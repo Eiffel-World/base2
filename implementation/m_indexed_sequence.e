@@ -1,14 +1,14 @@
 note
-	description: "Linear structures with integer indexes as cursors."
+	description: "Sequences with integer indexes as cursors."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	M_INDEXED_LINEAR [E]
+	M_INDEXED_SEQUENCE [E]
 
 inherit
-	M_LINEAR [E]
+	M_SEQUENCE [E]
 		undefine
 			back,
 			go_i_th
@@ -22,6 +22,13 @@ feature -- Cursor movement
 		do
 			index := 1
 		end
+		
+	finish
+			-- Move current position to the last element
+		do
+			index := count
+		end		
+		
 	forth
 			-- Move current position to the next element
 		do

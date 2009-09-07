@@ -8,7 +8,7 @@ deferred class
 	M_PRUNABLE_BY_VALUE [E]
 
 inherit
-	M_SPARSE_PRUNABLE [E]
+	M_PRUNABLE [E]
 
 feature -- Element change
 	prune_all (v: E)

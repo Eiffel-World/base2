@@ -8,7 +8,7 @@ deferred class
 	M_PRUNABLE_ACTIVE [E]
 
 inherit
-	M_SPARSE_PRUNABLE [E]
+	M_PRUNABLE [E]
 
 	M_ACTIVE [E]
 

@@ -5,16 +5,14 @@ note
 	revision: "$Revision$"
 
 deferred class
-	M_IMPLICIT_ENTRY_POINT [E]
+	M_EXTENDIBLE_BY_VALUE [E]
 
 inherit
-	M_SPARSE_EXTENDIBLE [E]
+	M_EXTENDIBLE [E]
 
 feature -- Element change
 	extend (v: E)
 			-- Extend with `v'
-		require
-			not_full: not full
 		deferred
 		ensure
 			added: has (v)

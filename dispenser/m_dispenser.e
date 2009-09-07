@@ -1,5 +1,5 @@
 note
-	description: "Data structures, where a single element is accesible at a time."
+	description: "Finite extendible data structures, where a single element can be accessed and removed at a time."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,7 +10,7 @@ deferred class
 inherit
 	M_FINITE [E]
 
-	M_IMPLICIT_ENTRY_POINT [E]
+	M_EXTENDIBLE_BY_VALUE [E]
 
 	M_PRUNABLE_ACTIVE [E]
 end

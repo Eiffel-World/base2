@@ -10,7 +10,6 @@ class
 inherit
 	M_LIST [E]
 		undefine
-			full,
 			item,
 			readable,
 			go_i_th
@@ -20,12 +19,11 @@ inherit
 			is_last
 		end
 
-	M_UNBOUNDED [E]
-
-	M_CELLED_LINEAR [E]
+	M_CELLED_SEQUENCE [E]
 		redefine
 			active,
-			is_first
+			is_first,
+			is_last
 		end
 
 feature -- Access

@@ -15,7 +15,7 @@ inherit
 			do_if
 		end
 
-	M_FINITE_SORTED [INTEGER]
+	M_SORTED [INTEGER]
 		rename
 			min as lower,
 			max as upper,
@@ -35,7 +35,7 @@ inherit
 			i_th
 		end
 
-	M_FINITE_INDEXED_LINEAR [INTEGER]
+	M_INDEXED_SEQUENCE [INTEGER]
 		undefine
 			is_empty,
 			occurrences,

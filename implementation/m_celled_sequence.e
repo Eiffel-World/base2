@@ -1,14 +1,14 @@
 note
-	description: "Linear structures with references to cells as cursors."
+	description: "Sequences with references to cells as cursors."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
 
 deferred class
-	M_CELLED_LINEAR [G]
+	M_CELLED_SEQUENCE [G]
 
 inherit
-	M_LINEAR [G]
+	M_SEQUENCE [G]
 		undefine
 			readable,
 			item

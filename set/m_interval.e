@@ -42,14 +42,6 @@ feature -- Status report
 	is_empty: BOOLEAN
 			-- Is empty?
 
-	has_space_for (i: INTEGER): BOOLEAN
-			-- Can `i' new elements be added?
-		once
-			Result := True
-		ensure then
-			never_full: Result
-		end
-
 	has_lower: BOOLEAN
 			-- Is there a lower bound?
 		do

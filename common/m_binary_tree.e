@@ -8,7 +8,7 @@ class
 	M_BINARY_TREE [E]
 
 inherit
-	M_FINITE_LINEAR [E]
+	M_SEQUENCE [E]
 		rename
 			start as preorder_start,
 			forth as preorder_forth,
@@ -41,7 +41,7 @@ inherit
 --			preorder_search
 		end
 
---	M_FINITE_LINEAR [E]
+--	M_SEQUENCE [E]
 --		rename
 --			start as inorder_start,
 --			forth as inorder_forth,
@@ -65,16 +65,16 @@ inherit
 
 	M_PRUNABLE_ACTIVE [E]
 
-	M_UNBOUNDED [E]
-
-	M_CELLED_LINEAR [E]
+	M_CELLED_SEQUENCE [E]
 		rename
 			start as preorder_start,
 			forth as preorder_forth,
 			back as preorder_back,
+			finish as preorder_finish,
 			index as preorder_index,
 			i_th as preorder_i_th,
 			first as preorder_first,
+			last as preorder_last,
 			index_of as preorder_index_of,
 			go_i_th as preorder_go_i_th,
 			search as preorder_search
@@ -93,7 +93,7 @@ inherit
 --			preorder_search
 		end
 
---	M_CELLED_LINEAR [E]
+--	M_CELLED_SEQUENCE [E]
 --		rename
 --			start as inorder_start,
 --			forth as inorder_forth,
@@ -135,7 +135,7 @@ feature -- Access
 				restore_cursor
 			end
 		end
-		
+
 feature -- Status report
 	writable: BOOLEAN
 			-- Can current item be replaced?

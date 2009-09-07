@@ -10,7 +10,7 @@ deferred class
 inherit
 	M_FINITE_SET [E]
 
-	M_IMPLICIT_ENTRY_POINT [E]
+	M_EXTENDIBLE_BY_VALUE [E]
 		redefine
 			extend
 		end

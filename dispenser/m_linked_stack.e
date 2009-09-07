@@ -11,13 +11,11 @@ inherit
 	M_STACK [E]
 		undefine
 			hold_count,
-			exists,
-			full
+			exists
 		end
 
 inherit {NONE}
 	M_LINKED_LIST [E]
-
 
 feature -- Element change
 	extend (v: E)

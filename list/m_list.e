@@ -8,13 +8,15 @@ deferred class
 	M_LIST [E]
 
 inherit
-	M_DEQUE [E]
+	M_SEQUENCE [E]
 
 	M_REPLACEABLE_ACTIVE [E]
 
 	M_PRUNABLE_ACTIVE [E]
 
-	M_PRUNABLE_BAG [E]
+	M_SPARSE_BAG [E]
+		rename
+			extend as extend_front
 		undefine
 			hold_count,
 			exists
@@ -56,11 +58,72 @@ feature -- Replacement
 		end
 
 feature -- Element change
+	extend_back (v: E)
+			-- Add `v' at back
+		do
+			if is_empty then
+				extend_front (v)
+			else
+				save_cursor
+				finish
+				extend_right (v)
+				restore_cursor
+			end
+		ensure then
+			new_is_last: last = v
+		end
+
+	append (other: M_SEQUENCE [E])
+			-- Append `other'
+		require
+			not_void: other /= Void
+			not_current: other /= Current
+		do
+			other.save_cursor
+			from
+				other.start
+			until
+				other.off
+			loop
+				extend_back (other.item)
+				other.forth
+			end
+			other.restore_cursor
+		ensure
+			more_elements: count = old count + other.count
+		end
+
+	extend_front (v: E)
+			-- Add `v' at the front
+		deferred
+		ensure then
+			new_is_first: first = v
+		end
+
+	prepend (other: M_SEQUENCE [E])
+			-- Prepend `other'
+		require
+			not_void: other /= Void
+			not_current: other /= Current
+		do
+			other.save_cursor
+			from
+				other.finish
+			until
+				other.off
+			loop
+				extend_front (other.item)
+				other.back
+			end
+			other.restore_cursor
+		ensure
+			more_elements: count = old count + other.count
+		end
+
 	extend_left (v: E)
 			-- Add `v' to the left of cursor position.
 			-- Do not move cursor.
 		require
-			not_full: not full
 			not_off: not off
 		do
 			if is_first then
@@ -81,7 +144,6 @@ feature -- Element change
 			-- Add `v' to the right of cursor position.
 			-- Do not move cursor.
 		require
-			not_full: not full
 			not_off: not off
 		deferred
 		ensure
@@ -94,7 +156,6 @@ feature -- Element change
 			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
 		require
-			has_space: has_space_for (other.count)
 			not_off: not off
 			other_exists: other /= Void
 			not_current: other /= Current
@@ -120,7 +181,6 @@ feature -- Element change
 			-- Merge `other' into current structure after cursor
 			-- position. Do not move cursor. Empty `other'.
 		require
-			has_space: has_space_for (other.count)
 			not_off: not off
 			other_exists: other /= Void
 			not_current: other /= Current
@@ -129,24 +189,6 @@ feature -- Element change
 	 		new_count: count = old count + old other.count
 	 		same_index: index = old index
 			other_is_empty: other.is_empty
-		end
-
-	extend_front (v: E)
-			-- Add `v' at the front
-		deferred
-		end
-
-	extend_back (v: E)
-			-- Add `v' at back
-		do
-			if is_empty then
-				extend_front (v)
-			else
-				save_cursor
-				finish
-				extend_right (v)
-				restore_cursor
-			end
 		end
 
 	remove_right
@@ -169,16 +211,26 @@ feature -- Element change
 
 	remove_back
 			-- Remove an element from the back
+		require
+			not_empty: not is_empty
 		do
 			finish
 			remove
+		ensure
+			one_less_element: count = old count - 1
+			pruned_one: occurrences (old last) = old (occurrences (last)) - 1
 		end
 
 	remove_front
 			-- Remove an element from the front
+		require
+			not_empty: not is_empty
 		do
 			start
 			remove
+		ensure
+			one_less_element: count = old count - 1
+			pruned_one: occurrences (old first) = old (occurrences (first)) - 1
 		end
 
 	prune_all (v: E)

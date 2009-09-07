@@ -11,11 +11,10 @@ inherit
 	M_SPARSE_SET [E]
 		undefine
 			hold_count,
-			exists,
-			full
+			exists
 		end
 
-	M_FINITE_SORTED [E]
+	M_SORTED [E]
 		rename
 			search as linear_serach
 		undefine
