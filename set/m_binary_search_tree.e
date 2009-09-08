@@ -20,6 +20,9 @@ inherit
 		undefine
 			item,
 			readable,
+			start,
+			finish,
+			forth,
 			back,
 			occurrences
 		redefine
@@ -41,10 +44,12 @@ inherit {NONE}
 	M_BINARY_TREE [E]
 		rename
 			inorder_start as start,
-			inorder_finish as finish,
 			inorder_forth as forth,
 			inorder_back as back,
-			inorder_index as index
+			inorder_finish as finish,
+			inorder_index as index,
+			inorder_i_th as i_th alias "[]",
+			inorder_go_i_th as go_i_th
 		export {NONE}
 			all
 		undefine

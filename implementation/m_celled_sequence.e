@@ -5,36 +5,43 @@ note
 	revision: "$Revision$"
 
 deferred class
-	M_CELLED_SEQUENCE [G]
+	M_CELLED_SEQUENCE [E]
 
 inherit
-	M_SEQUENCE [G]
+	M_SEQUENCE [E]
 		undefine
 			readable,
-			item
-		redefine
-			go_i_th
+			item,
+			start,
+			forth
 		end
 
-	M_CELLED [G]
+	M_CELLED [E]
 
 feature -- Access
+	i_th alias "[]" (i: INTEGER): E
+			-- Element associated with `i'
+		do
+			save_cursor
+			go_i_th (i)
+			Result := item
+			restore_cursor
+		end
+
 	index: INTEGER
 			-- Index of current position
 		do
-			if not off then
-				save_cursor
-				from
-					start
-					Result := 1
-				until
-					cursors.item = active
-				loop
-					forth
-					Result := Result + 1
-				end
-				restore_cursor
+			save_cursor
+			from
+				start
+				Result := 1
+			until
+				cursors.item = active
+			loop
+				forth
+				Result := Result + 1
 			end
+			restore_cursor
 		end
 
 feature -- Cursor movement

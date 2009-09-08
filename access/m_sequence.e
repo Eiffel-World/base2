@@ -20,7 +20,7 @@ inherit
 		end
 
 	M_CURSORED [E]
-	
+
 	M_FINITE [E]
 		redefine
 			hold_count,
@@ -30,11 +30,7 @@ inherit
 feature -- Access
 	i_th alias "[]" (i: INTEGER): E
 			-- Element associated with `i'
-		do
-			save_cursor
-			go_i_th (i)
-			Result := item
-			restore_cursor
+		deferred
 		end
 
 	item: E
@@ -45,8 +41,10 @@ feature -- Access
 
 	index: INTEGER
 			-- Index of current position
+		require
+			not_off: not off
 		deferred
-		end		
+		end
 
 	first: E
 			-- First element
@@ -55,7 +53,7 @@ feature -- Access
 		do
 			Result := i_th (1)
 		end
-		
+
 	last: E
 			-- Last element
 		require
@@ -63,7 +61,7 @@ feature -- Access
 		do
 			Result := i_th (count)
 		end
-		
+
 	has (v: E): BOOLEAN
 			-- Is `v' contained?
 		do
@@ -74,7 +72,7 @@ feature -- Access
 			restore_cursor
 		ensure then
 			index_of_first: Result = (index_of (v, 1) > 0)
-		end		
+		end
 
 	occurrences (v: like item): INTEGER
 			-- Number of times `v' appears
@@ -100,7 +98,7 @@ feature -- Access
 		ensure then
 			if_in_bounds: Result = (i >= 1 and i <= count)
 		end
-		
+
 	index_of (v: E; i: INTEGER): INTEGER
 			-- Index of `i'-th occurence of `v'
 		require
@@ -144,34 +142,37 @@ feature -- Status report
 		ensure
 			index_is_one: Result = (index = 1)
 		end
-		
+
 	is_last: BOOLEAN
 			-- Is cursor on the last element?
 		do
 			Result := (index = count)
-		end		
+		end
 
 feature -- Cursor movement
 	start
 			-- Move current position to the first element
-		deferred
+		do
+			go_i_th (1)
 		ensure
 			first_if_not_empty: not is_empty implies is_first
 		end
-		
+
 	finish
 			-- Move current position to the last element
-		deferred
+		do
+			go_i_th (count)
 		ensure
-			index_set: index = count
+			index_set: not is_empty implies is_last
 		end
 
 	forth
 			-- Move current position to the next element
-		deferred
+		do
+			go_i_th (index + 1)
 		ensure then
 			index_increased_until_last: not old is_last implies index = old index + 1
-			off_after_last: old is_last implies off			
+			off_after_last: old is_last implies off
 		end
 
 	back
@@ -187,18 +188,7 @@ feature -- Cursor movement
 
 	go_i_th (i: INTEGER)
 			-- Go to position `i'
-		do
-			if has_index (i) then
-				from
-					start
-				until
-					index = i
-				loop
-					forth
-				end
-			else
-				go_off
-			end
+		deferred
 		ensure
 			index_set_if_in_bounds: has_index (i) implies index = i
 			off_if_out_of_bounds: not has_index (i) implies off
@@ -210,7 +200,7 @@ feature -- Cursor movement
 		ensure
 			off: off
 		end
-		
+
 feature -- Quantifiers
 	hold_count (p: PREDICATE [ANY, TUPLE [E]]): INTEGER is
 			-- Number of elements for which `p' holds
@@ -249,12 +239,11 @@ feature -- Iteration
 				end
 				forth
 			end
-		end		
+		end
 
 invariant
-	item_and_i_th: readable implies (item = i_th (index))	
+	item_and_i_th: readable implies (item = i_th (index))
 	first: not is_empty implies first = i_th (1)
-	last: not is_empty implies last = i_th (count)		
-	has_index: readable = has_index (index)
-	readable_index: readable = (index >= 1 and index <= count) -- Theorem	
+	last: not is_empty implies last = i_th (count)
+	has_index: readable implies has_index (index)
 end

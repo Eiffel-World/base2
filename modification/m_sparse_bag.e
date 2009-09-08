@@ -14,6 +14,9 @@ inherit
 		end
 
 	M_PRUNABLE_BY_VALUE [E]
+		redefine
+			prune_all
+		end
 
 	M_FINITE [E]
 
@@ -34,4 +37,11 @@ feature -- Element change
 			pruned_one_if_has: old has (v) implies occurrences (v) = old occurrences (v) - 1
 			same_count_if_not_has: not old has (v) implies count = old count
 		end
+
+	prune_all (v: E)
+			-- Remove all occurences of `v'
+		deferred
+		ensure then
+			less_elements: count = old (count - occurrences (v))
+		end		
 end

@@ -29,8 +29,7 @@ inherit
 			has,
 			lower,
 			upper,
-			back,
-			go_i_th
+			back
 		redefine
 			i_th
 		end

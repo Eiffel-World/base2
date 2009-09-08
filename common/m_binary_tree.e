@@ -1,5 +1,5 @@
 note
-	description: "Summary description for {M_BINARY_TREE}."
+	description: "Binary trees (linked implementation)."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -8,59 +8,6 @@ class
 	M_BINARY_TREE [E]
 
 inherit
-	M_SEQUENCE [E]
-		rename
-			start as preorder_start,
-			forth as preorder_forth,
-			back as preorder_back,
-			finish as preorder_finish,
-			index as preorder_index,
-			i_th as preorder_i_th,
-			first as preorder_first,
-			last as preorder_last,
-			index_of as preorder_index_of,
-			go_i_th as preorder_go_i_th,
-			search as preorder_search
-		undefine
-			preorder_go_i_th,
-			item,
-			readable
-		redefine
-			preorder_back
---		select
---			preorder_start,
---			preorder_forth,
---			preorder_back,
---			preorder_finish,
---			preorder_index,
---			preorder_i_th,
---			preorder_first,
---			preorder_last,
---			preorder_index_of,
---			preorder_go_i_th,
---			preorder_search
-		end
-
---	M_SEQUENCE [E]
---		rename
---			start as inorder_start,
---			forth as inorder_forth,
---			back as inorder_back,
---			finish as inorder_finish,
---			index as inorder_index,
---			i_th as inorder_i_th,
---			first as inorder_first,
---			last as inorder_last,
---			index_of as inorder_index_of,
---			go_i_th as inorder_go_i_th,
---			search as inorder_search
---		undefine
---			item,
---			readable
---		redefine
---			inorder_back
---		end
-
 	M_REPLACEABLE_ACTIVE [E]
 
 	M_PRUNABLE_ACTIVE [E]
@@ -80,7 +27,8 @@ inherit
 			search as preorder_search
 		redefine
 			active,
-			preorder_back
+			preorder_back,
+			preorder_finish
 --		select
 --			preorder_start,
 --			preorder_forth,
@@ -116,21 +64,28 @@ feature -- Access
 	count: INTEGER
 			-- Number of elements
 
+	inorder_i_th (i: INTEGER): E
+			-- Element associated with `i'
+		do
+			save_cursor
+			inorder_go_i_th (i)
+			Result := item
+			restore_cursor
+		end
+
 	inorder_index: INTEGER
 			-- Index of current position
 		do
-			if active = Void then
-				Result := 0
-			else
+			if not off then
 				save_cursor
 				from
-					Result := 1
 					inorder_start
+					Result := 1
 				until
 					cursors.item = active
 				loop
-					Result := Result + 1
 					inorder_forth
+					Result := Result + 1
 				end
 				restore_cursor
 			end
@@ -340,6 +295,26 @@ feature -- Cursor movement
 					up
 				end
 				up
+			end
+		end
+
+	inorder_go_i_th (i: INTEGER)
+			-- Go to position `i'
+		local
+			j: INTEGER
+		do
+			if not has_index (i) then
+				go_off
+			else
+				from
+					inorder_start
+					j := 1
+				until
+					i = j
+				loop
+					inorder_forth
+					j := j + 1
+				end
 			end
 		end
 

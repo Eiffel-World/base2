@@ -12,16 +12,24 @@ inherit
 		undefine
 			item,
 			readable,
-			go_i_th
+			start,
+			forth,
+			finish
 		redefine
-			remove_right,
+			first,
+			last,
 			is_first,
-			is_last
+			is_last,
+			remove_right
 		end
 
 	M_CELLED_SEQUENCE [E]
+		undefine
+			finish
 		redefine
 			active,
+			first,
+			last,
 			is_first,
 			is_last
 		end
@@ -29,6 +37,18 @@ inherit
 feature -- Access
 	count: INTEGER
 			-- Number of elements
+
+	first: E
+			-- First element
+		do
+			Result := first_cell.item
+		end
+
+	last: E
+			-- Last element
+		do
+			Result := last_cell.item
+		end
 
 feature -- Status report
 	is_first: BOOLEAN
@@ -103,22 +123,60 @@ feature -- Element change
 			count := count + 1
 		end
 
-	merge_right (other: like Current)
-			-- Merge `other' into current structure after cursor
+	merge_left (other: M_LINKED_LIST [E])
+			-- Merge `other' into current structure before cursor
 			-- position. Do not move cursor. Empty `other'.
+		require
+			not_off: not off
+			other_exists: other /= Void
+			not_current: other /= Current
+		local
+			f, l: like first_cell
+			old_active: like active
 		do
-			other.last_cell.set_right (active.right)
-			active.set_right (other.first_cell)
-			count := count + other.count
-			other.wipe_out
+			if not other.is_empty then
+				old_active := active
+				if is_first then
+					f := other.first_cell
+					l := other.last_cell
+					count := count + other.count
+					other.wipe_out
+					l.set_right (first_cell)
+					first_cell := f
+				else
+					back
+					merge_right (other)
+				end
+				active := old_active
+			end
+		ensure
+	 		new_count: count = old count + old other.count
+	 		new_index: index = old index + old other.count
+			other_is_empty: other.is_empty
 		end
 
-	wipe_out
-			-- Prune of all elements
+	merge_right (other: M_LINKED_LIST [E])
+			-- Merge `other' into current structure after cursor
+			-- position. Do not move cursor. Empty `other'.
+		require
+			not_off: not off
+			other_exists: other /= Void
+			not_current: other /= Current
+		local
+			f, l: like first_cell
 		do
-			first_cell := Void
-			active := Void
-			count := 0
+			if not other.is_empty then
+				f := other.first_cell
+				l := other.last_cell
+				count := count + other.count
+				other.wipe_out
+				l.set_right (active.right)
+				active.set_right (f)
+			end
+		ensure
+	 		new_count: count = old count + old other.count
+	 		same_index: index = old index
+			other_is_empty: other.is_empty
 		end
 
 	remove_right
@@ -138,7 +196,16 @@ feature -- Element change
 			else
 				back
 				remove_right
+				forth
 			end
+		end
+
+	wipe_out
+			-- Prune of all elements
+		do
+			first_cell := Void
+			active := Void
+			count := 0
 		end
 
 feature {M_LINKED_LIST} -- Implementation

@@ -24,12 +24,6 @@ inherit
 			for_all
 		end
 
-	M_MAPPING [INTEGER, E]
-		rename
-			item as i_th alias "[]",
-			has_key as has_index
-		end
-
 	M_INTEGER_INTERVAL
 		rename
 			has as has_index,

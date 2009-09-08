@@ -44,7 +44,6 @@ feature -- Cursor saving
 			cursors.remove
 		end
 
-
 feature {NONE} -- Implementation
 	active: M_CELL [E]
 
