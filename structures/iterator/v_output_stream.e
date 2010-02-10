@@ -65,18 +65,18 @@ feature -- Replacement
 --			index_offset_effect: input.index - old input.index = index - old index
 		end
 
---feature -- Model
+--feature -- Specification
 --	sequence: MML_SEQUENCE [G]
 --			-- Sequence of elements
 --		note
---			status: model
+--			status: specification
 --		deferred
 --		end
 
 --	index: INTEGER
 --			-- Current position
 --		note
---			status: model
+--			status: specification
 --		deferred
 --		end
 end

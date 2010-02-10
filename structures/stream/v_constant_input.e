@@ -35,11 +35,11 @@ feature -- Cursor movement
 			index := index + 1
 		end
 
-feature {NONE} -- Model
+feature -- Specification
 	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements
 		note
-			status: model
+			status: specification
 		do
 			create {MML_AGENT_SEQUENCE [G]} Result.such_that (agent (i: INTEGER): G do Result := item end)
 		end
@@ -47,7 +47,7 @@ feature {NONE} -- Model
 	index: INTEGER
 			-- Current position
 		note
-			status: model
+			status: specification
 		attribute
 		end
 

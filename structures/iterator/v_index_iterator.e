@@ -121,11 +121,11 @@ feature -- Replacement
 			target.put (target.lower + index - 1, v)
 		end
 
-feature -- Model
+feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
 			-- Sequence of elements
 		note
-			status: model
+			status: specification
 		local
 			i: INTEGER
 		do

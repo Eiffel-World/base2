@@ -34,7 +34,7 @@ feature {NONE} -- Initizalization
 			cursor := tree.at_root
 		ensure
 			set_effect: set.is_empty
-			relation_effect: relation |=| o.equivalence
+			order_relation_effect: order_relation |=| o.order_relation
 		end
 
 feature -- Initialization
@@ -179,13 +179,13 @@ feature {NONE} -- Implementation
 			end
 		end
 
-feature -- Model
+feature -- Specification
 	order_relation: MML_RELATION [G, G]
 			-- Element equivalence relation
 		note
-			status: model
+			status: specification
 		do
-			Result := order.order
+			Result := order.order_relation
 		end
 
 invariant
@@ -193,5 +193,5 @@ invariant
 	tree_exists: tree /= Void
 	cursor_exists: cursor /= Void
 	relation_definition: relation |=| (order_relation.complement * order_relation.inverse.complement)
-	order_order_definition: order.order |=| order_relation
+	order_order_definition: order.order_relation |=| order_relation
 end

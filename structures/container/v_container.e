@@ -127,11 +127,11 @@ feature -- Removal
 			bag_effect: bag.is_empty
 		end
 
-feature -- Model
+feature -- Specification
 	bag: MML_FINITE_BAG [G]
 			-- Bag of container elements
 		note
-			status: model
+			status: specification
 		local
 			i: V_INPUT_ITERATOR [G]
 		do
@@ -149,7 +149,7 @@ feature -- Model
 	default_item: G
 			-- Default value of type `G'
 		note
-			status: spec_helper
+			status: specification
 		do
 		end
 

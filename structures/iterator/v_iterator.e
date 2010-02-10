@@ -14,8 +14,6 @@ inherit
 	V_OUTPUT_STREAM [G]
 		undefine
 			is_equal
---		redefine
---			sequence
 		end
 
 feature -- Replacement
@@ -35,12 +33,5 @@ feature -- Replacement
 			forth
 		ensure then
 			sequence_effect: sequence |=| old (sequence.replaced_at (index, v))
-		end
-
-feature -- Model
-	sequence: MML_FINITE_SEQUENCE [G]
-		note
-			status: model
-		deferred
 		end
 end

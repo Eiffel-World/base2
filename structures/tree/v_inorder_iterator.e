@@ -9,7 +9,7 @@ class
 	V_INORDER_ITERATOR [G]
 
 inherit
-	V_ITERATOR [G]
+	V_INPUT_ITERATOR [G]
 		undefine
 			off
 		end
@@ -202,10 +202,11 @@ feature -- Cursor movement
 			after := True
 		end
 
-feature -- Model
+feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
+			-- Sequence of elements
 		note
-			status: model
+			status: specification
 		local
 			old_active: V_BINARY_TREE_CELL [G]
 			old_after: BOOLEAN

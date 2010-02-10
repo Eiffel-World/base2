@@ -10,44 +10,56 @@ deferred class
 
 inherit
 	V_UPDATABLE_MAP [K, G]
+		redefine
+			is_equal
+		end
 
 	V_CONTAINER [G]
-
-feature -- Initialization
-	make (key_eq: V_EQUIVALENCE [K])
-			-- Create an empty table with key equivalence relation `key_eq'
-		require
-			key_eq_exists: key_eq /= Void
-		deferred
-		ensure
-			map_effect: map.is_empty
-			relation_effect: relation |=| key_eq.relation
-		end
-
-	make_reference_equality
-			-- Create an empty table with key equivalence based on reference equality
-		deferred
-		ensure
-			map_effect: map.is_empty
-			relation_effect: relation |=| create {MML_IDENTITY [G]}
-		end
-
-	make_object_equality
-			-- Create an empty table with key equivalence based on object equality
-		deferred
-		ensure
-			map_effect: map.is_empty
-			relation_effect: relation |=| create {MML_AGENT_RELATION [G, G]}.such_that (agent (x, y: G): BOOLEAN do Result := x ~ y end)
+		redefine
+			is_equal
 		end
 
 feature -- Measurement
 	key_equivalence: V_EQUIVALENCE [K]
 			-- Equivalence relation on keys
+		deferred
+		end
+
+feature -- Search
+	position_of_key (k: K): V_TABLE_ITERATOR [K, G]
+			-- Position of `k' in the table if contained, otherwise off
+		deferred
+		ensure
+--			target_definition: Result.target = Current
+			index_constraint_not_found: not has_equivalent_key (map, k, relation) implies not Result.key_sequence.domain [Result.index]
+			index_constraint_found: has_equivalent_key (map, k, relation) implies relation [k, Result.Key_sequence [Result.index]]
+		end
 
 feature -- Iteration
-	start: V_TABLE_ITERATOR [K, G]
+	at_start: V_TABLE_ITERATOR [K, G]
 			-- New iterator pointing to start position of the table
 		deferred
+		end
+
+feature -- Comparison
+	is_equal (other: like Current): BOOLEAN
+			-- Does `other' have the same key equivalence relation,
+			-- contain the same set of keys and associate them with same values?
+		local
+			i, j: V_TABLE_ITERATOR [K, G]
+		do
+			if key_equivalence ~ other.key_equivalence and count = other.count then
+				from
+					Result := True
+					i := at_start
+				until
+					i.off or not Result
+				loop
+					j := position_of_key (i.key)
+					Result := not j.off and then i.value = j.value
+					i.forth
+				end
+			end
 		end
 
 feature -- Extension
@@ -60,6 +72,20 @@ feature -- Extension
 			map_effect: map |=| old map.extended (k, v)
 		end
 
+	force (k: K; v: G)
+			-- Make sure that `k' is associated with `v'
+			-- Add `k' if not already present
+		do
+			if has_key (k) then
+				put (k, v)
+			else
+				extend (k, v)
+			end
+		ensure
+			map_effect_has: old has_equivalent_key (map, k, relation) implies map |=| old map.replaced_at (equivalent_key (map, k, relation), v)
+			map_effect_not_has: not old has_equivalent_key (map, k, relation) implies map |=| old map.extended (k, v)
+		end
+
 feature -- Removal
 	remove (k: K)
 			-- Remove key `k' and its associated value
@@ -67,7 +93,7 @@ feature -- Removal
 			has_key: has_key (k)
 		deferred
 		ensure
-			map_effect: map |=| old map.removed (map_key (k))
+			map_effect: map |=| old map.removed (equivalent_key (map, k, relation))
 		end
 
 	wipe_out
@@ -77,15 +103,35 @@ feature -- Removal
 			map_effect: map.is_empty
 		end
 
-feature -- Model
+feature -- Specification
 	map: MML_FINITE_MAP [K, G]
 			-- Corresponding mathematical map
 		note
-			status: model
-		deferred
+			status: specification
+		local
+			it: V_TABLE_ITERATOR [K, G]
+		do
+			create Result.empty
+			from
+				it := at_start
+			until
+				it.off
+			loop
+				Result := Result.extended (it.key, it.value)
+				it.forth
+			end
+		end
+
+	relation: MML_RELATION [K, K]
+			-- Key equivalence relation
+		note
+			status: specification
+		do
+			Result := key_equivalence.relation
 		end
 
 invariant
+	key_equivalence_exists: key_equivalence /= Void
 	bag_domain_definition: bag.domain |=| map.range
 	bag_definition: bag.domain.for_all (agent (x: G): BOOLEAN
 		do

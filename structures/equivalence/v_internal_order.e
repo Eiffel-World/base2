@@ -3,7 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: order
+	model: order_relation
 
 class
 	V_INTERNAL_ORDER [G -> COMPARABLE]

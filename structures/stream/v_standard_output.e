@@ -1,6 +1,6 @@
 note
 	description: "Standard (console) output."
-	author: ""
+	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
 	model: separator

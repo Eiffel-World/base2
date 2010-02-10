@@ -184,30 +184,13 @@ feature -- Cursor movement
 --			sequence_effect: sequence |=| old sequence
 --		end
 
-feature -- Model
+feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
+			-- Sequence of elements	
 		note
-			status: model
+			status: specification
 		deferred
 		end
-
---	map: MML_FINITE_MAP [INTEGER, G]
---			-- Map of positions to elements
---		local
---			s: MML_FINITE_SEQUENCE [G]
---			i: INTEGER
---		do
---			s := sequence
---			create Result.empty
---			from
---				i := 1
---			until
---				i > s.count
---			loop
---				Result := Result.extended (i, s [i])
---				i := i + 1
---			end
---		end
 
 invariant
 	target_exists: target /= Void
@@ -221,10 +204,5 @@ invariant
 	after_definition: after = (index = sequence.count + 1)
 	is_first_definition: is_first = (not sequence.is_empty and index = 1)
 	is_last_definition: is_last = (not sequence.is_empty and index = sequence.count)
---	map_domain_definition: map.domain |=| sequence.domain
---	map_definition: map.domain.for_all (agent (i: INTEGER): BOOLEAN
---		do
---			Result := map [i] = sequence [i]
---		end)
 	index_constraint: 0 <= index and index <= sequence.count + 1
 end

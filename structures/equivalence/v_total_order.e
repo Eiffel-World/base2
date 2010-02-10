@@ -3,7 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: order
+	model: order_relation
 
 deferred class
 	V_TOTAL_ORDER [G]
@@ -11,7 +11,7 @@ deferred class
 inherit
 	V_EQUIVALENCE [G]
 		rename
-			relation as equivalence
+			relation as equivalence_relation
 		end
 
 feature -- Basic operations
@@ -19,7 +19,7 @@ feature -- Basic operations
 			-- Is `x' < `y'?
 		deferred
 		ensure
-			definition: Result = order [x, y]
+			definition: Result = order_relation [x, y]
 		end
 
 	greater_than (x, y: G): BOOLEAN
@@ -27,7 +27,7 @@ feature -- Basic operations
 		do
 			Result := less_than (y, x)
 		ensure
-			definition: Result = order [y, x]
+			definition: Result = order_relation [y, x]
 		end
 
 	less_equal (x, y: G): BOOLEAN
@@ -35,7 +35,7 @@ feature -- Basic operations
 		do
 			Result := not greater_than (x, y)
 		ensure
-			definition: Result = not order [y, x]
+			definition: Result = not order_relation [y, x]
 		end
 
 	greater_equal (x, y: G): BOOLEAN
@@ -43,7 +43,7 @@ feature -- Basic operations
 		do
 			Result := not less_than (x, y)
 		ensure
-			definition: Result = not order [x, y]
+			definition: Result = not order_relation [x, y]
 		end
 
 	equivalent (x, y: G): BOOLEAN
@@ -52,30 +52,30 @@ feature -- Basic operations
 			Result := less_equal (x, y) and greater_equal (x, y)
 		end
 
-feature -- Model
-	order: MML_RELATION [G, G]
+feature -- Specification
+	order_relation: MML_RELATION [G, G]
 			-- Mathematical relation that corresponds to `less_than'
 		note
-			status: model
+			status: specification
 		do
 			create {MML_AGENT_RELATION [G, G]} Result.such_that (agent less_than)
 		end
 
 	is_order (x, y, z: G): BOOLEAN
-			-- Does `order' satisfy order relation properties for arguments `x', `y', `z'?
+			-- Does `order_relation' satisfy order relation properties for arguments `x', `y', `z'?
 		note
-			status: model_helper
+			status: specification
 		do
-			Result := not order [x, x] and
-				order [x, y] = not order [y, x] and
-				(order [x, y] and order [y, z] implies order [x, z])
+			Result := not order_relation [x, x] and
+				order_relation [x, y] = not order_relation [y, x] and
+				(order_relation [x, y] and order_relation [y, z] implies order_relation [x, z])
 		ensure
-			definition: Result = (not order [x, x] and
-				order [x, y] = not order [y, x] and
-				(order [x, y] and order [y, z] implies order [x, z]))
+			definition: Result = (not order_relation [x, x] and
+				order_relation [x, y] = not order_relation [y, x] and
+				(order_relation [x, y] and order_relation [y, z] implies order_relation [x, z]))
 			always: Result
 		end
 
 invariant
-	equivalence_definition: equivalence |=| (order.complement * order.inverse.complement)
+	equivalence_relation_definition: equivalence_relation |=| (order_relation.complement * order_relation.inverse.complement)
 end

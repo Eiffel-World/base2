@@ -62,18 +62,18 @@ feature -- Cursor movement
 				(pred.item ([sequence [index]]) and not sequence.interval (old index, index - 1).range.exists (pred))
 		end
 
-feature -- Model
+feature -- Specification
 	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements
 		note
-			status: model
+			status: specification
 		deferred
 		end
 
 	index: INTEGER
 			-- Current position
 		note
-			status: model
+			status: specification
 		deferred
 		end
 

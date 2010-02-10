@@ -21,11 +21,11 @@ feature -- Basic operations
 			Result := x = y
 		end
 
-feature -- Model
+feature -- Specification
 	relation: MML_IDENTITY [G]
 			-- Corresponding matematical relation
 		note
-			status: model
+			status: specification
 		do
 			create Result
 		end

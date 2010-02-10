@@ -167,11 +167,11 @@ feature -- Removal
 			sequence_effect: sequence.is_empty
 		end
 
-feature -- Model
+feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
 			-- Sequence of list's elements
 		note
-			status: model
+			status: specification
 		do
 			Result := at_start.sequence
 		end

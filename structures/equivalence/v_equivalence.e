@@ -16,11 +16,11 @@ feature -- Basic operations
 			definition: Result = relation [x, y]
 		end
 
-feature -- Model
+feature -- Specification
 	relation: MML_RELATION [G, G]
 			-- Corresponding matematical relation
 		note
-			status: model
+			status: specification
 		do
 			Result := create {MML_AGENT_RELATION [G, G]}.such_that (agent equivalent)
 		ensure
@@ -30,7 +30,7 @@ feature -- Model
 	is_equivalence (x, y, z: G): BOOLEAN
 			-- Does `relation' satisfy equivalence relation properties for arguments `x', `y', `z'?
 		note
-			status: model_helper
+			status: specification
 		do
 			Result := relation [x, x] and
 				relation [x, y] = relation [y, x] and

@@ -242,11 +242,11 @@ feature -- Removal
 			map_effect: map.is_empty
 		end
 
-feature -- Model
+feature -- Specification
 	map: MML_FINITE_MAP [INTEGER, G]
 			-- Corresponding mathematical map
 		note
-			status: model
+			status: specification
 		local
 			it: V_INPUT_ITERATOR [G]
 			i: INTEGER
@@ -267,7 +267,7 @@ feature -- Model
 	relation: MML_IDENTITY [INTEGER]
 			-- Index equivalence relation: identity
 		note
-			status: model
+			status: specification
 		do
 			create Result
 		end

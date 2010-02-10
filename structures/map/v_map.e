@@ -15,7 +15,7 @@ feature -- Access
 			has_key: has_key (k)
 		deferred
 		ensure
-			definition: Result = map [map_key (k)]
+			definition: Result = map [equivalent_key (map, k, relation)]
 		end
 
 feature -- Measurement
@@ -23,46 +23,43 @@ feature -- Measurement
 			-- Is any value associated with `k'?
 		deferred
 		ensure
-			definition: Result = not map_keys (k).as_finite.is_empty
+			definition: Result = has_equivalent_key (map, k, relation)
 		end
 
-feature -- Model
+feature -- Specification
 	map: MML_MAP [K, G]
 			-- Corresponding mathematical map
 		note
-			status: model
+			status: specification
 		deferred
 		end
 
 	relation: MML_RELATION [K, K]
 			-- Key equivalence relation
 		note
-			status: model
+			status: specification
 		deferred
 		end
 
-	map_keys (k: K): MML_SET [K]
-			-- Set of map keys equivalent to `k'
-			-- Either empty of singleton, becacause there is no more than one key from the same equivalence class
+	has_equivalent_key (m: MML_MAP [K, G]; k: K; r: MML_RELATION [K, K]): BOOLEAN
+			-- Does `m' contain a key equivalent to `k' according to `r'?
 		note
-			status: spec_helper
+			status: specification
 		do
-			Result := relation.image_of (k) * map.domain
+			Result := not (relation.image_of (k) * map.domain).as_finite.is_empty
 		ensure
-			definition: Result |=| (relation.image_of (k) * map.domain)
-			finite: Result.is_finite
-			empty_or_singleton: Result.as_finite.is_empty or Result.as_finite.count = 1
+			definition: Result = not (relation.image_of (k) * map.domain).as_finite.is_empty
 		end
 
-	map_key (k: K): K
-			-- Map key equivalent `k' if present
+	equivalent_key (m: MML_MAP [K, G]; k: K; r: MML_RELATION [K, K]): K
+			-- Key in `m' equivalent to `k' according to `r'
 		note
-			status: spec_helper
+			status: specification
 		require
-			has_key: not map_keys (k).as_finite.is_empty
+			has_equivalent: has_equivalent_key (m, k, r)
 		do
-			Result := map_keys (k).as_finite.any_item
+			Result := (relation.image_of (k) * map.domain).as_finite.any_item
 		ensure
-			Result = map_keys (k).as_finite.any_item
+			Result = (relation.image_of (k) * map.domain).as_finite.any_item
 		end
 end

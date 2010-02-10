@@ -140,7 +140,7 @@ feature -- Removal
 			-- Otherwise do nothing.
 		deferred
 		ensure
-			set_effect_has: has_equivalent (old set, v, relation) implies set |=| old set.removed (v)
+			set_effect_has: has_equivalent (old set, v, relation) implies set |=| old (set.removed (equivalent (set, v, relation)))
 			set_effect_not_has: not has_equivalent (old set, v, relation) implies set |=| old set
 		end
 
@@ -235,11 +235,11 @@ feature -- Removal
 			set_effect: set.is_empty
 		end
 
-feature -- Model
+feature -- Specification
 	set: MML_FINITE_SET [G]
 			-- Corresponding mathematical set
 		note
-			status: model
+			status: specification
 		local
 			i: V_INPUT_ITERATOR [G]
 		do
@@ -257,19 +257,31 @@ feature -- Model
 	relation: MML_RELATION [G, G]
 			-- Element equivalence relation
 		note
-			status: model
+			status: specification
 		do
 			Result := equivalence.relation
 		end
 
 	has_equivalent (s: MML_FINITE_SET [G]; x: G; r: MML_RELATION [G, G]): BOOLEAN
-			-- Does `s' contain an element equivalent to `x' according to `relation'?
+			-- Does `s' contain an element equivalent to `x' according to `r'?
 		note
-			status: spec_helper
+			status: specification
 		do
 			Result := not (s * r.image_of (x)).is_empty
 		ensure
 			definition: Result = not (s * r.image_of (x)).is_empty
+		end
+
+	equivalent (s: MML_FINITE_SET [G]; x: G; r: MML_RELATION [G, G]): G
+			-- Element of `s' equivalent to `x' according to `r'
+		note
+			status: specification
+		require
+			has_equivalent: has_equivalent (s, x, r)
+		do
+			Result := (s * r.image_of (x)).any_item
+		ensure
+			Result = (s * r.image_of (x)).any_item
 		end
 
 invariant
