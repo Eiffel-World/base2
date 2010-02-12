@@ -3,7 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: target, active
+	model: target, path
 
 class
 	V_BINARY_TREE_CURSOR [G]
@@ -11,7 +11,9 @@ class
 inherit
 	V_CELL_CURSOR [G]
 		redefine
-			active
+			active,
+			copy,
+			is_equal
 		end
 
 create {V_BINARY_TREE}
@@ -19,7 +21,7 @@ create {V_BINARY_TREE}
 
 feature {NONE} -- Initialization
 	make (tree: V_BINARY_TREE [G])
-			-- Create iterator through `tree', whose count is stored in `cc'
+			-- Create iterator over `tree'
 		require
 			tree_exists: tree /= Void
 		do
@@ -27,30 +29,26 @@ feature {NONE} -- Initialization
 			count_cell := tree.count_cell
 		ensure
 			target_effect: target = tree
-			active_effect: active = Void
+			path_effect: path.is_empty
+		end
+
+feature -- Initialization
+	copy (other: like Current)
+			-- Initialize with the same `target' and `path' as in `other'
+		do
+			target := other.target
+			active := other.active
+			count_cell := target.count_cell
+		ensure then
+			target_effect: target = other.target
+			path_effect: path = other.path
+			other_target_effect: other.target = old other.target
+			other_path_effect: other.path = old other.path
 		end
 
 feature -- Access
 	target: V_BINARY_TREE [G]
 			-- Tree to traverse
-
-	active: V_BINARY_TREE_CELL [G]
-			-- Cell at current position
-
---feature -- Measurement
---	subtree_count (node: V_BINARY_TREE_CELL [G]): INTEGER
---			-- Number of nodes in a subtree starting from `node'
---			-- ToDo: recursive definition
---		do
---			if node = Void then
---				Result := 0
---			else
---				Result := 1 + subtree_count (node.left) + subtree_count (node.right)
---			end
---		ensure
---			definition_base: node = Void implies Result = 0
---			definition_step: node /= Void implies Result = 1 + subtree_count (node.left) + subtree_count (node.right)
---		end
 
 feature -- Status report
 	is_root: BOOLEAN
@@ -77,6 +75,15 @@ feature -- Status report
 			Result := active /= Void and then active.right /= Void
 		end
 
+feature -- Comparison
+	is_equal (other: like Current): BOOLEAN
+			-- Does `other' have the same `target' and `path'?
+		do
+			Result := target = other.target and active = other.active
+		ensure then
+			definition: Result = (target = other.target and path |=| other.path)
+		end
+
 feature -- Cursor movement
 	up is
 			-- Move cursor up to the parent
@@ -85,7 +92,7 @@ feature -- Cursor movement
 		do
 			active := active.parent
 		ensure
-			active_effect: active = (old active).parent
+			path_effect: path |=| old path.but_last
 		end
 
 	left is
@@ -95,7 +102,7 @@ feature -- Cursor movement
 		do
 			active := active.left
 		ensure
-			active_effect: active = (old active).left
+			path_effect: path |=| old path.extended (False)
 		end
 
 	right is
@@ -105,7 +112,7 @@ feature -- Cursor movement
 		do
 			active := active.right
 		ensure
-			active_effect: active = (old active).right
+			path_effect: path |=| old path.extended (True)
 		end
 
 	go_root is
@@ -113,7 +120,8 @@ feature -- Cursor movement
 		do
 			active := target.root
 		ensure
-			active_effect: active = target.root
+			path_effect_non_empty: not target.map.is_empty implies path |=| {MML_BIT_VECTOR} [1]
+			path_effect_empty: target.map.is_empty implies path.is_empty
 		end
 
 feature -- Extension
@@ -126,10 +134,8 @@ feature -- Extension
 			active.put_left (create {V_BINARY_TREE_CELL [G]}.put (v))
 			count_cell.put (count_cell.item + 1)
 		ensure
-			active_left_item_effect: active.left.item = v
-			active_left_left_effect: active.left.left = Void
-			active_left_right_effect: active.left.right = Void
-			target_bag_effect: target.bag |=| old target.bag.extended (v)
+			target_map_effect: target.map |=| old target.map.extended (path.extended (False), v)
+			path_effect: path |=| old path
 		end
 
 	extend_right (v: G)
@@ -141,16 +147,13 @@ feature -- Extension
 			active.put_right (create {V_BINARY_TREE_CELL [G]}.put (v))
 			count_cell.put (count_cell.item + 1)
 		ensure
-			active_right_item_effect: active.right.item = v
-			active_right_left_effect: active.right.left = Void
-			active_right_right_effect: active.right.right = Void
-			target_bag_effect: target.bag |=| old target.bag.extended (v)
+			target_map_effect: target.map |=| old target.map.extended (path.extended (True), v)
+			path_effect: path |=| old path
 		end
-		
+
 feature -- Removal
 	remove
 			-- Remove current node (it must have less than two child nodes)
-			-- ToDo: contract
 		require
 			not_off: not off
 			not_two_children: not has_left or not has_right
@@ -181,17 +184,73 @@ feature -- Removal
 			end
 			active := Void
 		ensure
-			target_bag_effect: target.bag |=| old (target.bag.removed (active.item))
-			active_effect: active = Void
+			target_map_effect_has_left: old (target.map.domain.has (path.extended (False))) implies
+				target.map |=| old (target.map.replaced_at (path, target.map [path.extended (False)]).removed (path.extended (False)))
+			target_map_effect_has_right: old (target.map.domain.has (path.extended (True))) implies
+				target.map |=| old (target.map.replaced_at (path, target.map [path.extended (True)]).removed (path.extended (True)))
+			target_map_effect_leaf: old (not target.map.domain.has (path.extended (True)) and not target.map.domain.has (path.extended (False))) implies
+				target.map |=| old (target.map.removed (path))
+			path_effect: path.is_empty
 		end
+
+feature {V_CELL_CURSOR, V_INPUT_ITERATOR} -- Implementation
+	active: V_BINARY_TREE_CELL [G]
+			-- Cell at current position
 
 feature {NONE} -- Implementation
 	count_cell: V_CELL [INTEGER]
 			-- Cell where `target's	count is stored	
 
+feature -- Specification
+	path: MML_BIT_VECTOR
+			-- Path from root to current node
+		note
+			status: specification
+		local
+			old_active: V_BINARY_TREE_CELL [G]
+		do
+			old_active := active
+			from
+				create Result.make_with_count (0, 0)
+			until
+				off
+			loop
+				if active.is_left then
+					Result := Result.prepended (False)
+				else
+					Result := Result.prepended (True)
+				end
+				up
+			end
+			active := old_active
+		end
+
+	map: MML_FINITE_MAP [MML_BIT_VECTOR, G]
+			-- Map of paths to values in the subtree startin from current node
+		note
+			status: specification
+		require
+			not_off: not off
+		do
+			create Result.singleton (path, item)
+			if has_left then
+				left
+				Result := Result + map
+				up
+			end
+			if has_right then
+				right
+				Result := Result + map
+				up
+			end
+		end
+
 invariant
-	is_root_definition: is_root = (active /= Void and then active.parent = Void)
-	is_leaf_definition: is_leaf = (active /= Void and then active.left = Void and active.right = Void)
-	has_left_definition: has_left = (active /= Void and then active.left /= Void)
-	has_right_definition: has_right = (active /= Void and then active.right /= Void)
+	item_definition: target.map.domain.has (path) implies item = target.map [path]
+	off_definition: off = not target.map.domain.has (path)
+	is_root_definition: is_root = (path |=| {MML_BIT_VECTOR} [1])
+	is_leaf_definition: is_leaf = (target.map.domain.has (path) and
+		not target.map.domain.has (path.extended (True)) and not target.map.domain.has (path.extended (False)))
+	has_left_definition: has_left = (target.map.domain.has (path) and target.map.domain.has (path.extended (False)))
+	has_right_definition: has_right = (target.map.domain.has (path) and target.map.domain.has (path.extended (True)))
 end

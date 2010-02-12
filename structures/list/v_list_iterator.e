@@ -1,5 +1,5 @@
 note
-	description: "Iterators through lists."
+	description: "Iterators over lists."
 	author: ""
 	date: "$Date$"
 	revision: "$Revision$"
@@ -42,7 +42,7 @@ feature -- Extension
 		end
 
 	insert_left (other: V_INPUT_ITERATOR [G])
-			-- Append sequence of values, through which `input' iterates to the left of current position. Do not move cursor.
+			-- Append sequence of values, over which `input' iterates to the left of current position. Do not move cursor.
 		require
 			not_off: not off
 		deferred
@@ -54,7 +54,7 @@ feature -- Extension
 		end
 
 	insert_right (other: V_INPUT_ITERATOR [G])
-			-- Append sequence of values, through which `input' iterates to the right of current position. Move cursor to the last element of inserted sequence.
+			-- Append sequence of values, over which `input' iterates to the right of current position. Move cursor to the last element of inserted sequence.
 		require
 			not_off: not off
 		deferred

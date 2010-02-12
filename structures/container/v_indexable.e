@@ -170,6 +170,24 @@ feature -- Iteration
 		deferred
 		end
 
+	at_finish: like at_start
+			-- New iterator pointing to the last position
+		deferred
+		ensure
+			target_definition: Result.target = Current
+			index_definition: Result.index = map.count
+		end
+
+	at (i: INTEGER): like at_start
+			-- New iterator poiting at `i'-th position
+		require
+			has_index: 1 <= i and i <= count
+		deferred
+		ensure
+			target_definition: Result.target = Current
+			index_definition: Result.index = i
+		end
+
 feature -- Replacement
 	fill (v: G; l, u: INTEGER)
 			-- Put `v' at positions [`l', `u'].

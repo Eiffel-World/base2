@@ -9,17 +9,19 @@ class
 	V_INORDER_ITERATOR [G]
 
 inherit
-	V_INPUT_ITERATOR [G]
+	V_ITERATOR [G]
 		undefine
 			off
+		redefine
+			copy
 		end
 
-inherit {NONE}
 	V_BINARY_TREE_CURSOR [G]
-		export {NONE}
-			all
 		undefine
 			is_equal
+		redefine
+			copy,
+			go_root
 		end
 
 create {V_CONTAINER}
@@ -38,6 +40,23 @@ feature {NONE} -- Initialization
 		ensure
 			target_effect: target = c.target
 			active_effect: active = c.active
+		end
+
+feature -- Initialization
+	copy (other: like Current)
+			-- Initialize with the same `target' and position as in `other'
+		do
+			target := other.target
+			active := other.active
+			count_cell := target.count_cell
+			after := other.after
+		ensure then
+			target_effect: target = other.target
+			sequence_effect: sequence = other.sequence
+			index_effect: index = other.index
+			other_target_effect: other.target = old other.target
+			other_sequence_effect: other.sequence = old other.sequence
+			other_index_effect: other.index = old other.index
 		end
 
 feature -- Measurement
@@ -109,8 +128,19 @@ feature -- Status report
 		end
 
 feature -- Cursor movement
+	go_root is
+			-- Move cursor to the root
+		do
+			Precursor
+			if not target.is_empty then
+				after := False
+			else
+				after := True
+			end
+		end
+
 	start is
-			-- Go to the root
+			-- Move cursor to the leftmost node
 		do
 			if not target.is_empty then
 				from
@@ -127,7 +157,7 @@ feature -- Cursor movement
 		end
 
 	finish
-			-- Go to root
+			-- Move cursor to the rightmost node
 		do
 			if not target.is_empty then
 				from
@@ -142,7 +172,7 @@ feature -- Cursor movement
 		end
 
 	forth
-			-- Move current position to the next element in preorder
+			-- Movecursor to the next element in inorder
 		do
 			if active.right /= Void then
 				right
@@ -167,7 +197,7 @@ feature -- Cursor movement
 		end
 
 	back
-			-- Move current position to the previous element in preorder
+			-- Move cursor to the previous element in inorder
 		do
 			if active.left /= Void then
 				left
@@ -189,14 +219,14 @@ feature -- Cursor movement
 		end
 
 	go_before
-			-- Go before any position of `target'
+			-- Move cursor before any position of `target'
 		do
 			active := Void
 			after := False
 		end
 
 	go_after
-			-- Go after any position of `target'
+			-- Move cursor after any position of `target'
 		do
 			active := Void
 			after := True

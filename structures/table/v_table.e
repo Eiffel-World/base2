@@ -1,5 +1,5 @@
 note
-	description: "Finite maps where key-value pairs can be added and removed. Keys are unique with respect to key_equivalenvce"
+	description: "Finite maps where key-value pairs can be added and removed."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -25,26 +25,16 @@ feature -- Measurement
 		deferred
 		end
 
-feature -- Search
-	position_of_key (k: K): V_TABLE_ITERATOR [K, G]
-			-- Position of `k' in the table if contained, otherwise off
-		deferred
-		ensure
---			target_definition: Result.target = Current
-			index_constraint_not_found: not has_equivalent_key (map, k, relation) implies not Result.key_sequence.domain [Result.index]
-			index_constraint_found: has_equivalent_key (map, k, relation) implies relation [k, Result.Key_sequence [Result.index]]
-		end
-
 feature -- Iteration
 	at_start: V_TABLE_ITERATOR [K, G]
-			-- New iterator pointing to start position of the table
+			-- New iterator pointing to a position in the table, from which it can traverse all elements by going `forth'
 		deferred
 		end
 
 feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Does `other' have the same key equivalence relation,
-			-- contain the same set of keys and associate them with same values?
+			-- contain the same set of keys and associate them with then same values?
 		local
 			i, j: V_TABLE_ITERATOR [K, G]
 		do
@@ -52,10 +42,11 @@ feature -- Comparison
 				from
 					Result := True
 					i := at_start
+					j := other.at_start
 				until
 					i.off or not Result
 				loop
-					j := position_of_key (i.key)
+					j.search_key (i.key)
 					Result := not j.off and then i.value = j.value
 					i.forth
 				end
@@ -73,8 +64,8 @@ feature -- Extension
 		end
 
 	force (k: K; v: G)
-			-- Make sure that `k' is associated with `v'
-			-- Add `k' if not already present
+			-- Make sure that `k' is associated with `v'.
+			-- Add `k' if not already present.
 		do
 			if has_key (k) then
 				put (k, v)
@@ -88,7 +79,7 @@ feature -- Extension
 
 feature -- Removal
 	remove (k: K)
-			-- Remove key `k' and its associated value
+			-- Remove key `k' and its associated value.
 		require
 			has_key: has_key (k)
 		deferred
@@ -97,7 +88,7 @@ feature -- Removal
 		end
 
 	wipe_out
-			-- Remove all elements
+			-- Remove all elements.
 		deferred
 		ensure then
 			map_effect: map.is_empty

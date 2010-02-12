@@ -11,7 +11,8 @@ inherit
 	MML_MAP [K, G]
 
 create
-	empty
+	empty,
+	singleton
 
 create {MML_MODEL}
 	make_from_arrays
@@ -175,6 +176,15 @@ feature {NONE} -- Initialization
 			create values.make (1, 0)
 		end
 
+	singleton (k: K; x: G)
+			-- Create a map with just one key-value pair <`k', `x'>
+		do
+			create keys.make (1, 1)
+			keys [1] := k
+			create values.make (1, 1)
+			values [1] := x
+		end
+
 feature --Basic operations
 	restricted alias "|" (subdomain: MML_SET [K]): MML_FINITE_MAP [K, G]
 			-- This map with all key-value pairs where key is outside `restriction' removed
@@ -201,6 +211,33 @@ feature --Basic operations
 			create Result.make_from_arrays (ks.subarray (ks.lower, j - 1), vs.subarray (vs.lower, j - 1))
 		end
 
+	override alias "+" (other: MML_FINITE_MAP [K, G]): MML_FINITE_MAP [K, G]
+			-- Map that is equal to `other' on its domain and to `Current' on its domain minus the domain of `other'
+		local
+			i, j: INTEGER
+			ks: ARRAY [K]
+			vs: ARRAY [G]
+		do
+			create ks.make (1, keys.count + other.keys.count)
+			create vs.make (1, values.count + other.values.count)
+			ks.subcopy (other.keys, other.keys.lower, other.keys.upper, 1)
+			vs.subcopy (other.values, other.values.lower, other.values.upper, 1)
+			from
+				i := keys.lower
+				j := other.keys.upper + 1
+			until
+				i > keys.upper
+			loop
+				if not other.keys.has (keys [i]) then
+					ks [j] := keys [i]
+					vs [j] := values [i]
+					j := j + 1
+				end
+				i := i + 1
+			end
+			create Result.make_from_arrays (ks.subarray (ks.lower, j - 1), vs.subarray (vs.lower, j - 1))
+		end
+		
 	inverse: MML_FINITE_RELATION [G, K]
 			-- Relation consisting of inverted pairs from `Current'
 		do
@@ -296,7 +333,7 @@ feature -- Replacement
 --			end
 --		end
 
-feature {NONE} -- Implementation
+feature {MML_MODEL} -- Implementation
 	keys: ARRAY [K]
 	values: ARRAY [G]
 

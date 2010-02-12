@@ -31,7 +31,7 @@ feature {NONE} -- Initizalization
 		do
 			order := o
 			create tree
-			cursor := tree.at_root
+			create iterator.make_start (Current)
 		ensure
 			set_effect: set.is_empty
 			order_relation_effect: order_relation |=| o.order_relation
@@ -44,7 +44,9 @@ feature -- Initialization
 			if other /= Current then
 				order := other.order
 				tree := other.tree.twin
-				cursor := tree.at_root
+				if iterator = Void then
+					create iterator.make_start (Current)
+				end
 			end
 		ensure then
 			order_effect: order_relation |=| other.order_relation
@@ -63,30 +65,11 @@ feature -- Measurement
 			Result := tree.count
 		end
 
-feature -- Search
-	position_of (v: G): V_INORDER_ITERATOR [G]
-			-- Position of `v' in the set if contained, otherwise off
-		do
-			create Result.make_from_cursor (cursor_at (v))
-		end
-
 feature -- Iteration
-	at_start: V_INORDER_ITERATOR [G]
+	at_start: V_SORTED_SET_ITERATOR [G]
 			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'
 		do
-			Result := tree.at_start
-		end
-
-	at_finish: like at_start
-			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `back'
-		do
-			Result := tree.at_finish
-		end
-
-	at (i: INTEGER): like at_start
-			-- New iterator poiting at `i'-th position
-		do
-			Result := tree.at (i)
+			create Result.make_start (Current)
 		end
 
 feature -- Extension
@@ -99,25 +82,25 @@ feature -- Extension
 				tree.add_root (v)
 			else
 				from
-					cursor.go_root
+					iterator.tree_iterator.go_root
 				until
 					done
 				loop
-					if order.equivalent (v, cursor.item) then
+					if order.equivalent (v, iterator.item) then
 						done := True
-					elseif order.less_than (v, cursor.item) then
-						if not cursor.has_left then
-							cursor.extend_left (v)
+					elseif order.less_than (v, iterator.item) then
+						if not iterator.tree_iterator.has_left then
+							iterator.tree_iterator.extend_left (v)
 							done := True
 						else
-							cursor.left
+							iterator.tree_iterator.left
 						end
 					else
-						if not cursor.has_right then
-							cursor.extend_right (v)
+						if not iterator.tree_iterator.has_right then
+							iterator.tree_iterator.extend_right (v)
 							done := True
 						else
-							cursor.right
+							iterator.tree_iterator.right
 						end
 					end
 				end
@@ -129,22 +112,22 @@ feature -- Removal
 			-- Remove `v' from the set, if contained.
 			-- Otherwise do nothing.		
 		local
-			found: V_BINARY_TREE_CELL [G]
+			found: V_SORTED_SET_ITERATOR [G]
 		do
-			cursor := cursor_at (v)
-			if not cursor.off then
-				if cursor.has_left and cursor.has_right then
-					found := cursor.active
-					cursor.right
+			iterator.search (v)
+			if not iterator.off then
+				if iterator.tree_iterator.has_left and iterator.tree_iterator.has_right then
+					found := iterator.twin
+					iterator.tree_iterator.right
 					from
 					until
-						not cursor.has_left
+						not iterator.tree_iterator.has_left
 					loop
-						cursor.left
+						iterator.tree_iterator.left
 					end
-					found.put (cursor.item)
+					found.tree_iterator.put (iterator.item)
 				end
-				cursor.remove
+				iterator.tree_iterator.remove
 			end
 		end
 
@@ -155,29 +138,13 @@ feature -- Removal
 			tree.wipe_out
 		end
 
-feature {V_SORTED_SET} --Implementation
+feature {V_SORTED_SET, V_SORTED_SET_ITERATOR} -- Implementation
 	tree: V_BINARY_TREE [G]
 			-- Element storage
 
 feature {NONE} -- Implementation
-	cursor: V_BINARY_TREE_CURSOR [G]
+	iterator: V_SORTED_SET_ITERATOR [G]
 			-- Internal cursor
-
-	cursor_at (v: G): V_BINARY_TREE_CURSOR [G]
-			-- Position of `v' in the set if contained, otherwise off
-		do
-			from
-				Result := tree.at_root
-			until
-				Result.off or else order.equivalent (v, Result.item)
-			loop
-				if order.less_than (v, Result.item) then
-					Result.left
-				else
-					Result.right
-				end
-			end
-		end
 
 feature -- Specification
 	order_relation: MML_RELATION [G, G]
@@ -191,7 +158,7 @@ feature -- Specification
 invariant
 	order_exists: order /= Void
 	tree_exists: tree /= Void
-	cursor_exists: cursor /= Void
+	iterator_exists: iterator /= Void
 	relation_definition: relation |=| (order_relation.complement * order_relation.inverse.complement)
 	order_order_definition: order.order_relation |=| order_relation
 end

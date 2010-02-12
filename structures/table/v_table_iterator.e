@@ -30,12 +30,13 @@ feature -- Access
 		deferred
 		end
 
---feature -- Cursor movement
---	search_key (k: K)
---			-- Go to a position where key is equivalent to `k'
---			-- If `k' does not appear, go off
---		deferred
---		end
+feature -- Cursor movement
+	search_key (k: K)
+			-- Move to a position where key is equivalent to `k'.
+			-- If `k' does not appear, go off.
+			-- (Use `target.key_equivalence')
+		deferred
+		end
 
 feature -- Specification
 	key_sequence: MML_FINITE_SEQUENCE [K]

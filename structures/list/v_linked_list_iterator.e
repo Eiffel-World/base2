@@ -1,5 +1,5 @@
 note
-	description: "Iterators through linked lists."
+	description: "Iterators over linked lists."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -12,14 +12,16 @@ inherit
 	V_LIST_ITERATOR [G]
 		undefine
 			off
+		redefine
+			copy
 		end
 
-inherit {NONE}
 	V_CELL_CURSOR [G]
 		undefine
 			is_equal
 		redefine
-			active
+			active,
+			copy
 		end
 
 create {V_LINKED_LIST}
@@ -27,7 +29,7 @@ create {V_LINKED_LIST}
 
 feature {NONE} -- Initialization
 	make (list: V_LINKED_LIST [G])
-			-- Create iterator through `list', whose count is stored in `cc'
+			-- Create iterator over `list'
 		require
 			list_exists: list /= Void
 		do
@@ -38,12 +40,24 @@ feature {NONE} -- Initialization
 			index_effect: index = 0
 		end
 
+feature -- Initialization
+	copy (other: like Current)
+			-- Initialize with the same `target' and position as in `other'
+		do
+			target := other.target
+			active := other.active
+			after := other.after
+			count_cell := target.count_cell
+		ensure then
+			target_effect: target = other.target
+			index_effect: index = other.index
+			other_target_effect: other.target = old other.target
+			other_index_effect: other.index = old other.index
+		end
+
 feature -- Access
 	target: V_LINKED_LIST [G]
 			-- Container to iterate over
-
-	active: V_LINKABLE [G]
-			-- Cell at current position
 
 feature -- Measurement			
 	index: INTEGER
@@ -185,7 +199,7 @@ feature -- Extension
 		end
 
 	insert_left (other: V_INPUT_ITERATOR [G])
-			-- Append sequence of values, through which `input' iterates to the left of current position. Do not move cursor.
+			-- Append sequence of values, over which `input' iterates to the left of current position. Do not move cursor.
 		do
 			if is_first then
 				target.prepend (other)
@@ -197,7 +211,7 @@ feature -- Extension
 		end
 
 	insert_right (other: V_INPUT_ITERATOR [G])
-			-- Append sequence of values, through which `input' iterates to the right of current position. Move cursor to the last element of inserted sequence.
+			-- Append sequence of values, over which `input' iterates to the right of current position. Move cursor to the last element of inserted sequence.
 		do
 			from
 			until
@@ -219,7 +233,7 @@ feature -- Extension
 		do
 			if not other.is_empty then
 				other_first := other.first_cell
-				other_last := other.last_cell
+				other_last := other.at_finish.active
 				count_cell.put (count_cell.item + other.count)
 				other.wipe_out
 				other_last.put_right (active.right)
@@ -263,14 +277,18 @@ feature -- Removal
 			count_cell.put (count_cell.item - 1)
 		end
 
+feature {V_CELL_CURSOR} -- Implementation
+	active: V_LINKABLE [G]
+			-- Cell at current position
+
 feature {NONE} -- Implementation
 	count_cell: V_CELL [INTEGER]
 			-- Cell where `target's	count is stored	
 
-feature -- Model
+feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
 		note
-			status: model
+			status: specification
 		local
 			c: V_LINKABLE [G]
 		do

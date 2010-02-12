@@ -10,34 +10,39 @@ class
 
 inherit
 	V_TABLE_ITERATOR [K, G]
+		redefine
+			copy
+		end
 
 create {V_SORTED_TABLE}
-	make_start,
-	make_from_tree_iterator
+	make_start
 
 feature {NONE} -- Initialization
 	make_start (t: V_SORTED_TABLE [K, G])
 			-- Create an iterator at the start of `t'
 		do
 			target := t
-			tree_iterator := target.search_tree.at_start
+			set_iterator := target.set.at_start
 		ensure
 			target_effect: target = t
 			index_effect: index = 1
 		end
 
-	make_from_tree_iterator (t: V_SORTED_TABLE [K, G]; it: V_INORDER_ITERATOR [TUPLE [key: K; value: G]])
-			-- Create iterator pointing to the same node as `cursor'
-		require
-			t_exists: t /= Void
-			it_exists: it /= Void
---			valid_target: t.search_tree.tree = it.target
+feature -- Initialization
+	copy (other: like Current)
+			-- Initialize with the same `target' and position as in `other'
 		do
-			target := t
-			tree_iterator := it
-		ensure
-			target_effect: target = t
-			index_effect: index = it.index
+			if other /= Current then
+				target := other.target
+				set_iterator := other.set_iterator.twin
+			end
+		ensure then
+			target_effect: target = other.target
+			key_sequence_effect: key_sequence = other.key_sequence
+			index_effect: index = other.index
+			other_target_effect: other.target = old other.target
+			other_key_sequence_effect: other.key_sequence = old other.key_sequence
+			other_index_effect: other.index = old other.index
 		end
 
 feature -- Access
@@ -47,102 +52,104 @@ feature -- Access
 	key: K
 			-- Key at current position
 		do
-			Result := tree_iterator.item.key
+			Result := set_iterator.item.key
 		end
 
 	value: G
 			-- Value at current position
 		do
-			Result := tree_iterator.item.value
+			Result := set_iterator.item.value
 		end
 
 feature -- Measurement		
 	index: INTEGER
 			-- Current position.
 		do
-			Result := tree_iterator.index
+			Result := set_iterator.index
 		end
 
 feature -- Status report
 	before: BOOLEAN
 			-- Is current position before any position in `target'?
 		do
-			Result := tree_iterator.before
+			Result := set_iterator.before
 		end
 
 	after: BOOLEAN
 			-- Is current position after any position in `target'?
 		do
-			Result := tree_iterator.after
+			Result := set_iterator.after
 		end
 
 	is_first: BOOLEAN
 			-- Is cursor at the first position?
 		do
-			Result := tree_iterator.is_first
+			Result := set_iterator.is_first
 		end
 
 	is_last: BOOLEAN
 			-- Is cursor at the last position?
 		do
-			Result := tree_iterator.is_last
+			Result := set_iterator.is_last
 		end
 
 feature -- Cursor movement
 	start
 			-- Go to the first position
 		do
-			tree_iterator.start
+			set_iterator.start
 		end
 
 	finish
 			-- Go to the last position
 		do
-			tree_iterator.finish
+			set_iterator.finish
 		end
 
 	forth
 			-- Move one position forward
 		do
-			tree_iterator.forth
+			set_iterator.forth
 		end
 
 	back
 			-- Go one position backwards
 		do
-			tree_iterator.back
+			set_iterator.back
 		end
 
 	go_before
 			-- Go before any position of `target'
 		do
-			tree_iterator.go_before
+			set_iterator.go_before
 		end
 
 	go_after
 			-- Go after any position of `target'
 		do
-			tree_iterator.go_after
+			set_iterator.go_after
 		end
 
---	search_key (k: K)
---			-- Go to a position where key is equivalent to `k'
---			-- If `k' does not appear, go off
---		do
---			
---		end
+	search_key (k: K)
+			-- Move to a position where key is equivalent to `k'.
+			-- If `k' does not appear, go off.
+			-- (Use `target.key_equivalence')
+		do
+			set_iterator.search ([k, default_item])
+		end
 
 feature -- Replacement
 	put (v: G)
 			-- Replace item at current position with `v'
 		do
-			target.put (key, v)
+			set_iterator.item.value := v
 		ensure then
 			target_map_effect: target.map |=| old target.map.replaced_at (key_sequence [index], v)
 		end
 
-feature {NONE} -- Implementation
-	tree_iterator: V_INORDER_ITERATOR [TUPLE [key: K; value: G]]
+feature {V_SORTED_TABLE_ITERATOR} -- Implementation
+	set_iterator: V_SORTED_SET_ITERATOR [TUPLE [key: K; value: G]]
+			-- Iterator over the underlying set
 
 feature -- Specification
 	key_sequence: MML_FINITE_SEQUENCE [K]
@@ -154,7 +161,7 @@ feature -- Specification
 			i: INTEGER
 		do
 			create Result.empty
-			pair_sequence := tree_iterator.sequence
+			pair_sequence := set_iterator.sequence
 			from
 				i := 1
 			until
@@ -174,7 +181,7 @@ feature -- Specification
 			i: INTEGER
 		do
 			create Result.empty
-			pair_sequence := tree_iterator.sequence
+			pair_sequence := set_iterator.sequence
 			from
 				i := 1
 			until
@@ -183,5 +190,12 @@ feature -- Specification
 				Result := Result.extended (pair_sequence.item (i).value)
 				i := i + 1
 			end
+		end
+
+	default_item: G
+			-- Default value of type `G'
+		note
+			status: specification
+		do
 		end
 end

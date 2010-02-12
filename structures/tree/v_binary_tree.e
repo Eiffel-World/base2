@@ -3,13 +3,15 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: bag--map
+	model: bag
 
 class
 	V_BINARY_TREE [G]
 
 inherit
 	V_CONTAINER [G]
+		rename
+			at_start as at_inorder_start
 		redefine
 			default_create,
 			copy,
@@ -25,8 +27,7 @@ feature {NONE} -- Initialization
 		do
 			create count_cell.put (0)
 		ensure then
-			bag_effect: bag.is_empty
---			map_effect: map.is_empty
+			map_effect: map.is_empty
 		end
 
 feature -- Initialization
@@ -47,8 +48,8 @@ feature -- Initialization
 				end
 			end
 		ensure then
-			bag_effect: bag |=| other.bag
-			other_bag_effect: other.bag |=| old other.bag
+			map_effect: map |=| other.map
+			other_map_effect: other.map |=| old other.map
 		end
 
 feature -- Measurement
@@ -66,28 +67,15 @@ feature -- Iteration
 			Result.go_root
 		ensure
 			target_definition: Result.target = Current
-			active_definition: Result.active = root
+			path_definition_non_empty: not map.is_empty implies Result.path |=| {MML_BIT_VECTOR} [1]
+			path_definition_empty: map.is_empty implies Result.path.is_empty
 		end
 
-	at_start: V_INORDER_ITERATOR [G]
+	at_inorder_start: V_INORDER_ITERATOR [G]
 			-- New inorder iterator pointing to the leftmost node
 		do
 			create Result.make (Current)
 			Result.start
-		end
-
-	at_finish: like at_start
-			-- New inorder iterator pointing to the rightmost node
-		do
-			create Result.make (Current)
-			Result.finish
-		end
-
-	at (i: INTEGER): like at_start
-			-- New inorder iterator poiting at `i'-th position
-		do
-			create Result.make (Current)
-			Result.go_to (i)
 		end
 
 feature -- Comparison
@@ -100,7 +88,7 @@ feature -- Comparison
 				Result := equal_subtree (at_root, other.at_root)
 			end
 		ensure then
-			definition: Result implies bag |=| other.bag -- ToDo: incomplete!
+			definition: Result = (map |=| other.map)
 		end
 
 feature -- Extension
@@ -112,10 +100,7 @@ feature -- Extension
 			create root.put (v)
 			count_cell.put (1)
 		ensure
-			bag_effect: bag |=| old bag.extended (v)
---			map_domain_count_effect: map.domain.count = 1
---			map_domain_content_effect: map.domain [create {MML_FINITE_SEQUENCE [BOOLEAN]}.empty]
---			map_effect: map [create {MML_FINITE_SEQUENCE [BOOLEAN]}.empty] = v
+			map_effect: map |=| create {MML_FINITE_MAP [MML_BIT_VECTOR, G]}.singleton (1, v)
 		end
 
 feature -- Removal		
@@ -124,8 +109,8 @@ feature -- Removal
 		do
 			root := Void
 			count_cell.put (0)
---		ensure then
---			map_effect: map.is_empty
+		ensure then
+			map_effect: map.is_empty
 		end
 
 feature {V_BINARY_TREE_CURSOR} -- Implementation
@@ -136,10 +121,11 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 			-- Cell to store count, where it can be updated by iterators
 
 	copy_subtree (input, output: V_BINARY_TREE_CURSOR [G])
-			--
+			-- Copy subtree to which `input' points as a subtree of a leaf node, to which `ouput' points
 		require
 			input_not_off: not input.off
 			output_not_off: not output.off
+			output_if_leaf: output.is_leaf
 		do
 			if input.has_left then
 				input.left
@@ -160,7 +146,7 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 		end
 
 	equal_subtree (i, j: V_BINARY_TREE_CURSOR [G]): BOOLEAN
-			--
+			-- Is subtree starting from `i' equal to that starting from `j' both in structure in values?
 		require
 			i_not_off: not i.off
 			j_not_off: not j.off
@@ -193,10 +179,14 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 			end
 		end
 
---feature -- Model
---	map: MML_FINITE_MAP [MML_FINITE_SEQUENCE [BOOLEAN], G]
---			-- Map of tree positions to elements
---		do
-
---		end
+feature -- Specification
+	map: MML_FINITE_MAP [MML_BIT_VECTOR, G]
+			-- Map of paths to elements
+		do
+			if is_empty then
+				create Result.empty
+			else
+				Result := at_root.map
+			end
+		end
 end

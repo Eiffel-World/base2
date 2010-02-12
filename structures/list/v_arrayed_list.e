@@ -151,7 +151,7 @@ feature -- Extension
 		end
 
 	insert_at (i: INTEGER; input: V_INPUT_ITERATOR [G])
-			-- Insert sequence of values, through which `input' iterates, starting at position `i'
+			-- Insert sequence of values, over which `input' iterates, starting at position `i'
 		local
 			ic: INTEGER
 		do

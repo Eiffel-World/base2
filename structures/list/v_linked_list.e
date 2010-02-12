@@ -64,24 +64,24 @@ feature -- Measurement
 		end
 
 feature -- Iteration
-	at_start: V_LIST_ITERATOR [G]
+	at_start: V_LINKED_LIST_ITERATOR [G]
 			-- New iterator pointing to the first position
 		do
-			create {V_LINKED_LIST_ITERATOR [G]} Result.make (Current)
+			create Result.make (Current)
 			Result.start
 		end
 
 	at_finish: like at_start
 			-- New iterator pointing to the last position
 		do
-			create {V_LINKED_LIST_ITERATOR [G]} Result.make (Current)
+			create Result.make (Current)
 			Result.finish
 		end
 
 	at (i: INTEGER): like at_start
 			-- New iterator poiting at `i'-th position
 		do
-			create {V_LINKED_LIST_ITERATOR [G]} Result.make (Current)
+			create Result.make (Current)
 			Result.go_to (i)
 		end
 
@@ -129,7 +129,7 @@ feature -- Extension
 		end
 
 	prepend (input: V_INPUT_ITERATOR [G])
-			-- Prepend sequence of values, through which `input' iterates
+			-- Prepend sequence of values, over which `input' iterates
 		do
 			if not input.off then
 				extend_front (input.item)
@@ -147,7 +147,7 @@ feature -- Extension
 		end
 
 	insert_at (i: INTEGER; input: V_INPUT_ITERATOR [G])
-			-- Insert sequence of values, through which `input' iterates, starting at position `i'
+			-- Insert sequence of values, over which `input' iterates, starting at position `i'
 		do
 			from
 				iterator.go_to (i - 1)
@@ -202,13 +202,13 @@ feature {V_LINKED_LIST_ITERATOR} -- Implementation
 	first_cell: V_LINKABLE [G]
 			-- First cell of the list
 
-	last_cell: V_LINKABLE [G]
-			-- Last cell of the list
-		do
-			if attached {V_LINKED_LIST_ITERATOR [G]} at_finish as i then
-				Result := i.active
-			end
-		end
+--	last_cell: V_LINKABLE [G]
+--			-- Last cell of the list
+--		do
+--			if attached {V_LINKED_LIST_ITERATOR [G]} at_finish as i then
+--				Result := i.active
+--			end
+--		end
 
 	count_cell: V_CELL [INTEGER]
 			-- Cell to store count, where it can be updated by iterators

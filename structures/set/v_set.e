@@ -1,5 +1,8 @@
 note
-	description: "Container where all elements are unique with repect to some equivalence relation."
+	description: "[
+		Container where all elements are unique with repect to some equivalence relation. 
+		Elements can be added and removed.
+		]"
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -13,6 +16,7 @@ inherit
 		rename
 			has as has_exactly
 		redefine
+			has_exactly,
 			occurrences,
 			is_equal
 		end
@@ -27,19 +31,25 @@ feature -- Search
 	has (v: G): BOOLEAN
 			-- Is `v' contained?
 			-- (Uses `equivalence')
+		local
+			i: V_SET_ITERATOR [G]
 		do
-			Result := not position_of (v).off
+			i := at_start
+			i.search (v)
+			Result := i.off
 		ensure
 			definition: Result = has_equivalent (set, v, relation)
 		end
 
-	position_of (v: G): V_INPUT_ITERATOR [G]
-			-- Position of `v' in the set if contained, otherwise off
-		deferred
-		ensure
---			target_definition: Result.target = Current
-			index_constraint_not_found: not has_equivalent (set, v, relation) implies not Result.sequence.domain [Result.index]
-			index_constraint_found: has_equivalent (set, v, relation) implies relation [v, Result.sequence [Result.index]]
+	has_exactly (v: G): BOOLEAN
+			-- Is value `v' contained?
+			-- (Uses reference equality)
+		local
+			i: V_SET_ITERATOR [G]
+		do
+			i := at_start
+			i.search (v)
+			Result := not i.off and then i.item = v
 		end
 
 	occurrences (v: G): INTEGER
@@ -49,6 +59,12 @@ feature -- Search
 			if has_exactly (v) then
 				Result := 1
 			end
+		end
+
+feature -- Iteration
+	at_start: V_SET_ITERATOR [G]
+			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'
+		deferred
 		end
 
 feature -- Comparison
@@ -237,7 +253,7 @@ feature -- Removal
 
 feature -- Specification
 	set: MML_FINITE_SET [G]
-			-- Corresponding mathematical set
+			-- Set of elements
 		note
 			status: specification
 		local

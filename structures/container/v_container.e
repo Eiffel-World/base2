@@ -14,6 +14,7 @@ feature -- Measurement
 		deferred
 		end
 
+
 feature -- Status report
 	is_empty: BOOLEAN
 			-- Is container empty?
@@ -23,20 +24,20 @@ feature -- Status report
 
 feature -- Search
 	has (v: G): BOOLEAN
-			-- Is `v' contained?
+			-- Is value `v' contained?
 			-- (Uses reference equality)
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
 			it := at_start
-			it.search (v)
+			it.search_forward (v)
 			Result := not it.off
 		ensure
 			definition: Result = bag.domain [v]
 		end
 
 	occurrences (v: G): INTEGER
-			-- How many times is `v' contained?
+			-- How many times is value `v' contained?
 			-- (Uses reference equality)
 		local
 			it: V_INPUT_ITERATOR [G]
@@ -55,27 +56,39 @@ feature -- Search
 			definition: Result = bag [v]
 		end
 
---	filtered (p: PREDICATE [ANY, TUPLE [G]]): V_CONTAINER [G]
---			-- Container that consists of elements of `Current' that satisfy `p'
---		deferred
---		ensure
---			definition: Result.bag |=| bag.restricted (create {MML_AGENT_SET [G]}.such_that (p))
---		end
+	hold_count (p: PREDICATE [ANY, TUPLE [G]]): INTEGER
+			-- How many elements satisfy `p'?
+		local
+			it: V_INPUT_ITERATOR [G]
+		do
+			from
+				it := at_start
+			until
+				it.off
+			loop
+				if p.item ([it.item]) then
+					Result := Result + 1
+				end
+				it.forth
+			end
+		ensure
+			definition: Result = (bag.domain * {MML_AGENT_SET [G]} [p]).count
+		end
 
 	exists (p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
-			-- Is a value contained such that `p'(value)?
+			-- Is there an element that satisfies `p'?
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
 			it := at_start
-			it.search_that (p)
+			it.search_forward_that (p)
 			Result := not it.off
 		ensure
 			definition: Result = bag.domain.exists (p)
 		end
 
 	for_all (p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
-			-- Does `p' hold for all elements?
+			-- Do all elements satisfy `p'?
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
@@ -97,26 +110,8 @@ feature -- Iteration
 			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'
 		deferred
 		ensure
---			target_definition: Result.target = Current
+			target_definition: Result.target = Current
 			index_definition: Result.index = 1
-		end
-
-	at_finish: like at_start
-			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `back'
-		deferred
-		ensure
---			target_definition: Result.target = Current
-			index_definition: Result.index = Result.sequence.count
-		end
-
-	at (i: INTEGER): like at_start
-			-- New iterator poiting at `i'-th position
-		require
-			has_index: 1 <= i and i <= count
-		deferred
-		ensure
---			target_definition: Result.target = Current
-			index_definition: Result.index = i
 		end
 
 feature -- Removal
@@ -129,7 +124,7 @@ feature -- Removal
 
 feature -- Specification
 	bag: MML_FINITE_BAG [G]
-			-- Bag of container elements
+			-- Bag of elements
 		note
 			status: specification
 		local

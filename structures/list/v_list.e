@@ -84,7 +84,7 @@ feature -- Extension
 		end
 
 	append (input: V_INPUT_ITERATOR [G])
-			-- Append sequence of values, through which `input' iterates
+			-- Append sequence of values, over which `input' iterates
 		do
 			from
 			until
@@ -100,7 +100,7 @@ feature -- Extension
 		end
 
 	prepend (input: V_INPUT_ITERATOR [G])
-			-- Prepend sequence of values, through which `input' iterates
+			-- Prepend sequence of values, over which `input' iterates
 		local
 			i: INTEGER
 		do
@@ -122,7 +122,7 @@ feature -- Extension
 		end
 
 	insert_at (i: INTEGER; input: V_INPUT_ITERATOR [G])
-			-- Insert sequence of values, through which `input' iterates, starting at position `i'
+			-- Insert sequence of values, over which `input' iterates, starting at position `i'
 		require
 			valid_index: has_index (i) or i = count + 1
 		deferred

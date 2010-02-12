@@ -1,5 +1,5 @@
 note
-	description: "Iterators through arrayed lists."
+	description: "Iterators over arrayed lists."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -11,7 +11,8 @@ class
 inherit
 	V_LIST_ITERATOR [G]
 		undefine
-			go_to
+			go_to,
+			copy
 		end
 
 	V_INDEX_ITERATOR [G]
@@ -57,7 +58,7 @@ feature -- Extension
 		end
 
 	insert_left (other: V_INPUT_ITERATOR [G])
-			-- Append sequence of values, through which `input' iterates to the left of current position. Do not move cursor.
+			-- Append sequence of values, over which `input' iterates to the left of current position. Do not move cursor.
 		local
 			old_other_count: INTEGER
 		do
@@ -67,7 +68,7 @@ feature -- Extension
 		end
 
 	insert_right (other: V_INPUT_ITERATOR [G])
-			-- Append sequence of values, through which `input' iterates to the right of current position. Move cursor to the last element of inserted sequence.
+			-- Append sequence of values, over which `input' iterates to the right of current position. Move cursor to the last element of inserted sequence.
 		local
 			old_other_count: INTEGER
 		do
