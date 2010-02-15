@@ -20,13 +20,14 @@ create {V_BINARY_TREE}
 	make
 
 feature {NONE} -- Initialization
-	make (tree: V_BINARY_TREE [G])
+	make (tree: V_BINARY_TREE [G]; cc: V_CELL [INTEGER])
 			-- Create iterator over `tree'
 		require
 			tree_exists: tree /= Void
+			valid_cc: cc = tree.count_cell
 		do
 			target := tree
-			count_cell := tree.count_cell
+			count_cell := cc
 		ensure
 			target_effect: target = tree
 			path_effect: path.is_empty
@@ -102,7 +103,8 @@ feature -- Cursor movement
 		do
 			active := active.left
 		ensure
-			path_effect: path |=| old path.extended (False)
+			path_effect_not_off: old (map.domain.has (path.extended (False))) implies path |=| old path.extended (False)
+			path_effect_off: not old (map.domain.has (path.extended (False))) implies path.is_empty
 		end
 
 	right is
@@ -112,7 +114,8 @@ feature -- Cursor movement
 		do
 			active := active.right
 		ensure
-			path_effect: path |=| old path.extended (True)
+			path_effect_not_off: old (map.domain.has (path.extended (True))) implies path |=| old path.extended (True)
+			path_effect_off: not old (map.domain.has (path.extended (True))) implies path.is_empty
 		end
 
 	go_root is

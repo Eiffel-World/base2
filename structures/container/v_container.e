@@ -30,7 +30,7 @@ feature -- Search
 			it: V_INPUT_ITERATOR [G]
 		do
 			it := at_start
-			it.search_forward (v)
+			it.search_forth (v)
 			Result := not it.off
 		ensure
 			definition: Result = bag.domain [v]
@@ -81,7 +81,7 @@ feature -- Search
 			it: V_INPUT_ITERATOR [G]
 		do
 			it := at_start
-			it.search_forward_that (p)
+			it.satisfy_forth (p)
 			Result := not it.off
 		ensure
 			definition: Result = bag.domain.exists (p)

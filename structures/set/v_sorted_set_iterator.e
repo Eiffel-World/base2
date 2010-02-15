@@ -10,23 +10,47 @@ class
 
 inherit
 	V_SET_ITERATOR [G]
+		undefine
+			off
 		redefine
 			copy,
-			search_forward
+			search_forth
+		end
+
+inherit {NONE}
+	V_INORDER_ITERATOR [G]
+		rename
+			target as tree,
+			make as make_with_tree
+		export {V_SORTED_SET, V_SORTED_SET_ITERATOR}
+			all
+		redefine
+			copy,
+			search_forth,
+			make_with_tree
 		end
 
 create {V_SORTED_SET}
-	make_start
+	make
 
 feature {NONE} -- Initialization
-	make_start (s: V_SORTED_SET [G])
-			-- Create an iterator at the start of `s'
+	make (s: V_SORTED_SET [G]; t: V_BINARY_TREE [G])
+			-- Create an iterator over `s'
+		require
+			s_exists: s /= Void
+			valid_tree: t = s.tree
 		do
 			target := s
-			tree_iterator := target.tree.at_inorder_start
+			make_with_tree (t, t.count_cell)
 		ensure
 			target_effect: target = s
-			index_effect: index = 1
+		end
+
+	make_with_tree (t: V_BINARY_TREE [G]; cc: V_CELL [INTEGER])
+			-- Create iterator over `tree'
+		do
+			tree := t
+			count_cell := cc
 		end
 
 feature -- Initialization
@@ -35,7 +59,10 @@ feature -- Initialization
 		do
 			if other /= Current then
 				target := other.target
-				tree_iterator := other.tree_iterator.twin
+				tree := other.tree
+				active := other.active
+				count_cell := tree.count_cell
+				after := other.after
 			end
 		ensure then
 			target_effect: target = other.target
@@ -50,99 +77,27 @@ feature -- Access
 	target: V_SORTED_SET [G]
 			-- Set to iterate over
 
-	item: G
-			-- Value at current position
-		do
-			Result := tree_iterator.item
-		end
-
-feature -- Measurement		
-	index: INTEGER
-			-- Current position.
-		do
-			Result := tree_iterator.index
-		end
-
-feature -- Status report
-	before: BOOLEAN
-			-- Is current position before any position in `target'?
-		do
-			Result := tree_iterator.before
-		end
-
-	after: BOOLEAN
-			-- Is current position after any position in `target'?
-		do
-			Result := tree_iterator.after
-		end
-
-	is_first: BOOLEAN
-			-- Is cursor at the first position?
-		do
-			Result := tree_iterator.is_first
-		end
-
-	is_last: BOOLEAN
-			-- Is cursor at the last position?
-		do
-			Result := tree_iterator.is_last
-		end
-
-feature -- Cursor movement
-	start
-			-- Go to the first position
-		do
-			tree_iterator.start
-		end
-
-	finish
-			-- Go to the last position
-		do
-			tree_iterator.finish
-		end
-
-	forth
-			-- Move one position forward
-		do
-			tree_iterator.forth
-		end
-
-	back
-			-- Go one position backwards
-		do
-			tree_iterator.back
-		end
-
-	go_before
-			-- Go before any position of `target'
-		do
-			tree_iterator.go_before
-		end
-
-	go_after
-			-- Go after any position of `target'
-		do
-			tree_iterator.go_after
-		end
-
 	search (v: G)
 			-- Move to an element equivalent to `v'
 			-- (Use `target.equivalence')
 		do
 			from
-				tree_iterator.go_root
+				go_root
 			until
 				off or else target.order.equivalent (v, item)
 			loop
 				if target.order.less_than (v, item) then
-					tree_iterator.left
+					left
 				else
-					tree_iterator.right
+					right
 				end
+			end
+			if off then
+				after := True
 			end
 		end
 
-	search_forward (v: G)
+	search_forth (v: G)
 			-- Move to the first occurrence of `v' starting from current position
 			-- If `v' does not occur, move `off'
 			-- (Use refernce equality)
@@ -157,18 +112,5 @@ feature -- Cursor movement
 					end
 				end
 			end
-		end
-
-feature {V_SORTED_SET, V_SORTED_SET_ITERATOR} -- Implementation
-	tree_iterator: V_INORDER_ITERATOR [G]
-			-- Iterator over the underlying tree
-
-feature -- Specification
-	sequence: MML_FINITE_SEQUENCE [G]
-			-- Sequence of values
-		note
-			status: specification
-		do
-			Result := tree_iterator.sequence
 		end
 end

@@ -28,13 +28,14 @@ create {V_LINKED_LIST}
 	make
 
 feature {NONE} -- Initialization
-	make (list: V_LINKED_LIST [G])
+	make (list: V_LINKED_LIST [G]; cc: V_CELL [INTEGER])
 			-- Create iterator over `list'
 		require
 			list_exists: list /= Void
+			valid_cc: cc = list.count_cell
 		do
 			target := list
-			count_cell := list.count_cell
+			count_cell := cc
 		ensure
 			target_effect: target = list
 			index_effect: index = 0

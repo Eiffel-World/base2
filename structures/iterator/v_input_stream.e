@@ -32,7 +32,7 @@ feature -- Cursor movement
 			index_effect: index = old index + 1
 		end
 
-	search_forward (v: G)
+	search_forth (v: G)
 			-- Move to the first occurrence of `v' starting from current position
 			-- If `v' does not occur, move `off'
 			-- (Use refernce equality)
@@ -48,7 +48,7 @@ feature -- Cursor movement
 			sequence_effect: sequence |=| old sequence
 		end
 
-	search_forward_that (pred: PREDICATE [ANY, TUPLE [G]])
+	satisfy_forth (pred: PREDICATE [ANY, TUPLE [G]])
 			-- Move to the first position starting from current where `p' holds
 			-- If `pred' never holds, move `off'
 		do

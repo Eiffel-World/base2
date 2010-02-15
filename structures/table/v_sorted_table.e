@@ -56,7 +56,7 @@ feature -- Access
 		local
 			i: V_SORTED_TABLE_ITERATOR [K, G]
 		do
-			create i.make_start (Current)
+			create i.make (Current)
 			i.search_key (k)
 			Result := i.value
 		end
@@ -81,7 +81,8 @@ feature -- Iteration
 	at_start: V_SORTED_TABLE_ITERATOR [K, G]
 			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'
 		do
-			create Result.make_start (Current)
+			create Result.make (Current)
+			Result.start
 		end
 
 feature -- Replacement
@@ -90,7 +91,7 @@ feature -- Replacement
 		local
 			i: V_SORTED_TABLE_ITERATOR [K, G]
 		do
-			create i.make_start (Current)
+			create i.make (Current)
 			i.search_key (k)
 			i.put (v)
 		end

@@ -36,6 +36,9 @@ feature -- Cursor movement
 			-- If `k' does not appear, go off.
 			-- (Use `target.key_equivalence')
 		deferred
+		ensure
+			index_effect_found: target.has_equivalent_key (target.map, k, target.relation) implies target.relation [key_sequence [index], k]
+			index_effect_not_found: not target.has_equivalent_key (target.map, k, target.relation) implies index = key_sequence.count + 1
 		end
 
 feature -- Specification

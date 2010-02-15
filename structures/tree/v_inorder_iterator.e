@@ -25,36 +25,17 @@ inherit
 		end
 
 create {V_CONTAINER}
-	make,
-	make_from_cursor
-
-feature {NONE} -- Initialization
-	make_from_cursor (c: V_BINARY_TREE_CURSOR [G])
-			-- Create iterator pointing to the same node as `cursor'
-		require
-			c_exists: c /= Void
-		do
-			target := c.target
-			active := c.active
-			count_cell := target.count_cell
-		ensure
-			target_effect: target = c.target
-			active_effect: active = c.active
-		end
+	make
 
 feature -- Initialization
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'
 		do
-			target := other.target
-			active := other.active
-			count_cell := target.count_cell
+			Precursor {V_BINARY_TREE_CURSOR} (other)
 			after := other.after
 		ensure then
-			target_effect: target = other.target
 			sequence_effect: sequence = other.sequence
 			index_effect: index = other.index
-			other_target_effect: other.target = old other.target
 			other_sequence_effect: other.sequence = old other.sequence
 			other_index_effect: other.index = old other.index
 		end

@@ -25,7 +25,7 @@ feature {NONE} -- Initization
 			-- Create an empty list
 		do
 			create count_cell.put (0)
-			create iterator.make (Current)
+			create iterator.make (Current, count_cell)
 		ensure then
 			sequence_effect: sequence.is_empty
 		end
@@ -38,9 +38,11 @@ feature -- Initization
 				first_cell := Void
 				if count_cell = Void then
 					create count_cell.put (0)
+				else
+					count_cell.put (0)
 				end
 				if iterator = Void then
-					create iterator.make (Current)
+					create iterator.make (Current, count_cell)
 				end
 				append (other.at_start)
 			end
@@ -67,21 +69,21 @@ feature -- Iteration
 	at_start: V_LINKED_LIST_ITERATOR [G]
 			-- New iterator pointing to the first position
 		do
-			create Result.make (Current)
+			create Result.make (Current, count_cell)
 			Result.start
 		end
 
 	at_finish: like at_start
 			-- New iterator pointing to the last position
 		do
-			create Result.make (Current)
+			create Result.make (Current, count_cell)
 			Result.finish
 		end
 
 	at (i: INTEGER): like at_start
 			-- New iterator poiting at `i'-th position
 		do
-			create Result.make (Current)
+			create Result.make (Current, count_cell)
 			Result.go_to (i)
 		end
 
@@ -201,14 +203,6 @@ feature -- Removal
 feature {V_LINKED_LIST_ITERATOR} -- Implementation
 	first_cell: V_LINKABLE [G]
 			-- First cell of the list
-
---	last_cell: V_LINKABLE [G]
---			-- Last cell of the list
---		do
---			if attached {V_LINKED_LIST_ITERATOR [G]} at_finish as i then
---				Result := i.active
---			end
---		end
 
 	count_cell: V_CELL [INTEGER]
 			-- Cell to store count, where it can be updated by iterators

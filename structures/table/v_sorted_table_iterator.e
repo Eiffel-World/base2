@@ -15,17 +15,16 @@ inherit
 		end
 
 create {V_SORTED_TABLE}
-	make_start
+	make
 
 feature {NONE} -- Initialization
-	make_start (t: V_SORTED_TABLE [K, G])
+	make (t: V_SORTED_TABLE [K, G])
 			-- Create an iterator at the start of `t'
 		do
 			target := t
-			set_iterator := target.set.at_start
+			set_iterator := target.set.new_iterator
 		ensure
 			target_effect: target = t
-			index_effect: index = 1
 		end
 
 feature -- Initialization

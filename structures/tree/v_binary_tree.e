@@ -40,6 +40,8 @@ feature -- Initialization
 				root := Void
 				if count_cell = Void then
 					create count_cell.put (0)
+				else
+					count_cell.put (0)
 				end
 				if not other.is_empty then
 					i := other.at_root
@@ -63,7 +65,7 @@ feature -- Iteration
 	at_root: V_BINARY_TREE_CURSOR [G]
 			-- New cursor pointing to the root
 		do
-			create Result.make (Current)
+			create Result.make (Current, count_cell)
 			Result.go_root
 		ensure
 			target_definition: Result.target = Current
@@ -74,7 +76,7 @@ feature -- Iteration
 	at_inorder_start: V_INORDER_ITERATOR [G]
 			-- New inorder iterator pointing to the leftmost node
 		do
-			create Result.make (Current)
+			create Result.make (Current, count_cell)
 			Result.start
 		end
 

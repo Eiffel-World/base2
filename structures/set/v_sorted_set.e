@@ -31,7 +31,7 @@ feature {NONE} -- Initizalization
 		do
 			order := o
 			create tree
-			create iterator.make_start (Current)
+			create iterator.make (Current, tree)
 		ensure
 			set_effect: set.is_empty
 			order_relation_effect: order_relation |=| o.order_relation
@@ -44,9 +44,7 @@ feature -- Initialization
 			if other /= Current then
 				order := other.order
 				tree := other.tree.twin
-				if iterator = Void then
-					create iterator.make_start (Current)
-				end
+				create iterator.make (Current, tree)
 			end
 		ensure then
 			order_effect: order_relation |=| other.order_relation
@@ -66,10 +64,11 @@ feature -- Measurement
 		end
 
 feature -- Iteration
-	at_start: V_SORTED_SET_ITERATOR [G]
-			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'
+	new_iterator: V_SORTED_SET_ITERATOR [G]
+			-- New iterator over `Current'
+			-- (Might have more efficient implementation than `at_start')
 		do
-			create Result.make_start (Current)
+			create Result.make (Current, tree)
 		end
 
 feature -- Extension
@@ -82,25 +81,25 @@ feature -- Extension
 				tree.add_root (v)
 			else
 				from
-					iterator.tree_iterator.go_root
+					iterator.go_root
 				until
 					done
 				loop
 					if order.equivalent (v, iterator.item) then
 						done := True
 					elseif order.less_than (v, iterator.item) then
-						if not iterator.tree_iterator.has_left then
-							iterator.tree_iterator.extend_left (v)
+						if not iterator.has_left then
+							iterator.extend_left (v)
 							done := True
 						else
-							iterator.tree_iterator.left
+							iterator.left
 						end
 					else
-						if not iterator.tree_iterator.has_right then
-							iterator.tree_iterator.extend_right (v)
+						if not iterator.has_right then
+							iterator.extend_right (v)
 							done := True
 						else
-							iterator.tree_iterator.right
+							iterator.right
 						end
 					end
 				end
@@ -116,18 +115,18 @@ feature -- Removal
 		do
 			iterator.search (v)
 			if not iterator.off then
-				if iterator.tree_iterator.has_left and iterator.tree_iterator.has_right then
+				if iterator.has_left and iterator.has_right then
 					found := iterator.twin
-					iterator.tree_iterator.right
+					iterator.right
 					from
 					until
-						not iterator.tree_iterator.has_left
+						not iterator.has_left
 					loop
-						iterator.tree_iterator.left
+						iterator.left
 					end
-					found.tree_iterator.put (iterator.item)
+					found.put (iterator.item)
 				end
-				iterator.tree_iterator.remove
+				iterator.remove
 			end
 		end
 

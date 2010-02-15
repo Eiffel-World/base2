@@ -36,7 +36,7 @@ feature -- Search
 		do
 			i := at_start
 			i.search (v)
-			Result := i.off
+			Result := not i.off
 		ensure
 			definition: Result = has_equivalent (set, v, relation)
 		end
@@ -64,7 +64,17 @@ feature -- Search
 feature -- Iteration
 	at_start: V_SET_ITERATOR [G]
 			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'
+		do
+			Result := new_iterator
+			Result.start
+		end
+
+	new_iterator: V_SET_ITERATOR [G]
+			-- New iterator over `Current'
+			-- (Might have more efficient implementation than `at_start')
 		deferred
+		ensure
+			target_definition: Result.target = Current
 		end
 
 feature -- Comparison
@@ -156,8 +166,8 @@ feature -- Removal
 			-- Otherwise do nothing.
 		deferred
 		ensure
-			set_effect_has: has_equivalent (old set, v, relation) implies set |=| old (set.removed (equivalent (set, v, relation)))
-			set_effect_not_has: not has_equivalent (old set, v, relation) implies set |=| old set
+			set_effect_has: old (has_equivalent (set, v, relation)) implies set |=| old (set.removed (equivalent (set, v, relation)))
+			set_effect_not_has: not old (has_equivalent (set, v, relation)) implies set |=| old set
 		end
 
 	meet (other: V_SET [G])
