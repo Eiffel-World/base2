@@ -2,7 +2,8 @@ note
 	description: "[
 		Singly linked lists.
 		Random access takes linear time. 
-		Once a position is found, inserting or removing elements to the right of it takes constant time and desn't require reallocation of other element.
+		Once a position is found, inserting or removing elements to the right of it takes constant time 
+		and doesn't require reallocation of other elements.
 		]"
 	author: ""
 	date: "$Date$"
