@@ -1,6 +1,6 @@
 note
 	description: "Dispensers where the earliest added element is accessible."
-	author: ""
+	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -42,7 +42,7 @@ feature -- Comparison
 
 feature -- Extension
 	extend (v: G)
-			-- Add `v' to the dispenser
+			-- Enqueue `v'
 		deferred
 		ensure then
 			sequence_effect: sequence |=| old sequence.extended (v)

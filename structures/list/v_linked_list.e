@@ -37,6 +37,7 @@ feature -- Initialization
 		do
 			if other /= Current then
 				first_cell := Void
+				last_cell := Void
 				if count_cell = Void then
 					create count_cell.put (0)
 				else
@@ -103,21 +104,28 @@ feature -- Extension
 			cell: V_LINKABLE [G]
 		do
 			create cell.put (v)
-			cell.put_right (first_cell)
+			if is_empty then
+				last_cell := cell
+			else
+				cell.put_right (first_cell)
+			end
 			first_cell := cell
 			count_cell.put (count + 1)
 		end
 
 	extend_back (v: G)
 			-- Insert `v' at the back
+		local
+			cell: V_LINKABLE [G]
 		do
+			create cell.put (v)
 			if is_empty then
-				create first_cell.put (v)
-				count_cell.put (1)
+				first_cell := cell
 			else
-				iterator.finish
-				iterator.extend_right (v)
+				last_cell.put_right (cell)
 			end
+			last_cell := cell
+			count_cell.put (count + 1)
 		end
 
 	extend_at (i: INTEGER; v: G)
@@ -125,6 +133,8 @@ feature -- Extension
 		do
 			if i = 1 then
 				extend_front (v)
+			elseif i = count + 1 then
+				extend_back (v)
 			else
 				iterator.go_to (i - 1)
 				iterator.extend_right (v)
@@ -167,6 +177,9 @@ feature -- Removal
 	remove_front
 			-- Remove first element
 		do
+			if count = 1 then
+				last_cell := Void
+			end
 			first_cell := first_cell.right
 			count_cell.put (count - 1)
 		end
@@ -176,6 +189,7 @@ feature -- Removal
 		do
 			if count = 1 then
 				first_cell := Void
+				last_cell := Void
 				count_cell.put (0)
 			else
 				iterator.go_to (count - 1)
@@ -198,15 +212,25 @@ feature -- Removal
 			-- Remove all elements
 		do
 			first_cell := Void
+			last_cell := Void
 			count_cell.put (0)
 		end
 
 feature {V_LINKED_LIST_ITERATOR} -- Implementation
 	first_cell: V_LINKABLE [G]
 			-- First cell of the list
+			
+	last_cell: V_LINKABLE [G]
+			-- Last cell of the list
 
 	count_cell: V_CELL [INTEGER]
 			-- Cell to store count, where it can be updated by iterators
+
+	set_last_cell (c: V_LINKABLE [G])
+			-- Set `last_cell' to `c'
+		do
+			last_cell := c
+		end
 
 feature {NONE} --Implementation
 	iterator: V_LINKED_LIST_ITERATOR [G]
@@ -214,5 +238,6 @@ feature {NONE} --Implementation
 
 invariant
 	first_cell_exists_in_nonempty: is_empty = (first_cell = Void)
+	last_cell_exists_in_nonempty: is_empty = (last_cell = Void)
 	iterator_exists: iterator /= Void
 end

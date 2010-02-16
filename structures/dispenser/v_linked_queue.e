@@ -1,15 +1,15 @@
 note
-	description: "Linked implementation of stacks."
+	description: "Linked implementation of queues."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
 	model: sequence
 
 class
-	V_LINKED_STACK [G]
+	V_LINKED_QUEUE [G]
 
 inherit
-	V_STACK [G]
+	V_QUEUE [G]
 		redefine
 			default_create,
 			copy
@@ -17,14 +17,14 @@ inherit
 
 feature {NONE} -- Initialization
 	default_create
-			-- Create an empty stack
+			-- Create an empty queue
 		do
 			create list
 		end
 
 feature -- Initialization
 	copy (other: like Current)
-			-- Reinitialize by copying all the items of `other'.
+			-- Initialize by copying all the items of `other'.
 		do
 			if other /= Current then
 				list := other.list.twin
@@ -36,7 +36,7 @@ feature -- Initialization
 
 feature -- Access
 	item: G
-			-- The top element
+			-- The front element
 		do
 			Result := list.first
 		end
@@ -57,25 +57,25 @@ feature -- Iteration
 
 feature -- Extension
 	extend (v: G)
-			-- Push `v' on the stack
+			-- Enqueue `v'
 		do
-			list.extend_front (v)
+			list.extend_back (v)
 		end
 
 feature -- Removal
 	remove
-			-- Pop the top element
+			-- Dequeue
 		do
 			list.remove_front
 		end
 
 	wipe_out
-			-- Pop all elements
+			-- Remove all elements
 		do
 			list.wipe_out
 		end
 
-feature {V_LINKED_STACK} -- Implementation
+feature {V_LINKED_QUEUE} -- Implementation
 	list: V_LINKED_LIST [G]
 			-- Underlying list
 end

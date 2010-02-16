@@ -68,6 +68,8 @@ feature -- Measurement
 		do
 			if after then
 				Result := count_cell.item + 1
+			elseif is_last then
+				Result := count_cell.item
 			elseif active /= Void then
 				from
 					c := target.first_cell
@@ -118,17 +120,7 @@ feature -- Cursor movement
 	finish
 			-- Go to the last position
 		do
-			if not target.is_empty then
-				if off then
-					start
-				end
-				from
-				until
-					active.right = Void
-				loop
-					forth
-				end
-			end
+			active := target.last_cell
 			after := False
 		end
 
@@ -193,10 +185,14 @@ feature -- Extension
 		local
 			cell: V_LINKABLE [G]
 		do
-			create cell.put (v)
-			cell.put_right (active.right)
-			active.put_right (cell)
-			count_cell.put (count_cell.item + 1)
+			if is_last then
+				target.extend_back (v)
+			else
+				create cell.put (v)
+				cell.put_right (active.right)
+				active.put_right (cell)
+				count_cell.put (count_cell.item + 1)
+			end
 		end
 
 	insert_left (other: V_INPUT_ITERATOR [G])
@@ -234,10 +230,14 @@ feature -- Extension
 		do
 			if not other.is_empty then
 				other_first := other.first_cell
-				other_last := other.at_finish.active
+				other_last := other.last_cell
 				count_cell.put (count_cell.item + other.count)
 				other.wipe_out
-				other_last.put_right (active.right)
+				if is_last then
+					target.set_last_cell (other_last)
+				else
+					other_last.put_right (active.right)
+				end
 				active.put_right (other_first)
 			end
 		ensure
@@ -261,7 +261,7 @@ feature -- Removal
 		end
 
 	remove_left
-			-- Remove element to the left current position. Do not move cursor.
+			-- Remove element to the left of current position. Do not move cursor.
 		local
 			old_active: V_LINKABLE [G]
 		do
@@ -272,8 +272,11 @@ feature -- Removal
 		end
 
 	remove_right
-			-- Remove element to the right current position. Do not move cursor.
+			-- Remove element to the right of current position. Do not move cursor.
 		do
+			if active.right = target.last_cell then
+				target.set_last_cell (active)
+			end
 			active.put_right (active.right.right)
 			count_cell.put (count_cell.item - 1)
 		end

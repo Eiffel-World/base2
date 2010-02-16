@@ -43,7 +43,7 @@ feature -- Comparison
 
 feature -- Extension
 	extend (v: G)
-			-- Add `v' to the dispenser
+			-- Push `v' on the stack
 		deferred
 		ensure then
 			sequence_effect: sequence |=| old sequence.prepended (v)

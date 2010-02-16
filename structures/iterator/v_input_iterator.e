@@ -125,6 +125,8 @@ feature -- Cursor movement
 				go_before
 			elseif i = target.count + 1 then
 				go_after
+			elseif i = target.count then
+				finish
 			else
 				from
 					start
