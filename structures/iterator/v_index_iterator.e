@@ -1,6 +1,6 @@
 note
 	description: "Iterators over indexable containers that access elements directly through an integer index."
-	author: ""
+	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
 	model: target, index
@@ -58,7 +58,6 @@ feature -- Access
 feature -- Measurement
 	index: INTEGER
 			-- Index of current position
-
 
 feature -- Status report
 	before: BOOLEAN

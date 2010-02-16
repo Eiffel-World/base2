@@ -14,7 +14,6 @@ feature -- Measurement
 		deferred
 		end
 
-
 feature -- Status report
 	is_empty: BOOLEAN
 			-- Is container empty?

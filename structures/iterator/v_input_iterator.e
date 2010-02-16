@@ -10,6 +10,8 @@ deferred class
 
 inherit
 	V_INPUT_STREAM [G]
+--		rename
+--			sequence as tail
 		redefine
 			is_equal
 		end
@@ -99,6 +101,8 @@ feature -- Cursor movement
 	forth
 			-- Move one position forward
 		deferred
+		ensure then
+			index_effect: index = old index + 1
 		end
 
 	back
@@ -150,50 +154,62 @@ feature -- Cursor movement
 			index_effect: index = sequence.count + 1
 		end
 
---	search (v: G)
---			-- Move to the first occurrence of `v' starting from current position
---			-- If `v' does not occur, move `off'
---		do
---			from
---			until
---				off or else item = v
---			loop
---				forth
---			end
---		ensure
---			index_effect_not_found: not sequence.tail (old index).has (v) implies index = 0
---			index_effect_found: sequence.tail (old index).has (v) implies
---				(sequence [index] = v and not sequence.interval (old index, index - 1).has (v))
---			sequence_effect: sequence |=| old sequence
---		end
+	search_forth (v: G)
+			-- Move to the first occurrence of `v' starting from current position
+			-- If `v' does not occur, move `off'
+			-- (Use refernce equality)
+		do
+			from
+			until
+				off or else item = v
+			loop
+				forth
+			end
+		ensure
+			index_effect_not_found: not sequence.tail (old index).has (v) implies index = target.count + 1
+			index_effect_found: sequence.tail (old index).has (v) implies
+				(sequence [index] = v and not sequence.interval (old index, index - 1).has (v))
+			sequence_effect: sequence |=| old sequence
+		end
 
---	search_that (pred: PREDICATE [ANY, TUPLE [G]])
---			-- Move to the first position starting from current where `p' holds
---			-- If `pred' never holds, move `off'
---		do
---			from
---			until
---				off or else pred.item ([item])
---			loop
---				forth
---			end
---		ensure
---			index_effect_not_found: not sequence.tail (old index).range.exists (pred) implies index = 0
---			index_effect_found: sequence.tail (old index).range.exists (pred) implies
---				(pred.item ([sequence [index]]) and not sequence.interval (old index, index - 1).range.exists (pred))
---			sequence_effect: sequence |=| old sequence
---		end
+	satisfy_forth (pred: PREDICATE [ANY, TUPLE [G]])
+			-- Move to the first position starting from current where `p' holds
+			-- If `pred' never holds, move `off'
+		do
+			from
+			until
+				off or else pred.item ([item])
+			loop
+				forth
+			end
+		ensure
+			index_effect_not_found: not sequence.tail (old index).range.exists (pred) implies index = target.count + 1
+			index_effect_found: sequence.tail (old index).range.exists (pred) implies
+				(pred.item ([sequence [index]]) and not sequence.interval (old index, index - 1).range.exists (pred))
+			sequence_effect: sequence |=| old sequence
+		end
 
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
-			-- Sequence of elements	
+			-- Sequence of elements	in `target'
 		note
 			status: specification
 		deferred
 		end
 
+--	tail: MML_FINITE_SEQUENCE [G]
+--			-- Sequence of elements starting from current position
+--		note
+--			status: specification
+--		do
+--			Result := sequence.tail (index)
+--		end
+
 invariant
 	target_exists: target /= Void
+	item_definition: sequence.domain [index] implies item = sequence [index]
+	off_definition: off = not sequence.domain [index]
+--	tail_definition: tail |=| sequence.tail (index)
 	target_bag_domain_constraint: target.bag.domain |=| sequence.range
 	target_bag_constraint: target.bag.domain.for_all (agent (x: G): BOOLEAN
 		do

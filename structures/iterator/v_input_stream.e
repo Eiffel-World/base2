@@ -3,7 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: sequence, index
+	model: off, item--sequence
 
 deferred class
 	V_INPUT_STREAM [G]
@@ -29,56 +29,24 @@ feature -- Cursor movement
 			not_off: not off
 		deferred
 		ensure
-			index_effect: index = old index + 1
-		end
-
-	search_forth (v: G)
-			-- Move to the first occurrence of `v' starting from current position
-			-- If `v' does not occur, move `off'
-			-- (Use refernce equality)
-		do
-			from
-			until
-				off or else item = v
-			loop
-				forth
-			end
-		ensure
-			index_effect_found: sequence.domain [index] implies (sequence [index] = v and not sequence.interval (old index, index - 1).has (v))
-			sequence_effect: sequence |=| old sequence
-		end
-
-	satisfy_forth (pred: PREDICATE [ANY, TUPLE [G]])
-			-- Move to the first position starting from current where `p' holds
-			-- If `pred' never holds, move `off'
-		do
-			from
-			until
-				off or else pred.item ([item])
-			loop
-				forth
-			end
-		ensure
-			index_effect_found: sequence.domain [index] implies
-				(pred.item ([sequence [index]]) and not sequence.interval (old index, index - 1).range.exists (pred))
+			item_effect: not off implies relevant (item)
+			off_effect: relevant (off)
+--			sequence_effect: sequence |=| old sequence.but_first
 		end
 
 feature -- Specification
-	sequence: MML_SEQUENCE [G]
-			-- Sequence of elements
-		note
-			status: specification
-		deferred
+	relevant (x: ANY): BOOLEAN
+			-- Always true
+		do
+			Result := True
 		end
 
-	index: INTEGER
-			-- Current position
-		note
-			status: specification
-		deferred
-		end
+--	sequence: MML_SEQUENCE [G]
+--			-- Sequence of elements starting from current position
+--		deferred
+--		end
 
-invariant
-	item_definition: sequence.domain [index] implies item = sequence [index]
-	off_definition: off = not sequence.domain [index]
+--invariant
+--	off_definition: off = sequence.is_empty
+--	item_definition: not sequence.is_empty implies item = sequence.first
 end

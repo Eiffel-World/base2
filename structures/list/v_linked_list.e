@@ -20,7 +20,7 @@ inherit
 			prepend
 		end
 
-feature {NONE} -- Initization
+feature {NONE} -- Initialization
 	default_create
 			-- Create an empty list
 		do
@@ -30,9 +30,9 @@ feature {NONE} -- Initization
 			sequence_effect: sequence.is_empty
 		end
 
-feature -- Initization		
+feature -- Initialization
 	copy (other: like Current)
-			-- Reinitialize by copying all the items of `other'.
+			-- Initialize by copying all the items of `other'.
 		do
 			if other /= Current then
 				first_cell := Void
@@ -48,7 +48,7 @@ feature -- Initization
 			end
 		ensure then
 			sequence_effect: sequence |=| other.sequence
-			other_map_effect: other.sequence |=| old other.sequence
+			other_sequence_effect: other.sequence |=| old other.sequence
 		end
 
 feature -- Access

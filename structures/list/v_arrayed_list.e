@@ -80,11 +80,7 @@ feature -- Iteration
 	at_start: V_LIST_ITERATOR [G]
 			-- New iterator pointing to the first position
 		do
-			if not is_empty then
-				create {V_ARRAYED_LIST_ITERATOR [G]} Result.make (Current, 1)
-			else
-				create {V_ARRAYED_LIST_ITERATOR [G]} Result.make (Current, 0)
-			end
+			create {V_ARRAYED_LIST_ITERATOR [G]} Result.make (Current, 1)
 		end
 
 	at_finish: like at_start

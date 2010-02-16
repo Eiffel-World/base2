@@ -3,7 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: off--sequence, index
+	model: off
 
 deferred class
 	V_OUTPUT_STREAM [G]
@@ -20,9 +20,8 @@ feature -- Replacement
 		require
 			not_off: not off
 		deferred
---		ensure
---			sequence_effect: sequence |=| old (sequence.replaced_at (index, v))
---			index_effect: index = old index + 1
+		ensure
+			off_effect: relevant (off)
 		end
 
 	pipe (input: V_INPUT_STREAM [G])
@@ -38,10 +37,8 @@ feature -- Replacement
 				input.forth
 			end
 		ensure
---			sequence_effect: sequence |=| ((old (sequence.front (index - 1)) + input.sequence.interval (old input.index, input.index))
---				|+| old sequence.tail (index))
---			index_effect: not input.sequence.domain [input.index] or not sequence.domain [index]
---			index_offset_effect: input.index - old input.index = index - old index
+			off_effect: off or input.off
+			input_item_effect: not input.off implies relevant (input.item)
 		end
 
 	pipe_n (input: V_INPUT_STREAM [G]; n: INTEGER)
@@ -58,25 +55,16 @@ feature -- Replacement
 				input.forth
 				i := i + 1
 			end
---		ensure
---			sequence_effect: sequence |=| ((old (sequence.front (index - 1)) + input.sequence.interval (old input.index, input.index))
---				|+| old (sequence.tail (index)))
---			index_effect: index = old index + n or not input.sequence.domain [input.index] or not sequence.domain [index]
---			index_offset_effect: input.index - old input.index = index - old index
+		ensure
+			off_effect: relevant (off)
+			input_off_effect: relevant (input.off)
+			input_item_effect: not input.off implies relevant (input.item)
 		end
 
---feature -- Specification
---	sequence: MML_SEQUENCE [G]
---			-- Sequence of elements
---		note
---			status: specification
---		deferred
---		end
-
---	index: INTEGER
---			-- Current position
---		note
---			status: specification
---		deferred
---		end
+feature -- Specification
+	relevant (x: ANY): BOOLEAN
+			-- Always true
+		do
+			Result := True
+		end
 end

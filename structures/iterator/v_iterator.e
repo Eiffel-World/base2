@@ -13,7 +13,11 @@ inherit
 
 	V_OUTPUT_STREAM [G]
 		undefine
-			is_equal
+			is_equal,
+			relevant
+--		redefine
+--			pipe,
+--			pipe_n
 		end
 
 feature -- Replacement
@@ -33,5 +37,20 @@ feature -- Replacement
 			forth
 		ensure then
 			sequence_effect: sequence |=| old (sequence.replaced_at (index, v))
+			index_effect: index = old index + 1
 		end
+
+--	pipe (input: V_INPUT_STREAM [G])
+--			-- Copy values from `input' until one either `Current' or `other' is `off'
+--		do
+--			Precursor (input)
+--		ensure then
+--		end
+
+--	pipe_n (input: V_INPUT_STREAM [G]; n: INTEGER)
+--			-- Copy `n' elements from `input'; stop if either `Current' or `other' is `off'
+--		do
+--			Precursor (input, n)
+--		ensure then
+--		end
 end
