@@ -143,27 +143,6 @@ feature -- Search
 				Result = (map | {MML_INTEGER_SET} [[i, map.domain.upper]]).inverse.image ({MML_AGENT_SET [G]} [p]).lower
 		end
 
---	filtered (p: PREDICATE [ANY, TUPLE [G]]): V_TABLE [INTEGER, G]
---			-- Container that consists of elements of `Current' that satisfy `p' (with their original indexes)
---		local
---			it: V_INPUT_ITERATOR [G]
---			j: INTEGER
---		do
-----			create Result.make_reference_equality
---			from
---				it := at_start
---				j := 1
---			until
---				it.off
---			loop
---				if p.item ([it.item]) then
---					Result.extend (j, it.item)
---				end
---				it.forth
---				j := j + 1
---			end
---		end
-
 feature -- Iteration
 	at_start: V_ITERATOR [G]
 			-- New iterator pointing to the first position

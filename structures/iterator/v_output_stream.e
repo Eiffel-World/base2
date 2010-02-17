@@ -3,7 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: off
+	model: off, sequence
 
 deferred class
 	V_OUTPUT_STREAM [G]
@@ -38,6 +38,10 @@ feature -- Replacement
 			end
 		ensure
 			off_effect: off or input.off
+			sequence_effect: executable and input.executable implies
+				sequence |=| (old sequence + input.sequence.tail (old input.sequence.count + 1))
+			input_sequence_effect: input.executable implies
+				(old input.sequence).is_prefix_of (input.sequence)
 			input_item_effect: not input.off implies relevant (input.item)
 		end
 
@@ -56,15 +60,31 @@ feature -- Replacement
 				i := i + 1
 			end
 		ensure
-			off_effect: relevant (off)
-			input_off_effect: relevant (input.off)
+			off_effect: input.executable implies
+				off or input.off or input.sequence.count - old input.sequence.count = n
+			sequence_effect: executable and input.executable implies
+				sequence |=| (old sequence + input.sequence.tail (old input.sequence.count + 1))
+			input_sequence_effect: input.executable implies
+				(old input.sequence).is_prefix_of (input.sequence)
+			input_sequnce_constraint: input.executable implies
+				input.sequence.count - old input.sequence.count <= n
 			input_item_effect: not input.off implies relevant (input.item)
 		end
 
 feature -- Specification
+	sequence: MML_FINITE_SEQUENCE [G]
+			-- Sequence of elements that are already written
+		deferred
+		end
+
 	relevant (x: ANY): BOOLEAN
 			-- Always true
 		do
 			Result := True
+		end
+
+	executable: BOOLEAN
+			-- Are model-based contracts for this class executable?
+		deferred
 		end
 end

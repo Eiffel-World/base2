@@ -194,6 +194,22 @@ feature -- Comparison
 			end
 		end
 
+	is_prefix_of (other: MML_FINITE_SEQUENCE [G]): BOOLEAN
+			-- Is `Current' a prefix of `other'?
+		local
+			i: INTEGER
+		do
+			Result := count <= other.count
+			from
+				i := 1
+			until
+				i > count or not Result
+			loop
+				Result := item (i) = other.item (i)
+				i := i + 1
+			end
+		end
+
 feature {NONE} -- Initialization
 	empty
 			-- Create empty sequence

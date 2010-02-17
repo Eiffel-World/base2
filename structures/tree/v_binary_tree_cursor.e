@@ -187,12 +187,17 @@ feature -- Removal
 			end
 			active := Void
 		ensure
-			target_map_effect_has_left: old (target.map.domain.has (path.extended (False))) implies
-				target.map |=| old (target.map.replaced_at (path, target.map [path.extended (False)]).removed (path.extended (False)))
-			target_map_effect_has_right: old (target.map.domain.has (path.extended (True))) implies
-				target.map |=| old (target.map.replaced_at (path, target.map [path.extended (True)]).removed (path.extended (True)))
-			target_map_effect_leaf: old (not target.map.domain.has (path.extended (True)) and not target.map.domain.has (path.extended (False))) implies
-				target.map |=| old (target.map.removed (path))
+			target_map_domain_effect: (old target.map.domain).for_all (agent (x, p: MML_BIT_VECTOR): BOOLEAN
+				do
+					Result := (not p.is_prefix_of (x) implies target.map.domain [x]) and
+						((p.is_prefix_of (x) and not (x |=| p)) implies target.map.domain [x.removed_at (p.count + 1)])
+				end (?, old path))
+			target_map_domain_constraint: target.map.count = old target.map.count - 1
+			target_map_effect: (old target.map.domain).for_all (agent (x, p: MML_BIT_VECTOR; m: MML_FINITE_MAP [MML_BIT_VECTOR, G]): BOOLEAN
+				do
+					Result := (not p.is_prefix_of (x) implies target.map [x] = m [x]) and
+					((p.is_prefix_of (x) and not (x |=| p)) implies target.map [x.removed_at (p.count + 1)] = m [x])
+				end (?, old path, old target.map))
 			path_effect: path.is_empty
 		end
 

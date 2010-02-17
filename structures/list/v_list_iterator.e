@@ -45,6 +45,8 @@ feature -- Extension
 			-- Append sequence of values, over which `input' iterates to the left of current position. Do not move cursor.
 		require
 			not_off: not off
+			other_exists: other /= Void
+			different_target: target /= other.target
 		deferred
 		ensure
 			target_sequence_effect: target.sequence |=| old (target.sequence.front (index - 1) + other.sequence.tail (other.index) + target.sequence.tail (index))
@@ -57,6 +59,8 @@ feature -- Extension
 			-- Append sequence of values, over which `input' iterates to the right of current position. Move cursor to the last element of inserted sequence.
 		require
 			not_off: not off
+			other_exists: other /= Void
+			different_target: target /= other.target
 		deferred
 		ensure
 			target_sequence_effect: target.sequence |=| old (target.sequence.front (index) + other.sequence.tail (other.index) + target.sequence.tail (index + 1))

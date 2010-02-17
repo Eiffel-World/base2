@@ -68,6 +68,14 @@ feature -- Status report
 		end
 
 feature -- Decomposition
+	last: BOOLEAN is
+			-- The last element of `current'.
+		require
+			non_empty: not is_empty
+		do
+			Result := item (count)
+		end
+
 	but_first: MML_BIT_VECTOR is
 			-- The elements of `Current' except for the first one.
 		require
@@ -76,12 +84,30 @@ feature -- Decomposition
 			create Result.make_with_count (code |>> 1, count - 1)
 		end
 
+	tail (lower: INTEGER): MML_BIT_VECTOR
+			-- The elements of `Current' string from `lower'.
+		local
+			l: INTEGER
+		do
+			l := lower.max (1).min (count + 1)
+			create Result.make_with_count (code |>> (l - 1), count - l + 1)
+		end
+
 	but_last: MML_BIT_VECTOR is
 			-- The elements of `Current' except for the last one.
 		require
 			non_empty: not is_empty
 		do
 			create Result.make_with_count (code.set_bit (False, count - 1), count - 1)
+		end
+
+	front (upper: INTEGER): MML_BIT_VECTOR
+			-- Prefix up to `upper'.
+		local
+			u: INTEGER
+		do
+			u := upper.min (count).max (0)
+			create Result.make_with_count (code & (1 |<< u - 1), u)
 		end
 
 feature -- Comparison
@@ -93,23 +119,57 @@ feature -- Comparison
 			end
 		end
 
+	is_prefix_of (other: MML_BIT_VECTOR): BOOLEAN
+			-- Is `Current' a prefix of `other'?
+		local
+			i: INTEGER
+		do
+			Result := count <= other.count
+			from
+				i := 1
+			until
+				i > count or not Result
+			loop
+				Result := item (i) = other.item (i)
+				i := i + 1
+			end
+		end
+
 feature -- Element change
 	extended (b: BOOLEAN): MML_BIT_VECTOR
 			-- Current vector extended with `b' at the end
 		do
-			create Result.make_with_count (code + (b.to_integer |<< (count)), count + 1)
+			create Result.make_with_count (code + b.to_integer |<< count, count + 1)
+		end
+
+	extended_at (i: INTEGER; b: BOOLEAN): MML_BIT_VECTOR
+			-- Current vector extended with `b' at position `i'
+		do
+			Result := front (i - 1).extended (b) + tail (i)
+		end
+
+	removed_at (i: INTEGER): MML_BIT_VECTOR
+			-- Current vector with element at position `i' removed
+		do
+			Result := front (i - 1) + tail (i + 1)
 		end
 
 	prepended (b: BOOLEAN): MML_BIT_VECTOR
 			-- Current vector prepended with `b' at the beginning
 		do
-			create Result.make_with_count ((code |<< 1) + b.to_integer, count + 1)
+			create Result.make_with_count (code |<< 1 + b.to_integer, count + 1)
 		end
 
 	replaced_at (i: INTEGER; b: BOOLEAN): MML_BIT_VECTOR
 			-- Current vector with `b' at position `i'
 		do
 			create Result.make_with_count (code.set_bit (b, i - 1), count)
+		end
+
+	concatenation alias "+" (other : MML_BIT_VECTOR): MML_BIT_VECTOR is
+			-- The concatenation of `current' and `other'.
+		do
+			create Result.make_with_count (code + other.code |<< count, count + other.count)
 		end
 
 feature {MML_BIT_VECTOR} -- Implementation

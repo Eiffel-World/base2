@@ -34,10 +34,14 @@ feature -- Cursor movement
 		do
 		end
 
---feature -- Specification
---	sequence: MML_SEQUENCE [G]
---			-- Sequence of elements starting from current position
---		do
---			create {MML_AGENT_SEQUENCE [G]}	Result.such_that (agent (i: INTEGER): G do Result := item end)
---		end
+feature -- Specification
+	sequence: MML_FINITE_SEQUENCE [G]
+			-- Sequence of elements already read
+		note
+			status: specification_only
+		do
+		end
+
+	executable: BOOLEAN = False
+			-- Are model-based contracts for this class executable?		
 end

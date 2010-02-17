@@ -3,7 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: off, item--sequence
+	model: off, item, sequence
 
 deferred class
 	V_INPUT_STREAM [G]
@@ -31,22 +31,61 @@ feature -- Cursor movement
 		ensure
 			item_effect: not off implies relevant (item)
 			off_effect: relevant (off)
---			sequence_effect: sequence |=| old sequence.but_first
+			sequence_effect: executable implies
+				sequence |=| old (sequence.extended (item))
+		end
+
+	search_forth (v: G)
+			-- Move to the first occurrence of `v' at or after current position
+			-- If `v' does not occur, move `after'
+			-- (Use refernce equality)
+		do
+			from
+			until
+				off or else item = v
+			loop
+				forth
+			end
+		ensure
+			off_item_effect: off or else item = v
+			sequence_effect: executable implies
+				(old sequence).is_prefix_of (sequence)
+			sequence_constraint: executable implies
+				not sequence.tail (old sequence.count + 1).has (v)
+		end
+
+	satisfy_forth (pred: PREDICATE [ANY, TUPLE [G]])
+			-- Move to the first position at or after current where `p' holds
+			-- If `pred' never holds, move `after'
+		do
+			from
+			until
+				off or else pred.item ([item])
+			loop
+				forth
+			end
+		ensure
+			off_item_effect: off or else pred.item ([item])
+			sequence_effect: executable implies
+				(old sequence).is_prefix_of (sequence)
+			sequence_constraint: executable implies
+				not sequence.tail (old sequence.count + 1).range.exists (pred)
 		end
 
 feature -- Specification
+	sequence: MML_FINITE_SEQUENCE [G]
+			-- Sequence of elements that are already read
+		deferred
+		end
+
 	relevant (x: ANY): BOOLEAN
 			-- Always true
 		do
 			Result := True
 		end
 
---	sequence: MML_SEQUENCE [G]
---			-- Sequence of elements starting from current position
---		deferred
---		end
-
---invariant
---	off_definition: off = sequence.is_empty
---	item_definition: not sequence.is_empty implies item = sequence.first
+	executable: BOOLEAN
+			-- Are model-based contracts for this class executable?
+		deferred
+		end
 end

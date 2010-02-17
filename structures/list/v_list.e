@@ -85,6 +85,9 @@ feature -- Extension
 
 	append (input: V_INPUT_ITERATOR [G])
 			-- Append sequence of values, over which `input' iterates
+		require
+			input_exists: input /= Void
+			different_target: input.target /= Current
 		do
 			from
 			until
@@ -101,6 +104,9 @@ feature -- Extension
 
 	prepend (input: V_INPUT_ITERATOR [G])
 			-- Prepend sequence of values, over which `input' iterates
+		require
+			input_exists: input /= Void
+			different_target: input.target /= Current
 		local
 			i: INTEGER
 		do
@@ -125,6 +131,8 @@ feature -- Extension
 			-- Insert sequence of values, over which `input' iterates, starting at position `i'
 		require
 			valid_index: has_index (i) or i = count + 1
+			input_exists: input /= Void
+			different_target: input.target /= Current
 		deferred
 		ensure
 			sequence_effect: sequence |=| old (sequence.front (i - 1) + input.sequence.tail (input.index) + sequence.tail (i))
