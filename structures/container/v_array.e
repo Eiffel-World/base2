@@ -112,26 +112,22 @@ feature -- Measurement
 			-- Upper bound of index interval		
 
 feature -- Iteration
-	at_start: V_ITERATOR [G]
+	at_start: V_ARRAY_ITERATOR [G]
 			-- New iterator pointing to start position of the array
 		do
-			if not is_empty then
-				create {V_INDEX_ITERATOR [G]} Result.make (Current, 1)
-			else
-				create {V_INDEX_ITERATOR [G]} Result.make (Current, 0)
-			end
+			create Result.make (Current, 1)
 		end
 
 	at_finish: like at_start
 			-- New iterator pointing to end position of the array
 		do
-			create {V_INDEX_ITERATOR [G]} Result.make (Current, count)
+			create Result.make (Current, count)
 		end
 
 	at (i: INTEGER): like at_start
 			-- New iterator poiting at `i'-th position
 		do
-			create {V_INDEX_ITERATOR [G]} Result.make (Current, i)
+			create Result.make (Current, i)
 		end
 
 feature -- Comparison

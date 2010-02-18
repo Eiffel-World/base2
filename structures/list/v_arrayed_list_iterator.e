@@ -16,11 +16,6 @@ inherit
 		end
 
 	V_INDEX_ITERATOR [G]
-		rename
-			make as make_indexed
-		redefine
-			target
-		end
 
 create {V_ARRAYED_LIST}
 	make
