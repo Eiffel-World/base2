@@ -3,6 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
+	model: sequence
 
 deferred class
 	V_QUEUE [G]

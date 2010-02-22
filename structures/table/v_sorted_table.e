@@ -130,6 +130,6 @@ feature -- Specification
 
 invariant
 	search_tree_exists: set /= Void
-	relation_definition: relation |=| (order_relation.complement * order_relation.inverse.complement)
+	relation_definition: relation |=| (order_relation * order_relation.inverse)
 	key_order_order_definition: key_order.order_relation |=| order_relation
 end

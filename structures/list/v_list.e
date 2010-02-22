@@ -9,7 +9,7 @@ deferred class
 	V_LIST [G]
 
 inherit
-	V_INDEXABLE [G]
+	V_SEQUENCE [G]
 		undefine
 			count
 		redefine

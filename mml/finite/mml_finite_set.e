@@ -56,7 +56,10 @@ feature -- Access
 		require
 			not_empty: not is_empty
 		do
-			Result := array [array.lower]
+			if not is_empty then
+				-- Workaround for semistrict postconditions
+				Result := array [array.lower]
+			end
 		end
 
 	lower: INTEGER

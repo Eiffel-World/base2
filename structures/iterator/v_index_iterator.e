@@ -1,5 +1,5 @@
 note
-	description: "Iterators over indexable containers that access elements directly through an integer index."
+	description: "Iterators over sequences that access elements directly through an integer index."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -15,7 +15,7 @@ inherit
 		end
 
 feature -- Access
-	target: V_INDEXABLE [G]
+	target: V_SEQUENCE [G]
 			-- Target container
 		deferred
 		end

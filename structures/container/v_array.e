@@ -13,7 +13,7 @@ class
 	V_ARRAY [G]
 
 inherit
-	V_INDEXABLE [G]
+	V_SEQUENCE [G]
 		redefine
 			copy,
 			is_equal,
@@ -112,7 +112,7 @@ feature -- Measurement
 			-- Upper bound of index interval		
 
 feature -- Iteration
-	at_start: V_ARRAY_ITERATOR [G]
+	at_start: V_SEQUENCE_ITERATOR [G]
 			-- New iterator pointing to start position of the array
 		do
 			create Result.make (Current, 1)
@@ -164,7 +164,7 @@ feature -- Replacement
 			area.fill_with_default (l - lower, u - lower)
 		end
 
-	subcopy (other: V_INDEXABLE [G]; other_first, other_last, index: INTEGER)
+	subcopy (other: V_SEQUENCE [G]; other_first, other_last, index: INTEGER)
 			-- Copy items of `other' within bounds [`other_first', `other_last'] to current array starting at index `i'.
 		do
 			if attached {V_ARRAY [G]} other as a then

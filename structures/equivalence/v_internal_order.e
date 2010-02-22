@@ -12,9 +12,13 @@ inherit
 	V_TOTAL_ORDER [G]
 
 feature -- Basic operations
-	less_than (x, y: G): BOOLEAN
-			-- Is `x' < `y'?
+	greater_equal (x, y: G): BOOLEAN
+			-- Is `x' >= `y'?
 		do
-			Result := x < y
+			Result := x >= y
 		end
+
+feature -- Specification
+	executable: BOOLEAN = False
+			-- Are model-based contracts for this class executable?	
 end

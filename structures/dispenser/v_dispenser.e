@@ -44,13 +44,6 @@ feature -- Removal
 			sequence_effect: sequence |=| old sequence.but_first
 		end
 
-	wipe_out
-			-- Remove all elements
-		deferred
-		ensure then
-			sequence_effect: sequence.is_empty
-		end
-
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
 			-- Sequence of elements in the order of access

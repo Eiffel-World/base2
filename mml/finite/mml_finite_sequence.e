@@ -91,8 +91,43 @@ feature -- Access
 			end
 		end
 
+feature -- Search
+	first_index_of (x: G): INTEGER
+			-- Index of the first occurrence of `x'
+		local
+			i: INTEGER
+		do
+			from
+				i := array.lower
+			until
+				i > array.upper or Result > 0
+			loop
+				if model_equals (array [i], x) then
+					Result := i
+				end
+				i := i + 1
+			end
+		end
+
+	last_index_of (x: G): INTEGER
+			-- Index of the last occurrence of `x'
+		local
+			i: INTEGER
+		do
+			from
+				i := array.upper
+			until
+				i < array.lower or Result > 0
+			loop
+				if model_equals (array [i], x) then
+					Result := i
+				end
+				i := i - 1
+			end
+		end
+
 feature -- Decomposition
---	first : G is
+--	first : G
 --			-- First elemrnt.
 --		require
 --			non_empty: not is_empty
@@ -100,7 +135,7 @@ feature -- Decomposition
 --			Result := array [array.lower]
 --		end
 
-	last : G is
+	last: G
 			-- The last element of `current'.
 		require
 			non_empty: not is_empty
@@ -108,7 +143,7 @@ feature -- Decomposition
 			Result := array [array.upper]
 		end
 
-	but_first : MML_FINITE_SEQUENCE[G] is
+	but_first: MML_FINITE_SEQUENCE [G]
 			-- The elements of `current' except for the first one.
 --		require
 --			not_empty: not is_empty
@@ -116,7 +151,7 @@ feature -- Decomposition
 			Result := interval (2, count)
 		end
 
-	but_last : MML_FINITE_SEQUENCE[G] is
+	but_last: MML_FINITE_SEQUENCE [G]
 			-- The elements of `current' except for the last one.
 		require
 			not_empty: not is_empty
@@ -124,19 +159,19 @@ feature -- Decomposition
 			Result := interval (1, count - 1)
 		end
 
-	tail (lower: INTEGER): MML_FINITE_SEQUENCE[G] is
+	tail (lower: INTEGER): MML_FINITE_SEQUENCE [G]
 			-- Suffix from `lower'.
 		do
 			Result := interval (lower, count)
 		end
 
---	front (upper: INTEGER): MML_FINITE_SEQUENCE[G] is
+--	front (upper: INTEGER): MML_FINITE_SEQUENCE [G]
 --			-- Prefix up to `upper'.
 --		do
 --			Result := interval (1, upper)
 --		end
 
-	interval (lower, upper: INTEGER): MML_FINITE_SEQUENCE[G] is
+	interval (lower, upper: INTEGER): MML_FINITE_SEQUENCE [G]
 			-- Subsequence from `lower' to `upper'.
 		local
 			l, u: INTEGER

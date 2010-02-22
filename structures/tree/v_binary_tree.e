@@ -3,7 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: bag
+	model: map
 
 class
 	V_BINARY_TREE [G]
@@ -184,6 +184,8 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 feature -- Specification
 	map: MML_FINITE_MAP [MML_BIT_VECTOR, G]
 			-- Map of paths to elements
+		note
+			status: specification
 		do
 			if is_empty then
 				create Result.empty
@@ -191,4 +193,11 @@ feature -- Specification
 				Result := at_root.map
 			end
 		end
+
+invariant
+	bag_domain_definition: bag.domain |=| map.range
+	bag_definition: bag.domain.for_all (agent (x: G): BOOLEAN
+		do
+			Result := bag [x] = map.inverse.image_of (x).count
+		end)
 end

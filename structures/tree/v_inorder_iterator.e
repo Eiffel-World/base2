@@ -3,7 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: target, sequence, index
+	model: target, path, after
 
 class
 	V_INORDER_ITERATOR [G]
@@ -153,7 +153,7 @@ feature -- Cursor movement
 		end
 
 	forth
-			-- Movecursor to the next element in inorder
+			-- Move cursor to the next element in inorder
 		do
 			if active.right /= Void then
 				right
@@ -236,4 +236,68 @@ feature -- Specification
 			active := old_active
 			after := old_after
 		end
+
+	subtree_sequence (m: MML_FINITE_MAP [MML_BIT_VECTOR, G]; root: MML_BIT_VECTOR): MML_FINITE_SEQUENCE [G]
+			-- Inorder sequence of values in a subtree of `m' starting from `root'
+		note
+			status: specification
+		do
+			if not m.domain [root] then
+				create Result.empty
+			else
+				Result := subtree_sequence (m, root.extended (False)).extended (m [root]) + subtree_sequence (m, root.extended (True))
+			end
+		ensure
+			definition_base: not m.domain [root] implies Result.is_empty
+			definition_step: m.domain [root] implies
+				Result = subtree_sequence (m, root.extended (False)).extended (m [root]) + subtree_sequence (m, root.extended (True))
+		end
+
+	predecessor (m: MML_FINITE_MAP [MML_BIT_VECTOR, G]; node: MML_BIT_VECTOR): MML_BIT_VECTOR
+			-- Predecessor of `node' in inorder
+		note
+			status: specification
+		do
+			if not m.domain [node.extended (False)] then
+				if node [node.count] then
+					Result := node.but_last
+				else
+					Result := node.front (node.last_index_of (True) - 1)
+				end
+			else
+				from
+					Result := node.extended (False)
+				until
+					not m.domain [Result]
+				loop
+					Result := Result.extended (True)
+				end
+				Result := Result.but_last
+			end
+		ensure
+			definition_has_left: m.domain [node.extended (False)] implies
+				node.extended (False).is_prefix_of (Result) and
+				not m.domain [Result.extended (True)] and
+				Result.tail (node.count + 2).is_constant (True)
+			definition_not_has_left_is_right: not m.domain [node.extended (False)] and node [node.count] implies
+				Result |=| node.but_last
+			definition_not_has_left_is_left: not m.domain [node.extended (False)] and not node [node.count] implies
+				Result |=| node.front (node.last_index_of (True) - 1)
+		end
+
+	node_index (m: MML_FINITE_MAP [MML_BIT_VECTOR, G]; node: MML_BIT_VECTOR): INTEGER
+			-- Index of `node' in inorder
+		do
+			if m.domain [node] then
+				 Result := node_index (m, predecessor (m, node)) + 1
+			end
+		ensure
+			definition_base: not m.domain [node] implies Result = 0
+			definition_step: m.domain [node] implies Result = node_index (m, predecessor (m, node)) + 1
+		end
+
+invariant
+	sequence_definition: sequence |=| subtree_sequence (target.map, {MML_BIT_VECTOR} [1])
+	index_definition_not_after: not after implies index = node_index (target.map, path)
+	index_definition_afetr: after implies index = target.map.count + 1
 end

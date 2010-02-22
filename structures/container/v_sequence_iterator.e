@@ -1,11 +1,12 @@
 note
-	description: "Iterators over arrays."
+	description: "Iterators over sequences that allow only traversal, search and replacement."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
+	model: target, index
 
 class
-	V_ARRAY_ITERATOR [G]
+	V_SEQUENCE_ITERATOR [G]
 
 inherit
 	V_INDEX_ITERATOR [G]
@@ -17,7 +18,7 @@ create {V_CONTAINER}
 	make
 
 feature {NONE} -- Initialization
-	make (t: V_ARRAY [G]; i: INTEGER)
+	make (t: V_SEQUENCE [G]; i: INTEGER)
 			-- Create an iterator at position `i' in `t'
 		require
 			t_exists: t /= Void
@@ -44,6 +45,6 @@ feature -- Initialization
 		end
 
 feature -- Access
-	target: V_ARRAY [G]
+	target: V_SEQUENCE [G]
 			-- Target container
 end

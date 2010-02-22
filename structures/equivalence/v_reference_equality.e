@@ -29,4 +29,7 @@ feature -- Specification
 		do
 			create Result
 		end
+
+	executable: BOOLEAN = True
+			-- Are model-based contracts for this class executable?
 end

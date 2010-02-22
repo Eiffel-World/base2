@@ -27,10 +27,10 @@ feature -- Access
 	key_order: V_TOTAL_ORDER [K]
 
 feature -- Basic operations
-	less_than (x, y: TUPLE [key: K; value: G]): BOOLEAN
-			-- Is `x' < `y'?
+	greater_equal (x, y: TUPLE [key: K; value: G]): BOOLEAN
+			-- Is `x' >= `y'?
 		do
-			Result := key_order.less_than (x.key, y.key)
+			Result := key_order.greater_equal (x.key, y.key)
 		end
 
 feature -- Specification
@@ -42,18 +42,15 @@ feature -- Specification
 			Result := key_order.order_relation
 		end
 
-	order_relation_definition (x, y: TUPLE [key: K; value: G]): BOOLEAN
-			-- Does `relation' satisfy equivalence relation properties for arguments `x', `y', `z'?
-		note
-			status: specification
-		do
-			Result := (order_relation [x, y] = key_order_relation [x.key, y.key])
-		ensure
-			definition: Result = (order_relation [x, y] = key_order_relation [x.key, y.key])
-			always: Result
-		end
+	executable: BOOLEAN = False
+			-- Are model-based contracts for this class executable?		
 
 invariant
 	key_order_exists: key_order /= Void
-	key_order_order_relation_definition: key_order.order_relation |=| key_order_relation
+	key_order_order_relation_definition: executable implies key_order.order_relation |=| key_order_relation
+	order_relation_definition: executable implies order_relation |=|
+		create {MML_AGENT_ENDORELATION [TUPLE [key: K; value: G]]}.such_that (agent (x, y: TUPLE [key: K; value: G]): BOOLEAN
+		do
+			Result := key_order_relation [x.key, y.key]
+		end)
 end

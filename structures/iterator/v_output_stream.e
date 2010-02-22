@@ -74,17 +74,23 @@ feature -- Replacement
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
 			-- Sequence of elements that are already written
+		note
+			status: specification
 		deferred
 		end
 
 	relevant (x: ANY): BOOLEAN
 			-- Always true
+		note
+			status: specification
 		do
 			Result := True
 		end
 
 	executable: BOOLEAN
 			-- Are model-based contracts for this class executable?
+		note
+			status: specification
 		deferred
 		end
 end

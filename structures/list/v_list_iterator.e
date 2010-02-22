@@ -1,6 +1,6 @@
 note
 	description: "Iterators over lists."
-	author: ""
+	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
 	model: target, index
@@ -101,4 +101,7 @@ feature -- Removal
 			target_sequence_effect: target.sequence |=| old (target.sequence.front (index) + target.sequence.tail (index + 2))
 			index_effect: index = old index
 		end
+
+invariant
+	sequence_definition: sequence |=| target.sequence
 end

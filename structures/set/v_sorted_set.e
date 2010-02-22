@@ -158,6 +158,6 @@ invariant
 	order_exists: order /= Void
 	tree_exists: tree /= Void
 	iterator_exists: iterator /= Void
-	relation_definition: relation |=| (order_relation.complement * order_relation.inverse.complement)
+	relation_definition: relation |=| (order_relation * order_relation.inverse)
 	order_order_definition: order.order_relation |=| order_relation
 end

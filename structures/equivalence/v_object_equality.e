@@ -17,4 +17,8 @@ feature -- Basic operations
 		do
 			Result := x ~ y
 		end
+
+feature -- Specification		
+	executable: BOOLEAN = False
+			-- Are model-based contracts for this class executable?		
 end

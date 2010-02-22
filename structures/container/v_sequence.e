@@ -6,7 +6,7 @@ note
 	model: map
 
 deferred class
-	V_INDEXABLE [G]
+	V_SEQUENCE [G]
 
 inherit
 	V_CONTAINER [G]
@@ -200,7 +200,7 @@ feature -- Replacement
 			map_unchanged_effect: (map | (map.domain - {MML_INTEGER_SET}[[l, u]])) |=| old (map | (map.domain - {MML_INTEGER_SET}[[l, u]]))
 		end
 
-	subcopy (other: V_INDEXABLE [G]; other_first, other_last, index: INTEGER)
+	subcopy (other: V_SEQUENCE [G]; other_first, other_last, index: INTEGER)
 			-- Copy items of `other' within bounds [`other_first', `other_last'] to current array starting at index `index'.
 		require
 			other_exists: other /= Void
@@ -229,14 +229,6 @@ feature -- Replacement
 			map_unchanged_effect: (map | (map.domain - {MML_INTEGER_SET} [[index, index + other_last - other_first]])) |=|
 				old (map | (map.domain - {MML_INTEGER_SET} [[index, index + other_last - other_first]]))
 			other_map_effect: other /= Current implies other.map |=| old other.map
-		end
-
-feature -- Removal
-	wipe_out
-			-- Remove all elements
-		deferred
-		ensure then
-			map_effect: map.is_empty
 		end
 
 feature -- Specification

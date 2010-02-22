@@ -17,28 +17,22 @@ feature -- Basic operations
 		end
 
 feature -- Specification
-	relation: MML_RELATION [G, G]
+	relation: MML_ENDORELATION [G]
 			-- Corresponding matematical relation
 		note
 			status: specification
 		do
-			Result := create {MML_AGENT_RELATION [G, G]}.such_that (agent equivalent)
-		ensure
-			definition: Result |=| create {MML_AGENT_RELATION [G, G]}.such_that (agent equivalent)
+			Result := create {MML_AGENT_ENDORELATION [G]}.such_that (agent equivalent)
 		end
 
-	is_equivalence (x, y, z: G): BOOLEAN
-			-- Does `relation' satisfy equivalence relation properties for arguments `x', `y', `z'?
+	executable: BOOLEAN
+			-- Are model-based contracts for this class executable?
 		note
 			status: specification
-		do
-			Result := relation [x, x] and
-				relation [x, y] = relation [y, x] and
-				(relation [x, y] and relation [y, z] implies relation [x, z])
-		ensure
-			definition: Result = (relation [x, x] and
-				relation [x, y] = relation [y, x] and
-				(relation [x, y] and relation [y, z] implies relation [x, z]))
-			always: Result
+		deferred
 		end
+invariant
+	relation_reflaxive: executable implies relation.reflexive
+	relation_symmetric: executable implies relation.symmetric
+	relation_transitive: executable implies relation.transitive
 end

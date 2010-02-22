@@ -254,13 +254,6 @@ feature -- Removal
 				end (?, old set, other))
 		end
 
-	wipe_out
-			-- Remove all elements
-		deferred
-		ensure then
-			set_effect: set.is_empty
-		end
-
 feature -- Specification
 	set: MML_FINITE_SET [G]
 			-- Set of elements

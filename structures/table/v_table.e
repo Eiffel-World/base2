@@ -87,13 +87,6 @@ feature -- Removal
 			map_effect: map |=| old map.removed (equivalent_key (map, k, relation))
 		end
 
-	wipe_out
-			-- Remove all elements.
-		deferred
-		ensure then
-			map_effect: map.is_empty
-		end
-
 feature -- Specification
 	map: MML_FINITE_MAP [K, G]
 			-- Corresponding mathematical map

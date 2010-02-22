@@ -8,7 +8,7 @@ class
 	MML_IDENTITY [G]
 
 inherit
-	MML_RELATION [G, G]
+	MML_ENDORELATION [G]
 		redefine
 			is_identity
 		end
@@ -29,6 +29,24 @@ feature -- Access
 feature -- Status report
 	is_identity: BOOLEAN = True
 			-- Is this an identity relation?
+
+	reflexive: BOOLEAN = True
+			-- Is relation reflexive?
+
+	irreflexive: BOOLEAN = False
+			-- Is relation irreflexive?
+
+	symmetric: BOOLEAN = True
+			-- Is relation symmetric?
+
+	antisymmetric: BOOLEAN = True
+			-- Is relation antisymmetric?
+
+	transitive: BOOLEAN = True
+			-- Is relation transitive?
+
+	total: BOOLEAN = False
+			-- Is relation total?
 
 feature -- Comparison
 	is_model_equal alias "|=|" (other: MML_MODEL): BOOLEAN

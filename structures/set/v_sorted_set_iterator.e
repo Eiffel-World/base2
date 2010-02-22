@@ -14,7 +14,8 @@ inherit
 			off
 		redefine
 			copy,
-			search_forth
+			search_forth,
+			search_back
 		end
 
 inherit {NONE}
@@ -27,6 +28,7 @@ inherit {NONE}
 		redefine
 			copy,
 			search_forth,
+			search_back,
 			make_with_tree
 		end
 
@@ -102,15 +104,24 @@ feature -- Access
 			-- If `v' does not occur, move `off'
 			-- (Use refernce equality)
 		do
-			if v /= item then
-				if target.order.less_than (v, item) then
-					go_after
-				else
-					search (v)
-					if v /= item then
-						go_after
-					end
-				end
+			if before or (not off and then target.order.greater_than (v, item)) then
+				search (v)
+			end
+			if not off and then v /= item then
+				go_after
+			end
+		end
+
+	search_back (v: G)
+			-- Move to the last occurrence of `v' at or before current position
+			-- If `v' does not occur, move `before'
+			-- (Use refernce equality)
+		do
+			if after or (not off and then target.order.less_than (v, item)) then
+				search (v)
+			end
+			if not off and then v /= item then
+				go_before
 			end
 		end
 end

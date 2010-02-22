@@ -67,6 +67,16 @@ feature -- Status report
 			Result := count = 0
 		end
 
+	is_constant (b: BOOLEAN): BOOLEAN
+			-- Are all bits equal to `b'?
+		do
+			if b then
+				Result := code = 1 |<< count - 1
+			else
+				Result := code = 0
+			end
+		end
+		
 feature -- Decomposition
 	last: BOOLEAN is
 			-- The last element of `current'.
@@ -108,6 +118,41 @@ feature -- Decomposition
 		do
 			u := upper.min (count).max (0)
 			create Result.make_with_count (code & (1 |<< u - 1), u)
+		end
+
+feature -- Search
+	first_index_of (x: BOOLEAN): INTEGER
+			-- Index of the first occurrence of `x'
+		local
+			i: INTEGER
+		do
+			from
+				i := 1
+			until
+				i > count or Result > 0
+			loop
+				if item (i) = x then
+					Result := i
+				end
+				i := i + 1
+			end
+		end
+
+	last_index_of (x: BOOLEAN): INTEGER
+			-- Index of the last occurrence of `x'
+		local
+			i: INTEGER
+		do
+			from
+				i := count
+			until
+				i < 1 or Result > 0
+			loop
+				if item (i) = x then
+					Result := i
+				end
+				i := i - 1
+			end
 		end
 
 feature -- Comparison

@@ -15,33 +15,33 @@ inherit
 		end
 
 feature -- Basic operations
-	less_than (x, y: G): BOOLEAN
-			-- Is `x' < `y'?
+	greater_equal (x, y: G): BOOLEAN
+			-- Is `x' >= `y'?
 		deferred
 		ensure
 			definition: Result = order_relation [x, y]
 		end
 
-	greater_than (x, y: G): BOOLEAN
-			-- Is `x' > `y'?
+	less_equal (x, y: G): BOOLEAN
+			-- Is `x' <= `y'?
 		do
-			Result := less_than (y, x)
+			Result := greater_equal (y, x)
 		ensure
 			definition: Result = order_relation [y, x]
 		end
 
-	less_equal (x, y: G): BOOLEAN
-			-- Is `x' <= `y'?
+	greater_than (x, y: G): BOOLEAN
+			-- Is `x' > `y'?
 		do
-			Result := not greater_than (x, y)
+			Result := not greater_equal (y, x)
 		ensure
 			definition: Result = not order_relation [y, x]
 		end
 
-	greater_equal (x, y: G): BOOLEAN
-			-- Is `x' >= `y'?
+	less_than (x, y: G): BOOLEAN
+			-- Is `x' < `y'?
 		do
-			Result := not less_than (x, y)
+			Result := not greater_equal (x, y)
 		ensure
 			definition: Result = not order_relation [x, y]
 		end
@@ -53,29 +53,18 @@ feature -- Basic operations
 		end
 
 feature -- Specification
-	order_relation: MML_RELATION [G, G]
-			-- Mathematical relation that corresponds to `less_than'
+	order_relation: MML_ENDORELATION [G]
+			-- Mathematical relation that corresponds to `greater_equal'
 		note
 			status: specification
 		do
-			create {MML_AGENT_RELATION [G, G]} Result.such_that (agent less_than)
-		end
-
-	is_order (x, y, z: G): BOOLEAN
-			-- Does `order_relation' satisfy order relation properties for arguments `x', `y', `z'?
-		note
-			status: specification
-		do
-			Result := not order_relation [x, x] and
-				order_relation [x, y] = not order_relation [y, x] and
-				(order_relation [x, y] and order_relation [y, z] implies order_relation [x, z])
-		ensure
-			definition: Result = (not order_relation [x, x] and
-				order_relation [x, y] = not order_relation [y, x] and
-				(order_relation [x, y] and order_relation [y, z] implies order_relation [x, z]))
-			always: Result
+			create {MML_AGENT_ENDORELATION [G]} Result.such_that (agent greater_equal)
 		end
 
 invariant
-	equivalence_relation_definition: equivalence_relation |=| (order_relation.complement * order_relation.inverse.complement)
+	equivalence_relation_definition: executable implies equivalence_relation |=| (order_relation * order_relation.inverse)
+	order_relation_reflaxive: executable implies order_relation.reflexive
+	order_relation_antisymmetric: executable implies order_relation.antisymmetric
+	order_relation_transitive: executable implies order_relation.transitive
+	order_relation_total: executable implies order_relation.total
 end
