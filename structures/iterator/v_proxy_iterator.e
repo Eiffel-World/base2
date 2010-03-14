@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 	make (t: V_CONTAINER [G]; it: V_INPUT_ITERATOR [G])
-			-- Create a proxy for `it' with target `t'
+			-- Create a proxy for `it' with target `t'.
 		require
 			t_exists: t /= Void
 			it_exists: it /= Void
@@ -31,10 +31,10 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	target: V_CONTAINER [G]
-			-- Container to iterate over
+			-- Container to iterate over.
 
 	item: G
-			-- Item at current position
+			-- Item at current position.
 		do
 			Result := iterator.item
 		end
@@ -73,44 +73,44 @@ feature -- Status report
 
 feature -- Cursor movement
 	start
-			-- Go to the first position
+			-- Go to the first position.
 		do
 			iterator.start
 		end
 
 	finish
-			-- Go to the last position
+			-- Go to the last position.
 		do
 			iterator.finish
 		end
 
 	forth
-			-- Move one position forward
+			-- Move one position forward.
 		do
 			iterator.forth
 		end
 
 	back
-			-- Go one position backwards
+			-- Go one position backwards.
 		do
 			iterator.back
 		end
 
 	go_before
-			-- Go before any position of `target'
+			-- Go before any position of `target'.
 		do
 			iterator.go_before
 		end
 
 	go_after
-			-- Go after any position of `target'
+			-- Go after any position of `target'.
 		do
 			iterator.go_after
 		end
 
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
-			-- Sequence of elements	in `target'
+			-- Sequence of elements	in `target'.
 		note
 			status: specification
 		do
@@ -119,7 +119,7 @@ feature -- Specification
 
 feature {NONE} -- Implementation
 	iterator: V_INPUT_ITERATOR [G]
-			-- Iterator over the storage
+			-- Iterator over the storage.
 
 invariant
 	iterator_exists: iterator /= Void

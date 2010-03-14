@@ -13,7 +13,7 @@ inherit
 
 feature -- Replacement
 	put (k: K; v: G)
-			-- Associate `v' with key `k'
+			-- Associate `v' with key `k'.
 		require
 			has_key: has_key (k)
 		deferred

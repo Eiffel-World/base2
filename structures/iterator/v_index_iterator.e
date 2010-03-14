@@ -16,19 +16,19 @@ inherit
 
 feature -- Access
 	target: V_SEQUENCE [G]
-			-- Target container
+			-- Target container.
 		deferred
 		end
 
 	item: G
-			-- Item at current position
+			-- Item at current position.
 		do
 			Result := target [target.lower + index - 1]
 		end
 
 feature -- Measurement
 	index: INTEGER
-			-- Index of current position
+			-- Index of current position.
 
 feature -- Status report
 	before: BOOLEAN
@@ -57,57 +57,57 @@ feature -- Status report
 
 feature -- Cursor movement
 	start
-			-- Go to the first position
+			-- Go to the first position.
 		do
 			index := 1
 		end
 
 	finish
-			-- Go to the last position
+			-- Go to the last position.
 		do
 			index := target.count
 		end
 
 	forth
-			-- Move one position forward
+			-- Move one position forward.
 		do
 			index := index + 1
 		end
 
 	back
-			-- Go one position backwards
+			-- Go one position backwards.
 		do
 			index := index - 1
 		end
 
 	go_to (i: INTEGER)
-			-- Go to position `i'
+			-- Go to position `i'.
 		do
 			index := i
 		end
 
 	go_before
-			-- Go before any position of `target'
+			-- Go before any position of `target'.
 		do
 			index := 0
 		end
 
 	go_after
-			-- Go after any position of `target'
+			-- Go after any position of `target'.
 		do
 			index := target.count + 1
 		end
 
 feature -- Replacement
 	put (v: G)
-			-- Replace item at current position with `v'
+			-- Replace item at current position with `v'.
 		do
 			target.put (target.lower + index - 1, v)
 		end
 
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
-			-- Sequence of elements
+			-- Sequence of elements.
 		note
 			status: specification
 		local

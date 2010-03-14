@@ -17,7 +17,7 @@ create
 
 feature {NONE} -- Initialization
 	make_with_separator (s: STRING)
-			-- Create a stream and set `separator' to `s'
+			-- Create a stream and set `separator' to `s'.
 		do
 			separator := s
 		ensure
@@ -26,7 +26,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	separator: STRING
-			-- String that is output after every element
+			-- String that is output after every element.
 
 feature -- Status report
 	off: BOOLEAN = False
@@ -34,7 +34,7 @@ feature -- Status report
 
 feature -- Replacement
 	output (v: ANY)
-			-- Put `v' into the stream and move to the next position
+			-- Put `v' into the stream and move to the next position.
 		do
 			print (v)
 			if separator /= Void then
@@ -44,7 +44,7 @@ feature -- Replacement
 
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [ANY]
-			-- Sequence of elements already read
+			-- Sequence of elements already read.
 		note
 			status: specification_only
 		do

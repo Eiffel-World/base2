@@ -23,14 +23,14 @@ inherit
 
 feature -- Measurement
 	equivalence: V_EQUIVALENCE [G]
-			-- Equivalence relation on values
+			-- Equivalence relation on values.
 		deferred
 		end
 
 feature -- Search
 	has (v: G): BOOLEAN
 			-- Is `v' contained?
-			-- (Uses `equivalence')
+			-- (Uses `equivalence'.)
 		local
 			i: V_SET_ITERATOR [G]
 		do
@@ -43,7 +43,7 @@ feature -- Search
 
 	has_exactly (v: G): BOOLEAN
 			-- Is value `v' contained?
-			-- (Uses reference equality)
+			-- (Uses reference equality.)
 		local
 			i: V_SET_ITERATOR [G]
 		do
@@ -54,7 +54,7 @@ feature -- Search
 
 	occurrences (v: G): INTEGER
 			-- How many times is `v' contained?
-			-- (Uses reference equality)
+			-- (Uses reference equality.)
 		do
 			if has_exactly (v) then
 				Result := 1
@@ -63,15 +63,15 @@ feature -- Search
 
 feature -- Iteration
 	at_start: V_SET_ITERATOR [G]
-			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'
+			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'.
 		do
 			Result := new_iterator
 			Result.start
 		end
 
 	new_iterator: V_SET_ITERATOR [G]
-			-- New iterator over `Current'
-			-- (Might have more efficient implementation than `at_start')
+			-- New iterator over `Current'.
+			-- (Might have more efficient implementation than `at_start'.)
 		deferred
 		ensure
 			target_definition: Result.target = Current
@@ -80,7 +80,7 @@ feature -- Iteration
 feature -- Comparison
 	is_subset_of (other: V_SET [G]): BOOLEAN
 			-- Does `other' have all ellement of `Current'?
-			-- (Uses `other.equivalence')
+			-- (Uses `other.equivalence'.)
 		require
 			other_exists: other /= Void
 		do
@@ -91,7 +91,7 @@ feature -- Comparison
 
 	is_superset_of (other: V_SET [G]): BOOLEAN
 			-- Does `Current' have all ellement of `other'?
-			-- (Uses `equivalence')
+			-- (Uses `equivalence'.)
 		require
 			other_exists: other /= Void
 		do
@@ -102,7 +102,7 @@ feature -- Comparison
 
 	disjoint (other: V_SET [G]): BOOLEAN
 			-- Do no elements of `other' occur in `Current'?
-			-- (Uses `equivalence')
+			-- (Uses `equivalence'.)
 		require
 			other_exists: other /= Void
 		do
@@ -129,7 +129,7 @@ feature -- Comparison
 
 feature -- Extension
 	extend (v: G)
-			-- Add `v' to the set
+			-- Add `v' to the set.
 		deferred
 		ensure
 			set_effect_not_has: not has_equivalent (old set, v, relation) implies set |=| old set.extended (v)
@@ -137,7 +137,7 @@ feature -- Extension
 		end
 
 	join (other: V_SET [G])
-			-- Add all elements from `other'
+			-- Add all elements from `other'.
 		require
 			other_exists: other /= Void
 		local
@@ -256,7 +256,7 @@ feature -- Removal
 
 feature -- Specification
 	set: MML_FINITE_SET [G]
-			-- Set of elements
+			-- Set of elements.
 		note
 			status: specification
 		local
@@ -274,7 +274,7 @@ feature -- Specification
 		end
 
 	relation: MML_RELATION [G, G]
-			-- Element equivalence relation
+			-- Element equivalence relation.
 		note
 			status: specification
 		do
@@ -292,7 +292,7 @@ feature -- Specification
 		end
 
 	equivalent (s: MML_FINITE_SET [G]; x: G; r: MML_RELATION [G, G]): G
-			-- Element of `s' equivalent to `x' according to `r'
+			-- Element of `s' equivalent to `x' according to `r'.
 		note
 			status: specification
 		require

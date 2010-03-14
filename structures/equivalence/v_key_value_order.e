@@ -16,7 +16,7 @@ create
 
 feature {NONE} -- Initialization
 	make (o: V_TOTAL_ORDER [K])
-			-- Create key-value order derived from key order `o'
+			-- Create key-value order derived from key order `o'.
 		require
 			o_exists: o /= Void
 		do
@@ -38,7 +38,7 @@ feature -- Basic operations
 
 feature -- Specification
 	key_order_relation: MML_RELATION [K, K]
-			-- Order relation on keys
+			-- Order relation on keys.
 		note
 			status: specification
 		do

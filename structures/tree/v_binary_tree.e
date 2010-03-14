@@ -23,7 +23,7 @@ create
 
 feature {NONE} -- Initialization
 	default_create
-			-- Create an empty tree
+			-- Create an empty tree.
 		do
 			create count_cell.put (0)
 		ensure then
@@ -56,14 +56,14 @@ feature -- Initialization
 
 feature -- Measurement
 	count: INTEGER
-			-- Number of elements
+			-- Number of elements.
 		do
 			Result := count_cell.item
 		end
 
 feature -- Iteration
 	at_root: V_BINARY_TREE_CURSOR [G]
-			-- New cursor pointing to the root
+			-- New cursor pointing to the root.
 		do
 			create Result.make (Current, count_cell)
 			Result.go_root
@@ -74,7 +74,7 @@ feature -- Iteration
 		end
 
 	at_inorder_start: V_INORDER_ITERATOR [G]
-			-- New inorder iterator pointing to the leftmost node
+			-- New inorder iterator pointing to the leftmost node.
 		do
 			create Result.make (Current, count_cell)
 			Result.start
@@ -95,7 +95,7 @@ feature -- Comparison
 
 feature -- Extension
 	add_root (v: G)
-			-- Add a root with value `v' to an empty tree
+			-- Add a root with value `v' to an empty tree.
 		require
 			is_empty: is_empty
 		do
@@ -107,7 +107,7 @@ feature -- Extension
 
 feature -- Removal		
 	wipe_out
-			-- Remove all elements
+			-- Remove all elements.
 		do
 			root := Void
 			count_cell.put (0)
@@ -117,13 +117,13 @@ feature -- Removal
 
 feature {V_BINARY_TREE_CURSOR} -- Implementation
 	root: V_BINARY_TREE_CELL [G]
-			-- Root node
+			-- Root node.
 
 	count_cell: V_CELL [INTEGER]
-			-- Cell to store count, where it can be updated by iterators
+			-- Cell to store count, where it can be updated by iterators.
 
 	copy_subtree (input, output: V_BINARY_TREE_CURSOR [G])
-			-- Copy subtree to which `input' points as a subtree of a leaf node, to which `ouput' points
+			-- Copy subtree to which `input' points as a subtree of a leaf node, to which `ouput' points.
 		require
 			input_not_off: not input.off
 			output_not_off: not output.off
@@ -183,7 +183,7 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 
 feature -- Specification
 	map: MML_FINITE_MAP [MML_BIT_VECTOR, G]
-			-- Map of paths to elements
+			-- Map of paths to elements.
 		note
 			status: specification
 		do

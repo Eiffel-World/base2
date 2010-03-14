@@ -10,7 +10,7 @@ deferred class
 
 feature -- Access
 	item alias "[]" (k: K): G
-			-- Value associated with `k'
+			-- Value associated with `k'.
 		require
 			has_key: has_key (k)
 		deferred
@@ -28,14 +28,14 @@ feature -- Measurement
 
 feature -- Specification
 	map: MML_MAP [K, G]
-			-- Corresponding mathematical map
+			-- Corresponding mathematical map.
 		note
 			status: specification
 		deferred
 		end
 
 	relation: MML_RELATION [K, K]
-			-- Key equivalence relation
+			-- Key equivalence relation.
 		note
 			status: specification
 		deferred
@@ -52,7 +52,7 @@ feature -- Specification
 		end
 
 	equivalent_key (m: MML_MAP [K, G]; k: K; r: MML_RELATION [K, K]): K
-			-- Key in `m' equivalent to `k' according to `r'
+			-- Key in `m' equivalent to `k' according to `r'.
 		note
 			status: specification
 		require

@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initizalization
 	make (o: V_TOTAL_ORDER [G])
-			-- Create an empty set with elements order `o'
+			-- Create an empty set with elements order `o'.
 		require
 			o_exists: o /= Void
 		do
@@ -56,32 +56,32 @@ feature -- Initialization
 
 feature -- Measurement
 	order: V_TOTAL_ORDER [G]
-			-- Order relation on values
+			-- Order relation on values.
 
 	count: INTEGER
-			-- Number of elements
+			-- Number of elements.
 		do
 			Result := tree.count
 		end
 
 feature -- Iteration
 	at_start: V_SORTED_SET_ITERATOR [G]
-			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'
+			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'.
 		do
 			Result := new_iterator
 			Result.start
 		end
 
 	new_iterator: V_SORTED_SET_ITERATOR [G]
-			-- New iterator over `Current'
-			-- (Might have more efficient implementation than `at_start')
+			-- New iterator over `Current'.
+			-- (Might have more efficient implementation than `at_start'.)
 		do
 			create Result.make (Current, tree)
 		end
 
 feature -- Extension
 	extend (v: G)
-			-- Add `v' to the set
+			-- Add `v' to the set.
 		local
 			done: BOOLEAN
 		do
@@ -140,22 +140,22 @@ feature -- Removal
 
 feature -- Removal
 	wipe_out
-			-- Remove all elements
+			-- Remove all elements.
 		do
 			tree.wipe_out
 		end
 
 feature {V_SORTED_SET, V_SORTED_SET_ITERATOR} -- Implementation
 	tree: V_BINARY_TREE [G]
-			-- Element storage
+			-- Element storage.
 
 feature {NONE} -- Implementation
 	iterator: V_SORTED_SET_ITERATOR [G]
-			-- Internal cursor
+			-- Internal cursor.
 
 feature -- Specification
 	order_relation: MML_RELATION [G, G]
-			-- Element equivalence relation
+			-- Element equivalence relation.
 		note
 			status: specification
 		do

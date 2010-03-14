@@ -22,7 +22,7 @@ inherit
 
 feature -- Access
 	target: V_CONTAINER [G]
-			-- Container to iterate over
+			-- Container to iterate over.
 		deferred
 		end
 
@@ -33,7 +33,7 @@ feature -- Measurement
 		end
 
 	count: INTEGER
-			-- Number of elements left to iterate
+			-- Number of elements left to iterate.
 		do
 			Result := target.count - index + 1
 		end
@@ -89,28 +89,28 @@ feature -- Comparison
 
 feature -- Cursor movement
 	start
-			-- Go to the first position
+			-- Go to the first position.
 		deferred
 		ensure
 			index_effect: index = 1
 		end
 
 	finish
-			-- Go to the last position
+			-- Go to the last position.
 		deferred
 		ensure
 			index_effect: index = sequence.count
 		end
 
 	forth
-			-- Move one position forward
+			-- Move one position forward.
 		deferred
 		ensure then
 			index_effect: index = old index + 1
 		end
 
 	back
-			-- Go one position backwards
+			-- Go one position backwards.
 		require
 			not_off: not off
 		deferred
@@ -119,7 +119,7 @@ feature -- Cursor movement
 		end
 
 	go_to (i: INTEGER)
-			-- Go to position `i'
+			-- Go to position `i'.
 		require
 			has_index: valid_index (i)
 		local
@@ -147,23 +147,23 @@ feature -- Cursor movement
 		end
 
 	go_before
-			-- Go before any position of `target'
+			-- Go before any position of `target'.
 		deferred
 		ensure
 			index_effect: index = 0
 		end
 
 	go_after
-			-- Go after any position of `target'
+			-- Go after any position of `target'.
 		deferred
 		ensure
 			index_effect: index = sequence.count + 1
 		end
 
 	search_forth (v: G)
-			-- Move to the first occurrence of `v' at or after current position
-			-- If `v' does not occur, move `after'
-			-- (Use refernce equality)
+			-- Move to the first occurrence of `v' at or after current position.
+			-- If `v' does not occur, move `after'.
+			-- (Use refernce equality.)
 		do
 			if before then
 				start
@@ -182,8 +182,8 @@ feature -- Cursor movement
 		end
 
 	satisfy_forth (pred: PREDICATE [ANY, TUPLE [G]])
-			-- Move to the first position at or after current where `p' holds
-			-- If `pred' never holds, move `after'
+			-- Move to the first position at or after current where `p' holds.
+			-- If `pred' never holds, move `after'.
 		do
 			if before then
 				start
@@ -202,9 +202,9 @@ feature -- Cursor movement
 		end
 
 	search_back (v: G)
-			-- Move to the last occurrence of `v' at or before current position
-			-- If `v' does not occur, move `before'
-			-- (Use refernce equality)
+			-- Move to the last occurrence of `v' at or before current position.
+			-- If `v' does not occur, move `before'.
+			-- (Use refernce equality.)
 		do
 			if after then
 				finish
@@ -223,8 +223,8 @@ feature -- Cursor movement
 		end
 
 	satisfy_back (pred: PREDICATE [ANY, TUPLE [G]])
-			-- Move to the first position at or before current where `p' holds
-			-- If `pred' never holds, move `after'
+			-- Move to the first position at or before current where `p' holds.
+			-- If `pred' never holds, move `after'.
 		require
 			pred_exists: pred /= Void
 		do
@@ -246,14 +246,14 @@ feature -- Cursor movement
 
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
-			-- Sequence of elements	in `target'
+			-- Sequence of elements	in `target'.
 		note
 			status: specification
 		deferred
 		end
 
 	front: MML_FINITE_SEQUENCE [G]
-			-- Sequence of elements that are already read
+			-- Sequence of elements that are already read.
 		note
 			status: specification
 		do

@@ -16,11 +16,11 @@ create
 
 feature -- Access
 	right: V_LINKABLE [G]
-			-- Next cell
+			-- Next cell.
 
 feature -- Replacement
 	put_right (cell: V_LINKABLE [G])
-			-- Replace `right' with `cell'
+			-- Replace `right' with `cell'.
 		do
 			right := cell
 		ensure

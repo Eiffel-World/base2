@@ -10,7 +10,7 @@ deferred class
 
 feature -- Access
 	item: G
-			-- Item at current position
+			-- Item at current position.
 		do
 			Result := active.item
 		end
@@ -24,7 +24,7 @@ feature -- Status report
 
 feature -- Replacement
 	put (v: G)
-			-- Replace item at current position with `v'
+			-- Replace item at current position with `v'.
 		require
 			not_off: not off
 		do
@@ -35,7 +35,7 @@ feature -- Replacement
 
 feature {V_CELL_CURSOR} -- Implementation
 	active: V_CELL [G]
-			-- Cell at current position
+			-- Cell at current position.
 		deferred
 		end
 end

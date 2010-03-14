@@ -16,13 +16,13 @@ create
 
 feature -- Access
 	right: V_BINARY_TREE_CELL [G]
-			-- Rigth child
+			-- Rigth child.
 
 	left: V_BINARY_TREE_CELL [G]
-			-- Left child
+			-- Left child.
 
 	parent: V_BINARY_TREE_CELL [G]
-			-- Parent
+			-- Parent.
 
 feature -- Status report
 	is_root: BOOLEAN
@@ -51,7 +51,7 @@ feature -- Status report
 
 feature -- Replacement
 	put_right (r: V_BINARY_TREE_CELL [G])
-			-- Set `right' to `r'; detach `r' from its previous parent; detach previous `right' from Current
+			-- Set `right' to `r'; detach `r' from its previous parent; detach previous `right' from Current.
 		do
 			if right /= Void then
 				right.simple_put_parent (Void)
@@ -67,7 +67,7 @@ feature -- Replacement
 		end
 
 	put_left (l: V_BINARY_TREE_CELL [G])
-			-- Set `left' to `l'; detach `l' from its previous parent; detach previous `left' from Current
+			-- Set `left' to `l'; detach `l' from its previous parent; detach previous `left' from Current.
 		do
 			if left /= Void then
 				left.simple_put_parent (Void)
@@ -84,7 +84,7 @@ feature -- Replacement
 
 feature {V_BINARY_TREE_CELL} -- Implementation
 	simple_put_right (r: V_BINARY_TREE_CELL [G])
-			-- Set `right' to `r'
+			-- Set `right' to `r'.
 		do
 			right := r
 		ensure
@@ -92,7 +92,7 @@ feature {V_BINARY_TREE_CELL} -- Implementation
 		end
 
 	simple_put_left (l: V_BINARY_TREE_CELL [G])
-			-- Set `left' to `l'
+			-- Set `left' to `l'.
 		do
 			left := l
 		ensure
@@ -100,7 +100,7 @@ feature {V_BINARY_TREE_CELL} -- Implementation
 		end
 
 	simple_put_parent (p: V_BINARY_TREE_CELL [G])
-			-- Set `parent' to `p'
+			-- Set `parent' to `p'.
 		do
 			parent := p
 		ensure
@@ -108,7 +108,7 @@ feature {V_BINARY_TREE_CELL} -- Implementation
 		end
 
 	put_parent (p: V_BINARY_TREE_CELL [G])
-			-- Set `parent' to `p', detach Current from its previous parent
+			-- Set `parent' to `p', detach Current from its previous parent.
 		do
 			if parent /= Void then
 				if parent.left = Current then

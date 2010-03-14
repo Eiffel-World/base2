@@ -19,7 +19,7 @@ create {V_CONTAINER}
 
 feature {NONE} -- Initialization
 	make (t: V_SEQUENCE [G]; i: INTEGER)
-			-- Create an iterator at position `i' in `t'
+			-- Create an iterator at position `i' in `t'.
 		require
 			t_exists: t /= Void
 			i_valid: 0 <= i and i <= t.count + 1
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 	copy (other: like Current)
-			-- Initialize with the same `target' and `index' as in `other'
+			-- Initialize with the same `target' and `index' as in `other'.
 		do
 			target := other.target
 			index := other.index
@@ -46,5 +46,5 @@ feature -- Initialization
 
 feature -- Access
 	target: V_SEQUENCE [G]
-			-- Target container
+			-- Target container.
 end

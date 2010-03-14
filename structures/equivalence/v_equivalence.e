@@ -18,7 +18,7 @@ feature -- Basic operations
 
 feature -- Specification
 	relation: MML_ENDORELATION [G]
-			-- Corresponding matematical relation
+			-- Corresponding matematical relation.
 		note
 			status: specification
 		do

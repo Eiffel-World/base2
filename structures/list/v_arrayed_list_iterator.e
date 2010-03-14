@@ -22,7 +22,7 @@ create {V_ARRAYED_LIST}
 
 feature {NONE} -- Initialization
 	make (list: V_ARRAYED_LIST [G]; i: INTEGER)
-			-- Create an iterator at position `i' in `list'
+			-- Create an iterator at position `i' in `list'.
 		require
 			list_exists: list /= Void
 			i_valid: 0 <= i and i <= list.count + 1
@@ -36,7 +36,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	target: V_ARRAYED_LIST [G]
-			-- Container to iterate over	
+			-- Container to iterate over.
 
 feature -- Extension
 	extend_left (v: G)

@@ -21,13 +21,13 @@ inherit
 
 feature -- Measurement
 	key_equivalence: V_EQUIVALENCE [K]
-			-- Equivalence relation on keys
+			-- Equivalence relation on keys.
 		deferred
 		end
 
 feature -- Iteration
 	at_start: V_TABLE_ITERATOR [K, G]
-			-- New iterator pointing to a position in the table, from which it can traverse all elements by going `forth'
+			-- New iterator pointing to a position in the table, from which it can traverse all elements by going `forth'.
 		deferred
 		end
 
@@ -55,7 +55,7 @@ feature -- Comparison
 
 feature -- Extension
 	extend (k: K; v: G)
-			-- Extend table with key-value pair <`k', `v'>
+			-- Extend table with key-value pair <`k', `v'>.
 		require
 			fresh_key: not has_key (k)
 		deferred
@@ -89,7 +89,7 @@ feature -- Removal
 
 feature -- Specification
 	map: MML_FINITE_MAP [K, G]
-			-- Corresponding mathematical map
+			-- Map of keys to values.
 		note
 			status: specification
 		local
@@ -107,7 +107,7 @@ feature -- Specification
 		end
 
 	relation: MML_RELATION [K, K]
-			-- Key equivalence relation
+			-- Key equivalence relation.
 		note
 			status: specification
 		do

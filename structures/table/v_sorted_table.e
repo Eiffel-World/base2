@@ -24,7 +24,7 @@ create
 
 feature {NONE} -- Initialization
 	make (o: V_TOTAL_ORDER [K])
-			-- Create an empty table with key order `o'
+			-- Create an empty table with key order `o'.
 		require
 			o_exists: o /= Void
 		do
@@ -37,7 +37,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 	copy (other: like Current)
-			-- Initialize table by copying `key_order', and key-value pair from `other'
+			-- Initialize table by copying `key_order', and key-value pair from `other'.
 		do
 			if other /= Current then
 				key_order := other.key_order
@@ -52,7 +52,7 @@ feature -- Initialization
 
 feature -- Access
 	item alias "[]" (k: K): G
-			-- Value associated with `k'
+			-- Value associated with `k'.
 		local
 			i: V_SORTED_TABLE_ITERATOR [K, G]
 		do
@@ -63,10 +63,10 @@ feature -- Access
 
 feature -- Measurement
 	key_order: V_TOTAL_ORDER [K]
-			-- Order relation on keys
+			-- Order relation on keys.
 
 	count: INTEGER
-			-- Number of elements
+			-- Number of elements.
 		do
 			Result := set.count
 		end
@@ -79,7 +79,7 @@ feature -- Measurement
 
 feature -- Iteration
 	at_start: V_SORTED_TABLE_ITERATOR [K, G]
-			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'
+			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'.
 		do
 			create Result.make (Current)
 			Result.start
@@ -87,7 +87,7 @@ feature -- Iteration
 
 feature -- Replacement
 	put (k: K; v: G)
-			-- Associate `v' with key `k'
+			-- Associate `v' with key `k'.
 		local
 			i: V_SORTED_TABLE_ITERATOR [K, G]
 		do
@@ -98,30 +98,31 @@ feature -- Replacement
 
 feature -- Extension
 	extend (k: K; v: G)
-			-- Extend table with key-value pair <`k', `v'>
+			-- Extend table with key-value pair <`k', `v'>.
 		do
 			set.extend ([k, v])
 		end
 
 feature -- Removal
 	remove (k: K)
-			-- Remove key `k' and its associated value
+			-- Remove key `k' and its associated value.
 		do
 			set.remove ([k, default_item])
 		end
 
 	wipe_out
-			-- Remove all elements
+			-- Remove all elements.
 		do
 			set.wipe_out
 		end
 
 feature {V_SORTED_TABLE, V_SORTED_TABLE_ITERATOR} -- Implementation
 	set: V_SORTED_SET [TUPLE [key: K; value: G]]
+			-- Underlying set of key-value pairs
 
 feature -- Specification
 	order_relation: MML_RELATION [K, K]
-			-- Element equivalence relation
+			-- Element equivalence relation.
 		note
 			status: specification
 		do

@@ -19,14 +19,14 @@ inherit
 
 feature -- Access
 	key: K
-			-- Key at current position
+			-- Key at current position.
 		require
 			not_off: not off
 		deferred
 		end
 
 	target: V_TABLE [K, G]
-			-- Table to iterate over
+			-- Table to iterate over.
 		deferred
 		end
 
@@ -34,7 +34,7 @@ feature -- Cursor movement
 	search_key (k: K)
 			-- Move to a position where key is equivalent to `k'.
 			-- If `k' does not appear, go off.
-			-- (Use `target.key_equivalence')
+			-- (Use `target.key_equivalence'.)
 		deferred
 		ensure
 			index_effect_found: target.has_equivalent_key (target.map, k, target.relation) implies target.relation [key_sequence [index], k]
@@ -43,7 +43,7 @@ feature -- Cursor movement
 
 feature -- Specification
 	key_sequence: MML_FINITE_SEQUENCE [K]
-			-- Sequence of keys
+			-- Sequence of keys.
 		note
 			status: specification
 		deferred

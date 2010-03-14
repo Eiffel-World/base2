@@ -13,7 +13,7 @@ inherit
 
 feature {NONE} -- Initialization
 	make (v: G)
-			-- Create a stream that provides `v'
+			-- Create a stream that provides `v'.
 		do
 			item := v
 		ensure
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 
 feature -- Access
 	item: G
-			-- Item at current position
+			-- Item at current position.
 
 feature -- Status report
 	off: BOOLEAN = False
@@ -30,13 +30,13 @@ feature -- Status report
 
 feature -- Cursor movement
 	forth
-			-- Move one position forward
+			-- Move one position forward.
 		do
 		end
 
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
-			-- Sequence of elements already read
+			-- Sequence of elements already read.
 		note
 			status: specification_only
 		do

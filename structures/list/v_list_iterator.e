@@ -16,7 +16,7 @@ inherit
 
 feature -- Access
 	target: V_LIST [G]
-			-- Container to iterate over
+			-- Container to iterate over.
 		deferred
 		end
 

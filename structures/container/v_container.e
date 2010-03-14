@@ -10,7 +10,7 @@ deferred class
 
 feature -- Measurement
 	count: INTEGER
-			-- Number of elements
+			-- Number of elements.
 		deferred
 		end
 
@@ -24,7 +24,7 @@ feature -- Status report
 feature -- Search
 	has (v: G): BOOLEAN
 			-- Is value `v' contained?
-			-- (Uses reference equality)
+			-- (Uses reference equality.)
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
@@ -37,7 +37,7 @@ feature -- Search
 
 	occurrences (v: G): INTEGER
 			-- How many times is value `v' contained?
-			-- (Uses reference equality)
+			-- (Uses reference equality.)
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
@@ -112,7 +112,7 @@ feature -- Search
 
 feature -- Iteration
 	at_start: V_INPUT_ITERATOR [G]
-			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'
+			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'.
 		deferred
 		ensure
 			target_definition: Result.target = Current
@@ -122,7 +122,7 @@ feature -- Iteration
 
 feature -- Removal
 	wipe_out
-			-- Remove all elements
+			-- Remove all elements.
 		deferred
 		ensure
 			bag_effect: bag.is_empty
@@ -130,7 +130,7 @@ feature -- Removal
 
 feature -- Specification
 	bag: MML_FINITE_BAG [G]
-			-- Bag of elements
+			-- Bag of elements.
 		note
 			status: specification
 		local
@@ -148,7 +148,7 @@ feature -- Specification
 		end
 
 	default_item: G
-			-- Default value of type `G'
+			-- Default value of type `G'.
 		note
 			status: specification
 		do

@@ -19,7 +19,7 @@ create {V_SORTED_TABLE}
 
 feature {NONE} -- Initialization
 	make (t: V_SORTED_TABLE [K, G])
-			-- Create an iterator over `t'
+			-- Create an iterator over `t'.
 		do
 			target := t
 			set_iterator := target.set.new_iterator
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 	copy (other: like Current)
-			-- Initialize with the same `target' and position as in `other'
+			-- Initialize with the same `target' and position as in `other'.
 		do
 			if other /= Current then
 				target := other.target
@@ -44,16 +44,16 @@ feature -- Initialization
 
 feature -- Access
 	target: V_SORTED_TABLE [K, G]
-			-- Container to iterate over
+			-- Container to iterate over.
 
 	key: K
-			-- Key at current position
+			-- Key at current position.
 		do
 			Result := set_iterator.item.key
 		end
 
 	value: G
-			-- Value at current position
+			-- Value at current position.
 		do
 			Result := set_iterator.item.value
 		end
@@ -92,37 +92,37 @@ feature -- Status report
 
 feature -- Cursor movement
 	start
-			-- Go to the first position
+			-- Go to the first position.
 		do
 			set_iterator.start
 		end
 
 	finish
-			-- Go to the last position
+			-- Go to the last position.
 		do
 			set_iterator.finish
 		end
 
 	forth
-			-- Move one position forward
+			-- Move one position forward.
 		do
 			set_iterator.forth
 		end
 
 	back
-			-- Go one position backwards
+			-- Go one position backwards.
 		do
 			set_iterator.back
 		end
 
 	go_before
-			-- Go before any position of `target'
+			-- Go before any position of `target'.
 		do
 			set_iterator.go_before
 		end
 
 	go_after
-			-- Go after any position of `target'
+			-- Go after any position of `target'.
 		do
 			set_iterator.go_after
 		end
@@ -137,7 +137,7 @@ feature -- Cursor movement
 
 feature -- Replacement
 	put (v: G)
-			-- Replace item at current position with `v'
+			-- Replace item at current position with `v'.
 		do
 			set_iterator.item.value := v
 		ensure then
@@ -146,11 +146,11 @@ feature -- Replacement
 
 feature {V_SORTED_TABLE_ITERATOR} -- Implementation
 	set_iterator: V_SORTED_SET_ITERATOR [TUPLE [key: K; value: G]]
-			-- Iterator over the underlying set
+			-- Iterator over the underlying set.
 
 feature -- Specification
 	key_sequence: MML_FINITE_SEQUENCE [K]
-			-- Sequence of keys
+			-- Sequence of keys.
 		note
 			status: specification
 		local
@@ -170,7 +170,7 @@ feature -- Specification
 		end
 
 	value_sequence: MML_FINITE_SEQUENCE [G]
-			-- Sequence of values
+			-- Sequence of values.
 		note
 			status: specification
 		local
@@ -190,7 +190,7 @@ feature -- Specification
 		end
 
 	default_item: G
-			-- Default value of type `G'
+			-- Default value of type `G'.
 		note
 			status: specification
 		do

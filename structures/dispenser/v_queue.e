@@ -18,7 +18,7 @@ inherit
 feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Is queue made of the same values in the same order as `other'?
-			-- (Use reference comarison)
+			-- (Use reference comarison.)
 		local
 			i, j: V_INPUT_ITERATOR [G]
 		do
@@ -43,7 +43,7 @@ feature -- Comparison
 
 feature -- Extension
 	extend (v: G)
-			-- Enqueue `v'
+			-- Enqueue `v'.
 		deferred
 		ensure then
 			sequence_effect: sequence |=| old sequence.extended (v)

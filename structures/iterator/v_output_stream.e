@@ -16,7 +16,7 @@ feature -- Status report
 
 feature -- Replacement
 	output (v: G)
-			-- Put `v' into the stream and move to the next position
+			-- Put `v' into the stream and move to the next position.
 		require
 			not_off: not off
 		deferred
@@ -25,7 +25,7 @@ feature -- Replacement
 		end
 
 	pipe (input: V_INPUT_STREAM [G])
-			-- Copy values from `input' until one either `Current' or `other' is `off'
+			-- Copy values from `input' until one either `Current' or `other' is `off'.
 		require
 			input_exists: input /= Void
 		do
@@ -46,7 +46,7 @@ feature -- Replacement
 		end
 
 	pipe_n (input: V_INPUT_STREAM [G]; n: INTEGER)
-			-- Copy `n' elements from `input'; stop if either `Current' or `other' is `off'
+			-- Copy `n' elements from `input'; stop if either `Current' or `other' is `off'.
 		local
 			i: INTEGER
 		do
@@ -73,14 +73,14 @@ feature -- Replacement
 
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
-			-- Sequence of elements that are already written
+			-- Sequence of elements that are already written.
 		note
 			status: specification
 		deferred
 		end
 
 	relevant (x: ANY): BOOLEAN
-			-- Always true
+			-- Always true.
 		note
 			status: specification
 		do

@@ -26,7 +26,7 @@ create
 
 feature {NONE} -- Initizalization
 	default_create
-			-- Create an empty list with default `capacity'
+			-- Create an empty list with default `capacity'.
 		do
 			create array.make (1, default_capacity)
 			first_index := 1
@@ -36,7 +36,7 @@ feature {NONE} -- Initizalization
 		end
 
 	make_with_capacity (n: INTEGER)
-			-- Create an empty list with capacity `n'
+			-- Create an empty list with capacity `n'.
 		do
 			create array.make (1, n)
 			first_index := 1
@@ -47,7 +47,7 @@ feature {NONE} -- Initizalization
 
 feature -- Initialization
 	copy (other: like Current)
-			-- Reinitialize by copying all the items of `other'.
+			-- Initialize by copying all the items of `other'.
 		do
 			if other /= Current then
 				array := other.array.twin
@@ -61,50 +61,50 @@ feature -- Initialization
 
 feature -- Access
 	item alias "[]" (i: INTEGER): G
-			-- Value associated with `i'
+			-- Value associated with `i'.
 		do
 			Result := array [array_index (i)]
 		end
 
 feature -- Measurement		
 	count: INTEGER
-			-- Number of elements
+			-- Number of elements.
 
 	capacity: INTEGER
-			-- Size of the underlying array
+			-- Size of the underlying array.
 		do
 			Result := array.count
 		end
 
 feature -- Iteration
 	at_start: V_LIST_ITERATOR [G]
-			-- New iterator pointing to the first position
+			-- New iterator pointing to the first position.
 		do
 			create {V_ARRAYED_LIST_ITERATOR [G]} Result.make (Current, 1)
 		end
 
 	at_finish: like at_start
-			-- New iterator pointing to the last position
+			-- New iterator pointing to the last position.
 		do
 			create {V_ARRAYED_LIST_ITERATOR [G]} Result.make (Current, count)
 		end
 
 	at (i: INTEGER): like at_start
-			-- New iterator poiting at `i'-th position
+			-- New iterator poiting at `i'-th position.
 		do
 			create {V_ARRAYED_LIST_ITERATOR [G]} Result.make (Current, i)
 		end
 
 feature -- Replacement
 	put (i: INTEGER; v: G)
-			-- Associate `v' with index `i'
+			-- Associate `v' with index `i'.
 		do
 			array.put (array_index (i), v)
 		end
 
 feature -- Extension
 	extend_front (v: G)
-			-- Insert `v' at the front
+			-- Insert `v' at the front.
 		do
 			reserve (count + 1)
 			if is_empty then
@@ -120,7 +120,7 @@ feature -- Extension
 		end
 
 	extend_back (v: G)
-			-- Insert `v' at the back
+			-- Insert `v' at the back.
 		do
 			reserve (count + 1)
 			array.put (array_index (count + 1), v)
@@ -130,7 +130,7 @@ feature -- Extension
 		end
 
 	extend_at (i: INTEGER; v: G)
-			-- Insert `v' at position `i'
+			-- Insert `v' at position `i'.
 		do
 			if i = 1 then
 				extend_front (v)
@@ -147,7 +147,7 @@ feature -- Extension
 		end
 
 	insert_at (i: INTEGER; input: V_INPUT_ITERATOR [G])
-			-- Insert sequence of values, over which `input' iterates, starting at position `i'
+			-- Insert sequence of values, over which `input' iterates, starting at position `i'.
 		local
 			ic: INTEGER
 		do
@@ -168,27 +168,27 @@ feature -- Extension
 
 feature -- Removal
 	remove_front
-			-- Remove first element
+			-- Remove first element.
 		do
 			first_index := mod_capacity (first_index + 1)
 			count := count - 1
 		end
 
 	remove_back
-			-- Remove last element
+			-- Remove last element.
 		do
 			count := count - 1
 		end
 
 	remove_at  (i: INTEGER)
-			-- Remove element at position `i'
+			-- Remove element at position `i'.
 		do
 			circular_copy (i + 1, i, count - i)
 			count := count - 1
 		end
 
 	wipe_out
-			-- Remove all elements
+			-- Remove all elements.
 		do
 			count := 0
 		end
@@ -216,19 +216,19 @@ feature -- Resizing
 
 feature {V_ARRAYED_LIST} -- Implementation
 	default_capacity: INTEGER = 10
-			-- Default value for `capacity'
+			-- Default value for `capacity'.
 
 	growth_percentage: INTEGER = 150
-			-- Minimum percentage by which `array' grows when resized
+			-- Minimum percentage by which `array' grows when resized.
 
 	array: V_ARRAY [G]
-			-- Element storage
+			-- Element storage.
 
 	first_index: INTEGER
-			-- Index of the first list element in `array'
+			-- Index of the first list element in `array'.
 
 	mod_capacity (i: INTEGER): INTEGER
-			-- `i' modulo `capacity' in range [`1', `capacity']
+			-- `i' modulo `capacity' in range [`1', `capacity'].
 		do
 			Result := (i - 1) \\ capacity + 1
 			if i <= 0 then
@@ -239,7 +239,7 @@ feature {V_ARRAYED_LIST} -- Implementation
 		end
 
 	array_index (i: INTEGER): INTEGER
-			-- Position in `array' of `i'th list element
+			-- Position in `array' of `i'th list element.
 		do
 			Result := mod_capacity (i + first_index - 1)
 		ensure
@@ -247,7 +247,7 @@ feature {V_ARRAYED_LIST} -- Implementation
 		end
 
 	circular_copy (src, dest, n: INTEGER)
-			-- Copy `n' elements from position `src' to position `dest'
+			-- Copy `n' elements from position `src' to position `dest'.
 		local
 			i: INTEGER
 			a: V_ARRAY [G]

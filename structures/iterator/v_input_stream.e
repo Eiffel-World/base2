@@ -10,7 +10,7 @@ deferred class
 
 feature -- Access
 	item: G
-			-- Item at current position
+			-- Item at current position.
 		require
 			not_off: not off
 		deferred
@@ -24,7 +24,7 @@ feature -- Status report
 
 feature -- Cursor movement
 	forth
-			-- Move one position forward
+			-- Move one position forward.
 		require
 			not_off: not off
 		deferred
@@ -36,9 +36,9 @@ feature -- Cursor movement
 		end
 
 	search (v: G)
-			-- Move to the first occurrence of `v' at or after current position
-			-- If `v' does not occur, move `after'
-			-- (Use refernce equality)
+			-- Move to the first occurrence of `v' at or after current position.
+			-- If `v' does not occur, move `after'.
+			-- (Use refernce equality.)
 		do
 			from
 			until
@@ -55,8 +55,8 @@ feature -- Cursor movement
 		end
 
 	satisfy (pred: PREDICATE [ANY, TUPLE [G]])
-			-- Move to the first position at or after current where `p' holds
-			-- If `pred' never holds, move `after'
+			-- Move to the first position at or after current where `p' holds.
+			-- If `pred' never holds, move `after'.
 		require
 			pred_exists: pred /= Void
 		do
@@ -76,14 +76,14 @@ feature -- Cursor movement
 
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
-			-- Sequence of elements that are already read
+			-- Sequence of elements that are already read.
 		note
 			status: specification
 		deferred
 		end
 
 	relevant (x: ANY): BOOLEAN
-			-- Always true
+			-- Always true.
 		note
 			status: specification
 		do

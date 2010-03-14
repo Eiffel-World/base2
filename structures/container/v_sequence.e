@@ -20,7 +20,7 @@ inherit
 
 feature -- Access		
 	first: G
-			-- First element
+			-- First element.
 		require
 			not_empty: not is_empty
 		do
@@ -28,7 +28,7 @@ feature -- Access
 		end
 
 	last: G
-			-- Last element
+			-- Last element.
 		require
 			not_empty: not is_empty
 		do
@@ -37,17 +37,17 @@ feature -- Access
 
 feature -- Measurement
 	lower: INTEGER
-			-- Lower bound of index interval
+			-- Lower bound of index interval.
 		deferred
 		end
 
 	upper: INTEGER
-			-- Upper bound of index interval
+			-- Upper bound of index interval.
 		deferred
 		end
 
 	count: INTEGER
-			-- Number of elements
+			-- Number of elements.
 		do
 			Result := upper - lower + 1
 		end
@@ -61,7 +61,7 @@ feature -- Measurement
 feature -- Search
 	index_of (v: G): INTEGER
 			-- Index of the first occurrence of `v';
-			-- out of range, if `v' does not occur
+			-- out of range, if `v' does not occur.
 		do
 			if not is_empty then
 				Result := index_of_from (v, 1)
@@ -72,8 +72,8 @@ feature -- Search
 		end
 
 	index_of_from (v: G; i: INTEGER): INTEGER
-			-- Index of the first occurrence of `v' starting from position `i'
-			-- out of range, if `v' does not occur
+			-- Index of the first occurrence of `v' starting from position `i';
+			-- out of range, if `v' does not occur.
 		require
 			has_index: has_index (i)
 		local
@@ -102,8 +102,8 @@ feature -- Search
 		end
 
 	index_that (p: PREDICATE [ANY, TUPLE [G]]): INTEGER
-			-- Index of the first value that satisfies `p'
-			-- out of range, if `p' is never satisfied
+			-- Index of the first value that satisfies `p';
+			-- out of range, if `p' is never satisfied.
 		require
 			p_exists: p /= Void
 		do
@@ -116,8 +116,8 @@ feature -- Search
 		end
 
 	index_that_from (p: PREDICATE [ANY, TUPLE [G]]; i: INTEGER): INTEGER
-			-- Index of the first value that satisfies `p' starting from position `i'
-			-- out of range, if `p' is never satisfied
+			-- Index of the first value that satisfies `p' starting from position `i';
+			-- out of range, if `p' is never satisfied.
 		require
 			p_exists: p /= Void
 			has_index: has_index (i)
@@ -148,7 +148,7 @@ feature -- Search
 
 feature -- Iteration
 	at_start: V_ITERATOR [G]
-			-- New iterator pointing to the first position
+			-- New iterator pointing to the first position.
 		deferred
 		ensure then
 			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_FINITE_SEQUENCE [G]): BOOLEAN
@@ -158,7 +158,7 @@ feature -- Iteration
 		end
 
 	at_finish: like at_start
-			-- New iterator pointing to the last position
+			-- New iterator pointing to the last position.
 		deferred
 		ensure
 			target_definition: Result.target = Current
@@ -171,7 +171,7 @@ feature -- Iteration
 		end
 
 	at (i: INTEGER): like at_start
-			-- New iterator poiting at `i'-th position
+			-- New iterator poiting at `i'-th position.
 		require
 			has_index: 1 <= i and i <= count
 		deferred
@@ -257,7 +257,7 @@ feature -- Replacement
 
 feature -- Specification
 	map: MML_FINITE_MAP [INTEGER, G]
-			-- Corresponding mathematical map
+			-- Map of indexes to values.
 		note
 			status: specification
 		local
@@ -278,7 +278,7 @@ feature -- Specification
 		end
 
 	relation: MML_IDENTITY [INTEGER]
-			-- Index equivalence relation: identity
+			-- Index equivalence relation: identity.
 		note
 			status: specification
 		do

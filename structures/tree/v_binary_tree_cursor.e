@@ -21,7 +21,7 @@ create {V_BINARY_TREE}
 
 feature {NONE} -- Initialization
 	make (tree: V_BINARY_TREE [G]; cc: V_CELL [INTEGER])
-			-- Create iterator over `tree'
+			-- Create iterator over `tree'.
 		require
 			tree_exists: tree /= Void
 			valid_cc: cc = tree.count_cell
@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 	copy (other: like Current)
-			-- Initialize with the same `target' and `path' as in `other'
+			-- Initialize with the same `target' and `path' as in `other'.
 		do
 			target := other.target
 			active := other.active
@@ -49,7 +49,7 @@ feature -- Initialization
 
 feature -- Access
 	target: V_BINARY_TREE [G]
-			-- Tree to traverse
+			-- Tree to traverse.
 
 feature -- Status report
 	is_root: BOOLEAN
@@ -87,7 +87,7 @@ feature -- Comparison
 
 feature -- Cursor movement
 	up is
-			-- Move cursor up to the parent
+			-- Move cursor up to the parent.
 		require
 			not_off: not off
 		do
@@ -97,7 +97,7 @@ feature -- Cursor movement
 		end
 
 	left is
-			-- Move cursor down to the left child
+			-- Move cursor down to the left child.
 		require
 			not_off: not off
 		do
@@ -108,7 +108,7 @@ feature -- Cursor movement
 		end
 
 	right is
-			-- Move cursor down to the right child
+			-- Move cursor down to the right child.
 		require
 			not_off: not off
 		do
@@ -119,7 +119,7 @@ feature -- Cursor movement
 		end
 
 	go_root is
-			-- Move cursor to the root
+			-- Move cursor to the root.
 		do
 			active := target.root
 		ensure
@@ -129,7 +129,7 @@ feature -- Cursor movement
 
 feature -- Extension
 	extend_left (v: G)
-			-- Add a left child with value `v' to the current node
+			-- Add a left child with value `v' to the current node.
 		require
 			not_off: not off
 			not_has_left: not has_left
@@ -142,7 +142,7 @@ feature -- Extension
 		end
 
 	extend_right (v: G)
-			-- Add a left child with value `v' to the current node
+			-- Add a left child with value `v' to the current node.
 		require
 			not_off: not off
 			not_has_right: not has_right
@@ -156,7 +156,7 @@ feature -- Extension
 
 feature -- Removal
 	remove
-			-- Remove current node (it must have less than two child nodes)
+			-- Remove current node (it must have less than two child nodes).
 		require
 			not_off: not off
 			not_two_children: not has_left or not has_right
@@ -203,15 +203,15 @@ feature -- Removal
 
 feature {V_CELL_CURSOR, V_INPUT_ITERATOR} -- Implementation
 	active: V_BINARY_TREE_CELL [G]
-			-- Cell at current position
+			-- Cell at current position.
 
 feature {NONE} -- Implementation
 	count_cell: V_CELL [INTEGER]
-			-- Cell where `target's	count is stored	
+			-- Cell where `target's	count is stored.
 
 feature -- Specification
 	path: MML_BIT_VECTOR
-			-- Path from root to current node
+			-- Path from root to current node.
 		note
 			status: specification
 		local
@@ -234,7 +234,7 @@ feature -- Specification
 		end
 
 	map: MML_FINITE_MAP [MML_BIT_VECTOR, G]
-			-- Map of paths to values in the subtree startin from current node
+			-- Map of paths to values in the subtree startin from current node.
 		note
 			status: specification
 		require

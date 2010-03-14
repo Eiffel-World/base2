@@ -30,7 +30,7 @@ create {V_CONTAINER}
 
 feature {NONE} -- Initialization
 	make (tree: V_BINARY_TREE [G]; cc: V_CELL [INTEGER])
-			-- Create iterator over `tree'
+			-- Create iterator over `tree'.
 		do
 			Precursor (tree, cc)
 		ensure then
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 	copy (other: like Current)
-			-- Initialize with the same `target' and position as in `other'
+			-- Initialize with the same `target' and position as in `other'.
 		do
 			Precursor {V_BINARY_TREE_CURSOR} (other)
 			after := other.after
@@ -54,7 +54,7 @@ feature -- Initialization
 
 feature -- Measurement
 	index: INTEGER
-			-- Index of current position
+			-- Index of current position.
 		local
 			old_active: V_BINARY_TREE_CELL [G]
 			old_after: BOOLEAN
@@ -122,7 +122,7 @@ feature -- Status report
 
 feature -- Cursor movement
 	go_root is
-			-- Move cursor to the root
+			-- Move cursor to the root.
 		do
 			Precursor
 			if not target.is_empty then
@@ -136,7 +136,7 @@ feature -- Cursor movement
 		end
 
 	start is
-			-- Move cursor to the leftmost node
+			-- Move cursor to the leftmost node.
 		do
 			if not target.is_empty then
 				from
@@ -153,7 +153,7 @@ feature -- Cursor movement
 		end
 
 	finish
-			-- Move cursor to the rightmost node
+			-- Move cursor to the rightmost node.
 		do
 			if not target.is_empty then
 				from
@@ -168,7 +168,7 @@ feature -- Cursor movement
 		end
 
 	forth
-			-- Move cursor to the next element in inorder
+			-- Move cursor to the next element in inorder.
 		do
 			if active.right /= Void then
 				right
@@ -193,7 +193,7 @@ feature -- Cursor movement
 		end
 
 	back
-			-- Move cursor to the previous element in inorder
+			-- Move cursor to the previous element in inorder.
 		do
 			if active.left /= Void then
 				left
@@ -215,14 +215,14 @@ feature -- Cursor movement
 		end
 
 	go_before
-			-- Move cursor before any position of `target'
+			-- Move cursor before any position of `target'.
 		do
 			active := Void
 			after := False
 		end
 
 	go_after
-			-- Move cursor after any position of `target'
+			-- Move cursor after any position of `target'.
 		do
 			active := Void
 			after := True
@@ -230,7 +230,7 @@ feature -- Cursor movement
 
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
-			-- Sequence of elements
+			-- Sequence of elements.
 		note
 			status: specification
 		local
@@ -253,7 +253,7 @@ feature -- Specification
 		end
 
 	subtree_sequence (m: MML_FINITE_MAP [MML_BIT_VECTOR, G]; root: MML_BIT_VECTOR): MML_FINITE_SEQUENCE [G]
-			-- Inorder sequence of values in a subtree of `m' starting from `root'
+			-- Inorder sequence of values in a subtree of `m' starting from `root'.
 		note
 			status: specification
 		do
@@ -269,7 +269,7 @@ feature -- Specification
 		end
 
 	predecessor (m: MML_FINITE_MAP [MML_BIT_VECTOR, G]; node: MML_BIT_VECTOR): MML_BIT_VECTOR
-			-- Predecessor of `node' in inorder
+			-- Predecessor of `node' in inorder.
 		note
 			status: specification
 		do
@@ -301,7 +301,7 @@ feature -- Specification
 		end
 
 	node_index (m: MML_FINITE_MAP [MML_BIT_VECTOR, G]; node: MML_BIT_VECTOR): INTEGER
-			-- Index of `node' in inorder
+			-- Index of `node' in inorder.
 		do
 			if m.domain [node] then
 				 Result := node_index (m, predecessor (m, node)) + 1

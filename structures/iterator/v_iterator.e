@@ -24,7 +24,7 @@ inherit
 
 feature -- Replacement
 	put (v: G)
-			-- Replace item at current position with `v'
+			-- Replace item at current position with `v'.
 		require
 			not_off: not off
 		deferred
@@ -33,7 +33,7 @@ feature -- Replacement
 		end
 
 	output (v: G)
-			-- Replace item at current position with `v' and go to the next position
+			-- Replace item at current position with `v' and go to the next position.
 		do
 			put (v)
 			forth
@@ -43,7 +43,7 @@ feature -- Replacement
 		end
 
 	pipe (input: V_INPUT_STREAM [G])
-			-- Copy values from `input' until one either `Current' or `other' is `off'
+			-- Copy values from `input' until one either `Current' or `other' is `off'.
 		do
 			Precursor (input)
 		ensure then
@@ -53,7 +53,7 @@ feature -- Replacement
 		end
 
 	pipe_n (input: V_INPUT_STREAM [G]; n: INTEGER)
-			-- Copy `n' elements from `input'; stop if either `Current' or `other' is `off'
+			-- Copy `n' elements from `input'; stop if either `Current' or `other' is `off'.
 		do
 			Precursor (input, n)
 		ensure then

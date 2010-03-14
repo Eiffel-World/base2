@@ -37,7 +37,7 @@ create {V_SORTED_SET}
 
 feature {NONE} -- Initialization
 	make (s: V_SORTED_SET [G]; t: V_BINARY_TREE [G])
-			-- Create an iterator over `s'
+			-- Create an iterator over `s'.
 		require
 			s_exists: s /= Void
 			valid_tree: t = s.tree
@@ -49,7 +49,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_with_tree (t: V_BINARY_TREE [G]; cc: V_CELL [INTEGER])
-			-- Create iterator over `tree'
+			-- Create iterator over `tree'.
 		do
 			tree := t
 			count_cell := cc
@@ -57,7 +57,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 	copy (other: like Current)
-			-- Initialize with the same `target' and position as in `other'
+			-- Initialize with the same `target' and position as in `other'.
 		do
 			if other /= Current then
 				target := other.target
@@ -75,11 +75,11 @@ feature -- Initialization
 
 feature -- Access
 	target: V_SORTED_SET [G]
-			-- Set to iterate over
+			-- Set to iterate over.
 
 	search (v: G)
-			-- Move to an element equivalent to `v'
-			-- (Use `target.equivalence')
+			-- Move to an element equivalent to `v'.
+			-- (Use `target.equivalence'.)
 		do
 			from
 				go_root
@@ -98,9 +98,9 @@ feature -- Access
 		end
 
 	search_forth (v: G)
-			-- Move to the first occurrence of `v' starting from current position
-			-- If `v' does not occur, move `off'
-			-- (Use refernce equality)
+			-- Move to the first occurrence of `v' starting from current position.
+			-- If `v' does not occur, move `off'.
+			-- (Use refernce equality.)
 		do
 			if before or (not off and then target.order.greater_than (v, item)) then
 				search (v)
@@ -111,9 +111,9 @@ feature -- Access
 		end
 
 	search_back (v: G)
-			-- Move to the last occurrence of `v' at or before current position
-			-- If `v' does not occur, move `before'
-			-- (Use refernce equality)
+			-- Move to the last occurrence of `v' at or before current position.
+			-- If `v' does not occur, move `before'.
+			-- (Use refernce equality.)
 		do
 			if after or (not off and then target.order.less_than (v, item)) then
 				search (v)

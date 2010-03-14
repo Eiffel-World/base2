@@ -17,7 +17,7 @@ inherit
 
 feature {NONE} -- Initialization
 	default_create
-			-- Create an empty queue
+			-- Create an empty queue.
 		do
 			create list
 		ensure then
@@ -38,46 +38,46 @@ feature -- Initialization
 
 feature -- Access
 	item: G
-			-- The front element
+			-- The front element.
 		do
 			Result := list.first
 		end
 
 feature -- Measurement
 	count: INTEGER
-			-- Number of elements
+			-- Number of elements.
 		do
 			Result := list.count
 		end
 
 feature -- Iteration
 	at_start: V_INPUT_ITERATOR [G]
-			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'
+			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'.
 		do
 			create {V_PROXY_ITERATOR [G]} Result.make (Current, list.at_start)
 		end
 
 feature -- Extension
 	extend (v: G)
-			-- Enqueue `v'
+			-- Enqueue `v'.
 		do
 			list.extend_back (v)
 		end
 
 feature -- Removal
 	remove
-			-- Dequeue
+			-- Dequeue.
 		do
 			list.remove_front
 		end
 
 	wipe_out
-			-- Remove all elements
+			-- Remove all elements.
 		do
 			list.wipe_out
 		end
 
 feature {V_LINKED_QUEUE} -- Implementation
 	list: V_LINKED_LIST [G]
-			-- Underlying list
+			-- Underlying list.
 end

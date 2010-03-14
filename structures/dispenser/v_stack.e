@@ -18,7 +18,7 @@ inherit
 feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Is stack made of the same values in the same order as `other'?
-			-- (Use reference comarison)
+			-- (Use reference comarison.)
 		local
 			i, j: V_INPUT_ITERATOR [G]
 		do
@@ -43,7 +43,7 @@ feature -- Comparison
 
 feature -- Extension
 	extend (v: G)
-			-- Push `v' on the stack
+			-- Push `v' on the stack.
 		deferred
 		ensure then
 			sequence_effect: sequence |=| old sequence.prepended (v)

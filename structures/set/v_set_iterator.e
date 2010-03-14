@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 	target: V_SET [G]
-			-- Set to iterate over
+			-- Set to iterate over.
 		deferred
 		end
 
@@ -21,7 +21,7 @@ feature -- Cursor movement
 	search (v: G)
 			-- Move to an element equivalent to `v'.
 			-- If `v' does not appear, go off.
-			-- (Use `target.equivalence')
+			-- (Use `target.equivalence'.)
 		deferred
 		ensure
 			index_effect_found: target.has_equivalent (target.set, v, target.relation) implies target.relation [sequence [index], v]

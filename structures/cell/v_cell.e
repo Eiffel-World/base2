@@ -17,7 +17,7 @@ feature -- Access
 
 feature -- Replacement
 	put (v: G)
-			-- Replace `item' with `v'
+			-- Replace `item' with `v'.
 		do
 			item := v
 		ensure

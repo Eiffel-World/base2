@@ -28,7 +28,7 @@ create
 
 feature {NONE} -- Initialization
 	make (l, u: INTEGER)
-			-- Create array with indexes in [`l', `u']; set all values to default
+			-- Create array with indexes in [`l', `u']; set all values to default.
 		require
 			valid_indexes: l <= u + 1
 		do
@@ -46,7 +46,7 @@ feature {NONE} -- Initialization
 		end
 
 	make_filled (l, u: INTEGER; v: G)
-			-- Create array with indexes in [`l', `u']; set all values to `v'
+			-- Create array with indexes in [`l', `u']; set all values to `v'.
 		do
 			if l <= u then
 				lower := l
@@ -82,13 +82,13 @@ feature -- Initialization
 
 feature -- Access
 	item alias "[]" (i: INTEGER): G
-			-- Value associated with `i'
+			-- Value associated with `i'.
 		do
 			Result := area [i - lower]
 		end
 
 	subarray (l, u: INTEGER): V_ARRAY [G]
-			-- Array consisting of elements of Current in index range [`l', `u']
+			-- Array consisting of elements of Current in index range [`l', `u'].
 		require
 			valid_bounds: l <= u + 1
 		do
@@ -106,26 +106,26 @@ feature -- Access
 
 feature -- Measurement
 	lower: INTEGER
-			-- Lower bound of index interval
+			-- Lower bound of index interval.
 
 	upper: INTEGER
-			-- Upper bound of index interval		
+			-- Upper bound of index interval.		
 
 feature -- Iteration
 	at_start: V_SEQUENCE_ITERATOR [G]
-			-- New iterator pointing to start position of the array
+			-- New iterator pointing to start position of the array.
 		do
 			create Result.make (Current, 1)
 		end
 
 	at_finish: like at_start
-			-- New iterator pointing to end position of the array
+			-- New iterator pointing to end position of the array.
 		do
 			create Result.make (Current, count)
 		end
 
 	at (i: INTEGER): like at_start
-			-- New iterator poiting at `i'-th position
+			-- New iterator poiting at `i'-th position.
 		do
 			create Result.make (Current, i)
 		end
@@ -133,7 +133,7 @@ feature -- Iteration
 feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Is array made of the same items as `other'?
-			-- (Use reference comarison)
+			-- (Use reference comarison.)
 		do
 			if other = Current then
 				Result := True
@@ -215,7 +215,7 @@ feature -- Resizing
 		end
 
 	include (i: INTEGER)
-			-- Resize in a minimal way to include index `i'; keep values at old indixes; set to default at new indexes
+			-- Resize in a minimal way to include index `i'; keep values at old indixes; set to default at new indexes.
 			-- Reallocate memory unless count stays the same.
 		do
 			if i < lower then
@@ -243,7 +243,7 @@ feature -- Resizing
 		end
 
 	wipe_out
-			-- Remove all elements
+			-- Remove all elements.
 		do
 			resize (1, 0)
 		end

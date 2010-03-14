@@ -19,24 +19,24 @@ inherit
 
 feature -- Measurement
 	lower: INTEGER = 1
-			-- Lower bound of index interval
+			-- Lower bound of index interval.
 
 	upper: INTEGER
-			-- Upper bound of index interval
+			-- Upper bound of index interval.
 		do
 			Result := count
 		end
 
 feature -- Iteration
 	at_start: V_LIST_ITERATOR [G]
-			-- New iterator pointing to the first position
+			-- New iterator pointing to the first position.
 		deferred
 		end
 
 feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Is list made of the same values in the same order as `other'?
-			-- (Use reference comarison)
+			-- (Use reference comarison.)
 		local
 			i, j: V_INPUT_ITERATOR [G]
 		do
@@ -61,21 +61,21 @@ feature -- Comparison
 
 feature -- Extension
 	extend_front (v: G)
-			-- Insert `v' at the front
+			-- Insert `v' at the front.
 		deferred
 		ensure
 			sequence_effect: sequence |=| old sequence.prepended (v)
 		end
 
 	extend_back (v: G)
-			-- Insert `v' at the back
+			-- Insert `v' at the back.
 		deferred
 		ensure
 			sequence_effect: sequence |=| old sequence.extended (v)
 		end
 
 	extend_at (i: INTEGER; v: G)
-			-- Insert `v' at position `i'
+			-- Insert `v' at position `i'.
 		require
 			valid_index: has_index (i) or i = count + 1
 		deferred
@@ -84,7 +84,7 @@ feature -- Extension
 		end
 
 	append (input: V_INPUT_ITERATOR [G])
-			-- Append sequence of values, over which `input' iterates
+			-- Append sequence of values, over which `input' iterates.
 		require
 			input_exists: input /= Void
 			different_target: input.target /= Current
@@ -104,7 +104,7 @@ feature -- Extension
 		end
 
 	prepend (input: V_INPUT_ITERATOR [G])
-			-- Prepend sequence of values, over which `input' iterates
+			-- Prepend sequence of values, over which `input' iterates.
 		require
 			input_exists: input /= Void
 			different_target: input.target /= Current
@@ -130,7 +130,7 @@ feature -- Extension
 		end
 
 	insert_at (i: INTEGER; input: V_INPUT_ITERATOR [G])
-			-- Insert sequence of values, over which `input' iterates, starting at position `i'
+			-- Insert sequence of values, over which `input' iterates, starting at position `i'.
 		require
 			valid_index: has_index (i) or i = count + 1
 			input_exists: input /= Void
@@ -144,7 +144,7 @@ feature -- Extension
 
 feature -- Removal
 	remove_front
-			-- Remove first element
+			-- Remove first element.
 		require
 			not_empty: not is_empty
 		deferred
@@ -153,7 +153,7 @@ feature -- Removal
 		end
 
 	remove_back
-			-- Remove last element
+			-- Remove last element.
 		require
 			not_empty: not is_empty
 		deferred
@@ -162,7 +162,7 @@ feature -- Removal
 		end
 
 	remove_at  (i: INTEGER)
-			-- Remove element at position `i'
+			-- Remove element at position `i'.
 		require
 			has_index: has_index (i)
 		deferred
@@ -171,7 +171,7 @@ feature -- Removal
 		end
 
 	wipe_out
-			-- Remove all elements
+			-- Remove all elements.
 		deferred
 		ensure then
 			sequence_effect: sequence.is_empty
@@ -179,7 +179,7 @@ feature -- Removal
 
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
-			-- Sequence of list's elements
+			-- Sequence of list's elements.
 		note
 			status: specification
 		do

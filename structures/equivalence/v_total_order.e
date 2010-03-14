@@ -54,7 +54,7 @@ feature -- Basic operations
 
 feature -- Specification
 	order_relation: MML_ENDORELATION [G]
-			-- Mathematical relation that corresponds to `greater_equal'
+			-- Mathematical relation that corresponds to `greater_equal'.
 		note
 			status: specification
 		do

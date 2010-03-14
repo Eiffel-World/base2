@@ -29,7 +29,7 @@ create {V_LINKED_LIST}
 
 feature {NONE} -- Initialization
 	make (list: V_LINKED_LIST [G]; cc: V_CELL [INTEGER])
-			-- Create iterator over `list'
+			-- Create iterator over `list'.
 		require
 			list_exists: list /= Void
 			valid_cc: cc = list.count_cell
@@ -43,7 +43,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 	copy (other: like Current)
-			-- Initialize with the same `target' and position as in `other'
+			-- Initialize with the same `target' and position as in `other'.
 		do
 			target := other.target
 			active := other.active
@@ -58,11 +58,11 @@ feature -- Initialization
 
 feature -- Access
 	target: V_LINKED_LIST [G]
-			-- Container to iterate over
+			-- Container to iterate over.
 
 feature -- Measurement			
 	index: INTEGER
-			-- Current position
+			-- Current position.
 		local
 			c: V_LINKABLE [G]
 		do
@@ -107,7 +107,7 @@ feature -- Status report
 
 feature -- Cursor movement
 	start
-			-- Go to the first position
+			-- Go to the first position.
 		do
 			active := target.first_cell
 			if active = Void then
@@ -118,14 +118,14 @@ feature -- Cursor movement
 		end
 
 	finish
-			-- Go to the last position
+			-- Go to the last position.
 		do
 			active := target.last_cell
 			after := False
 		end
 
 	forth
-			-- Move one position forward
+			-- Move one position forward.
 		do
 			active := active.right
 			if active = Void then
@@ -134,7 +134,7 @@ feature -- Cursor movement
 		end
 
 	back
-			-- Go one position backwards
+			-- Go one position backwards.
 		local
 			old_active: V_LINKABLE [G]
 		do
@@ -153,14 +153,14 @@ feature -- Cursor movement
 		end
 
 	go_before
-			-- Go before any position of `target'
+			-- Go before any position of `target'.
 		do
 			active := Void
 			after := False
 		end
 
 	go_after
-			-- Go after any position of `target'
+			-- Go after any position of `target'.
 		do
 			active := Void
 			after := True
@@ -283,14 +283,15 @@ feature -- Removal
 
 feature {V_CELL_CURSOR} -- Implementation
 	active: V_LINKABLE [G]
-			-- Cell at current position
+			-- Cell at current position.
 
 feature {NONE} -- Implementation
 	count_cell: V_CELL [INTEGER]
-			-- Cell where `target's	count is stored	
+			-- Cell where `target's	count is stored.
 
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
+			-- Sequence of elements	in `target'.
 		note
 			status: specification
 		local
