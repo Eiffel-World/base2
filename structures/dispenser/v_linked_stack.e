@@ -20,6 +20,8 @@ feature {NONE} -- Initialization
 			-- Create an empty stack
 		do
 			create list
+		ensure then
+			sequence_effect: sequence.is_empty
 		end
 
 feature -- Initialization

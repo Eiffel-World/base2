@@ -3,7 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: target, sequence, index
+	model: target, index
 
 class
 	V_SORTED_SET_ITERATOR [G]
@@ -68,10 +68,8 @@ feature -- Initialization
 			end
 		ensure then
 			target_effect: target = other.target
-			sequence_effect: sequence = other.sequence
 			index_effect: index = other.index
 			other_target_effect: other.target = old other.target
-			other_sequence_effect: other.sequence = old other.sequence
 			other_index_effect: other.index = old other.index
 		end
 

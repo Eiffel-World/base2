@@ -57,6 +57,8 @@ feature -- Search
 
 	hold_count (p: PREDICATE [ANY, TUPLE [G]]): INTEGER
 			-- How many elements satisfy `p'?
+		require
+			p_exists: p /= Void
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
@@ -76,6 +78,8 @@ feature -- Search
 
 	exists (p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 			-- Is there an element that satisfies `p'?
+		require
+			p_exists: p /= Void
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
@@ -88,6 +92,8 @@ feature -- Search
 
 	for_all (p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 			-- Do all elements satisfy `p'?
+		require
+			p_exists: p /= Void
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
@@ -110,6 +116,7 @@ feature -- Iteration
 		deferred
 		ensure
 			target_definition: Result.target = Current
+			sequence_domain_definition: Result.sequence.count = bag.count
 			index_definition: Result.index = 1
 		end
 

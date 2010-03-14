@@ -3,7 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: target, key_sequence, index
+	model: target, index
 
 class
 	V_SORTED_TABLE_ITERATOR [K, G]
@@ -19,7 +19,7 @@ create {V_SORTED_TABLE}
 
 feature {NONE} -- Initialization
 	make (t: V_SORTED_TABLE [K, G])
-			-- Create an iterator at the start of `t'
+			-- Create an iterator over `t'
 		do
 			target := t
 			set_iterator := target.set.new_iterator
@@ -37,10 +37,8 @@ feature -- Initialization
 			end
 		ensure then
 			target_effect: target = other.target
-			key_sequence_effect: key_sequence = other.key_sequence
 			index_effect: index = other.index
 			other_target_effect: other.target = old other.target
-			other_key_sequence_effect: other.key_sequence = old other.key_sequence
 			other_index_effect: other.index = old other.index
 		end
 

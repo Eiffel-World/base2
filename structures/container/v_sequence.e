@@ -104,6 +104,8 @@ feature -- Search
 	index_that (p: PREDICATE [ANY, TUPLE [G]]): INTEGER
 			-- Index of the first value that satisfies `p'
 			-- out of range, if `p' is never satisfied
+		require
+			p_exists: p /= Void
 		do
 			if not is_empty then
 				Result := index_that_from (p, 1)
@@ -117,6 +119,7 @@ feature -- Search
 			-- Index of the first value that satisfies `p' starting from position `i'
 			-- out of range, if `p' is never satisfied
 		require
+			p_exists: p /= Void
 			has_index: has_index (i)
 		local
 			it: V_INPUT_ITERATOR [G]
@@ -147,6 +150,11 @@ feature -- Iteration
 	at_start: V_ITERATOR [G]
 			-- New iterator pointing to the first position
 		deferred
+		ensure then
+			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_FINITE_SEQUENCE [G]): BOOLEAN
+				do
+					Result := s [j] = map [map.domain.lower + j - 1]
+				end (?, Result.sequence))
 		end
 
 	at_finish: like at_start
@@ -154,6 +162,11 @@ feature -- Iteration
 		deferred
 		ensure
 			target_definition: Result.target = Current
+			sequence_domain_definition: Result.sequence.count = bag.count
+			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_FINITE_SEQUENCE [G]): BOOLEAN
+				do
+					Result := s [j] = map [map.domain.lower + j - 1]
+				end (?, Result.sequence))
 			index_definition: Result.index = map.count
 		end
 
@@ -164,12 +177,20 @@ feature -- Iteration
 		deferred
 		ensure
 			target_definition: Result.target = Current
+			sequence_domain_definition: Result.sequence.count = bag.count
+			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_FINITE_SEQUENCE [G]): BOOLEAN
+				do
+					Result := s [j] = map [map.domain.lower + j - 1]
+				end (?, Result.sequence))
 			index_definition: Result.index = i
 		end
 
 feature -- Replacement
 	fill (v: G; l, u: INTEGER)
 			-- Put `v' at positions [`l', `u'].
+		require
+			valid_lower: has_index (l)
+			valid_upper: has_index (u)
 		local
 			it: V_ITERATOR [G]
 			j: INTEGER
@@ -192,6 +213,9 @@ feature -- Replacement
 
 	clear (l, u: INTEGER)
 			-- Put default value at positions [`l', `u'].
+		require
+			valid_lower: has_index (l)
+			valid_upper: has_index (u)
 		do
 			fill (default_item, l, u)
 		ensure

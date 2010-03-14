@@ -21,6 +21,9 @@ feature {NONE} -- Initialization
 			o_exists: o /= Void
 		do
 			key_order := o
+		ensure
+			key_order_relation_effect: executable implies
+				key_order_relation |=| o.order_relation
 		end
 
 feature -- Access

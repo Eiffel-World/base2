@@ -95,14 +95,14 @@ feature -- Comparison
 
 feature -- Extension
 	add_root (v: G)
-			-- Add a route with value `v' to an empty tree
+			-- Add a root with value `v' to an empty tree
 		require
 			is_empty: is_empty
 		do
 			create root.put (v)
 			count_cell.put (1)
 		ensure
-			map_effect: map |=| create {MML_FINITE_MAP [MML_BIT_VECTOR, G]}.singleton (1, v)
+			map_effect: map |=| create {like map}.singleton (1, v)
 		end
 
 feature -- Removal		

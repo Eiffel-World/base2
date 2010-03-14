@@ -17,7 +17,8 @@ inherit
 		rename
 			equivalence as order
 		redefine
-			copy
+			copy,
+			at_start
 		end
 
 create
@@ -64,6 +65,13 @@ feature -- Measurement
 		end
 
 feature -- Iteration
+	at_start: V_SORTED_SET_ITERATOR [G]
+			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'
+		do
+			Result := new_iterator
+			Result.start
+		end
+
 	new_iterator: V_SORTED_SET_ITERATOR [G]
 			-- New iterator over `Current'
 			-- (Might have more efficient implementation than `at_start')

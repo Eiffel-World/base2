@@ -21,11 +21,21 @@ inherit
 			is_equal
 		redefine
 			copy,
-			go_root
+			go_root,
+			make
 		end
 
 create {V_CONTAINER}
 	make
+
+feature {NONE} -- Initialization
+	make (tree: V_BINARY_TREE [G]; cc: V_CELL [INTEGER])
+			-- Create iterator over `tree'
+		do
+			Precursor (tree, cc)
+		ensure then
+			after_effect: not after
+		end
 
 feature -- Initialization
 	copy (other: like Current)
@@ -34,10 +44,12 @@ feature -- Initialization
 			Precursor {V_BINARY_TREE_CURSOR} (other)
 			after := other.after
 		ensure then
-			sequence_effect: sequence = other.sequence
-			index_effect: index = other.index
-			other_sequence_effect: other.sequence = old other.sequence
-			other_index_effect: other.index = old other.index
+			sequence_effect: sequence |=| other.sequence
+			path_effect: path |=| other.path
+			after_effect: after = other.after
+			other_sequence_effect: other.sequence |=| old other.sequence
+			other_path_effect: other.path |=| old other.path
+			other_after_effect: other.after = old other.after
 		end
 
 feature -- Measurement
@@ -118,6 +130,9 @@ feature -- Cursor movement
 			else
 				after := True
 			end
+		ensure then
+			after_effect_nonemtpy: not target.map.is_empty implies not after
+			after_effect_empty: target.map.is_empty implies after
 		end
 
 	start is

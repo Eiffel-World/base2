@@ -35,7 +35,7 @@ feature -- Cursor movement
 				sequence |=| old (sequence.extended (item))
 		end
 
-	search_forth (v: G)
+	search (v: G)
 			-- Move to the first occurrence of `v' at or after current position
 			-- If `v' does not occur, move `after'
 			-- (Use refernce equality)
@@ -54,9 +54,11 @@ feature -- Cursor movement
 				not sequence.tail (old sequence.count + 1).has (v)
 		end
 
-	satisfy_forth (pred: PREDICATE [ANY, TUPLE [G]])
+	satisfy (pred: PREDICATE [ANY, TUPLE [G]])
 			-- Move to the first position at or after current where `p' holds
 			-- If `pred' never holds, move `after'
+		require
+			pred_exists: pred /= Void
 		do
 			from
 			until

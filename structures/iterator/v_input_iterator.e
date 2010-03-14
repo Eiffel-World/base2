@@ -11,6 +11,8 @@ deferred class
 inherit
 	V_INPUT_STREAM [G]
 		rename
+			search as search_forth,
+			satisfy as satisfy_forth,
 			sequence as front
 		redefine
 			is_equal,
@@ -223,6 +225,8 @@ feature -- Cursor movement
 	satisfy_back (pred: PREDICATE [ANY, TUPLE [G]])
 			-- Move to the first position at or before current where `p' holds
 			-- If `pred' never holds, move `after'
+		require
+			pred_exists: pred /= Void
 		do
 			if after then
 				finish

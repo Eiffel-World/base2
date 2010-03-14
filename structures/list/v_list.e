@@ -88,6 +88,7 @@ feature -- Extension
 		require
 			input_exists: input /= Void
 			different_target: input.target /= Current
+			not_before: not input.before
 		do
 			from
 			until
@@ -107,6 +108,7 @@ feature -- Extension
 		require
 			input_exists: input /= Void
 			different_target: input.target /= Current
+			not_before: not input.before
 		local
 			i: INTEGER
 		do
