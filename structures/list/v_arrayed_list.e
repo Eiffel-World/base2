@@ -107,23 +107,11 @@ feature -- Measurement
 
 	growth_rate: INTEGER
 			-- Minimum percentage by which underlying array grows when resized.
-			-- Higher values improve runtime efficiency at the cost of higher memery consumption.
+			-- Higher values improve runtime efficiency at the cost of higher memory consumption.
 			-- Minimum value is 100%: only resize the array so that all list elements fit.	
 
 feature -- Iteration
-	at_start: V_LIST_ITERATOR [G]
-			-- New iterator pointing to the first position.
-		do
-			create {V_ARRAYED_LIST_ITERATOR [G]} Result.make (Current, 1)
-		end
-
-	at_finish: like at_start
-			-- New iterator pointing to the last position.
-		do
-			create {V_ARRAYED_LIST_ITERATOR [G]} Result.make (Current, count)
-		end
-
-	at (i: INTEGER): like at_start
+	at (i: INTEGER): V_ARRAYED_LIST_ITERATOR [G]
 			-- New iterator poiting at `i'-th position.
 		do
 			create {V_ARRAYED_LIST_ITERATOR [G]} Result.make (Current, i)
@@ -252,7 +240,7 @@ feature -- Removal
 feature -- Resizing		
 	reserve (n: INTEGER)
 			-- Make sure `array' can accomodate `n' elements;
-			-- Do not resize by less than `growth rate'.
+			-- Do not resize by less than `growth_rate'.
 		local
 			old_size, new_size: INTEGER
 		do
@@ -282,17 +270,18 @@ feature -- Resizing
 		end
 
 feature {V_ARRAYED_LIST} -- Implementation
-	default_capacity: INTEGER = 10
-			-- Default value for `capacity'.
-
-	default_growth_rate: INTEGER = 150
-			-- Default values for `growth_rate'
-
 	array: V_ARRAY [G]
 			-- Element storage.
 
 	first_index: INTEGER
 			-- Index of the first list element in `array'.
+
+feature {NONE} -- Implementation
+	default_capacity: INTEGER = 10
+			-- Default value for `capacity'.
+
+	default_growth_rate: INTEGER = 150
+			-- Default values for `growth_rate'
 
 	mod_capacity (i: INTEGER): INTEGER
 			-- `i' modulo `capacity' in range [`1', `capacity'].

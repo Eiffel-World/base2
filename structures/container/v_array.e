@@ -112,19 +112,7 @@ feature -- Measurement
 			-- Upper bound of index interval.		
 
 feature -- Iteration
-	at_start: V_SEQUENCE_ITERATOR [G]
-			-- New iterator pointing to start position of the array.
-		do
-			create Result.make (Current, 1)
-		end
-
-	at_finish: like at_start
-			-- New iterator pointing to end position of the array.
-		do
-			create Result.make (Current, count)
-		end
-
-	at (i: INTEGER): like at_start
+	at (i: INTEGER): V_SEQUENCE_ITERATOR [G]
 			-- New iterator poiting at `i'-th position.
 		do
 			create Result.make (Current, i)

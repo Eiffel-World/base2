@@ -13,7 +13,7 @@ inherit
 		undefine
 			count
 		redefine
-			at_start,
+			at,
 			is_equal
 		end
 
@@ -28,8 +28,8 @@ feature -- Measurement
 		end
 
 feature -- Iteration
-	at_start: V_LIST_ITERATOR [G]
-			-- New iterator pointing to the first position.
+	at (i: INTEGER): V_LIST_ITERATOR [G]
+			-- New iterator poiting at `i'-th position.
 		deferred
 		end
 

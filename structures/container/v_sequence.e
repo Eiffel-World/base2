@@ -150,9 +150,10 @@ feature -- Search
 		end
 
 feature -- Iteration
-	at_start: V_ITERATOR [G]
+	at_start: like at
 			-- New iterator pointing to the first position.
-		deferred
+		do
+			Result := at (1)
 		ensure then
 			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_FINITE_SEQUENCE [G]): BOOLEAN
 				do
@@ -160,9 +161,10 @@ feature -- Iteration
 				end (?, Result.sequence))
 		end
 
-	at_finish: like at_start
+	at_finish: like at
 			-- New iterator pointing to the last position.
-		deferred
+		do
+			Result := at (count)
 		ensure
 			target_definition: Result.target = Current
 			sequence_domain_definition: Result.sequence.count = bag.count
@@ -173,7 +175,7 @@ feature -- Iteration
 			index_definition: Result.index = map.count
 		end
 
-	at (i: INTEGER): like at_start
+	at (i: INTEGER): V_ITERATOR [G]
 			-- New iterator poiting at `i'-th position.
 		require
 			has_index: 1 <= i and i <= count
@@ -228,7 +230,7 @@ feature -- Replacement
 		end
 
 	subcopy (other: V_SEQUENCE [G]; other_first, other_last, index: INTEGER)
-			-- Copy items of `other' within bounds [`other_first', `other_last'] to current array starting at index `index'.
+			-- Copy items of `other' within bounds [`other_first', `other_last'] to current sequence starting at index `index'.
 		require
 			other_exists: other /= Void
 			valid_lower: other.has_index (other_first)

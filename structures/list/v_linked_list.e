@@ -68,21 +68,7 @@ feature -- Measurement
 		end
 
 feature -- Iteration
-	at_start: V_LINKED_LIST_ITERATOR [G]
-			-- New iterator pointing to the first position.
-		do
-			create Result.make (Current, count_cell)
-			Result.start
-		end
-
-	at_finish: like at_start
-			-- New iterator pointing to the last position.
-		do
-			create Result.make (Current, count_cell)
-			Result.finish
-		end
-
-	at (i: INTEGER): like at_start
+	at (i: INTEGER): V_LINKED_LIST_ITERATOR [G]
 			-- New iterator poiting at `i'-th position.
 		do
 			create Result.make (Current, count_cell)
