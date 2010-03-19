@@ -15,14 +15,24 @@ inherit
 		end
 
 create {V_SORTED_TABLE}
-	make
+	make_at_start,
+	make_at_key
 
 feature {NONE} -- Initialization
-	make (t: V_SORTED_TABLE [K, G])
-			-- Create an iterator over `t'.
+	make_at_start (t: V_SORTED_TABLE [K, G])
+			-- Create an iterator at start of `t'.
 		do
 			target := t
 			set_iterator := target.set.new_iterator
+		ensure
+			target_effect: target = t
+		end
+
+	make_at_key (t: V_SORTED_TABLE [K, G]; k: K)
+			-- Create an iterator over `t' pointing to the position with key `k'.
+		do
+			target := t
+			set_iterator := target.set.at ([k, default_item])
 		ensure
 			target_effect: target = t
 		end

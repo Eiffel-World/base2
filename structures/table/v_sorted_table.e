@@ -9,10 +9,10 @@ note
 	model: map, order_relation
 
 class
-	V_SORTED_TABLE [K, G]
+	V_SORTED_TABLE [K, V]
 
 inherit
-	V_TABLE [K, G]
+	V_TABLE [K, V]
 		rename
 			key_equivalence as key_order
 		redefine
@@ -29,7 +29,7 @@ feature {NONE} -- Initialization
 			o_exists: o /= Void
 		do
 			key_order := o
-			create set.make (create {V_KEY_VALUE_ORDER [K, G]}.make (o))
+			create set.make (create {V_KEY_VALUE_ORDER [K, V]}.make (o))
 		ensure
 			map_effect: map.is_empty
 			order_relation_effect: order_relation |=| o.order_relation
@@ -51,13 +51,12 @@ feature -- Initialization
 		end
 
 feature -- Access
-	item alias "[]" (k: K): G
+	item alias "[]" (k: K): V
 			-- Value associated with `k'.
 		local
-			i: V_SORTED_TABLE_ITERATOR [K, G]
+			i: V_SORTED_TABLE_ITERATOR [K, V]
 		do
-			create i.make (Current)
-			i.search_key (k)
+			create i.make_at_key (Current, k)
 			Result := i.value
 		end
 
@@ -78,26 +77,30 @@ feature -- Measurement
 		end
 
 feature -- Iteration
-	at_start: V_SORTED_TABLE_ITERATOR [K, G]
+	new_iterator: V_SORTED_TABLE_ITERATOR [K, V]
 			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'.
 		do
-			create Result.make (Current)
-			Result.start
+			create Result.make_at_start (Current)
+		end
+
+	at_key (k: K): V_SORTED_TABLE_ITERATOR [K, V]
+			-- New iterator pointing to a position with key `k'
+		do
+			create Result.make_at_key (Current, k)
 		end
 
 feature -- Replacement
-	put (k: K; v: G)
+	put (k: K; v: V)
 			-- Associate `v' with key `k'.
 		local
-			i: V_SORTED_TABLE_ITERATOR [K, G]
+			i: V_SORTED_TABLE_ITERATOR [K, V]
 		do
-			create i.make (Current)
-			i.search_key (k)
+			create i.make_at_key (Current, k)
 			i.put (v)
 		end
 
 feature -- Extension
-	extend (k: K; v: G)
+	extend (k: K; v: V)
 			-- Extend table with key-value pair <`k', `v'>.
 		do
 			set.extend ([k, v])
@@ -117,7 +120,7 @@ feature -- Removal
 		end
 
 feature {V_SORTED_TABLE, V_SORTED_TABLE_ITERATOR} -- Implementation
-	set: V_SORTED_SET [TUPLE [key: K; value: G]]
+	set: V_SORTED_SET [TUPLE [key: K; value: V]]
 			-- Underlying set of key-value pairs
 
 feature -- Specification

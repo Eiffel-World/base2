@@ -6,10 +6,10 @@ note
 	model: map, relation
 
 deferred class
-	V_MAP [K, G]
+	V_MAP [K, V]
 
 feature -- Access
-	item alias "[]" (k: K): G
+	item alias "[]" (k: K): V
 			-- Value associated with `k'.
 		require
 			has_key: has_key (k)
@@ -27,7 +27,7 @@ feature -- Measurement
 		end
 
 feature -- Specification
-	map: MML_MAP [K, G]
+	map: MML_MAP [K, V]
 			-- Corresponding mathematical map.
 		note
 			status: specification
@@ -41,7 +41,7 @@ feature -- Specification
 		deferred
 		end
 
-	has_equivalent_key (m: MML_MAP [K, G]; k: K; r: MML_RELATION [K, K]): BOOLEAN
+	has_equivalent_key (m: MML_MAP [K, V]; k: K; r: MML_RELATION [K, K]): BOOLEAN
 			-- Does `m' contain a key equivalent to `k' according to `r'?
 		note
 			status: specification
@@ -51,7 +51,7 @@ feature -- Specification
 			definition: Result = not (relation.image_of (k) * map.domain).as_finite.is_empty
 		end
 
-	equivalent_key (m: MML_MAP [K, G]; k: K; r: MML_RELATION [K, K]): K
+	equivalent_key (m: MML_MAP [K, V]; k: K; r: MML_RELATION [K, K]): K
 			-- Key in `m' equivalent to `k' according to `r'.
 		note
 			status: specification

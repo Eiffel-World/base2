@@ -10,6 +10,9 @@ deferred class
 
 inherit
 	V_CONTAINER [G]
+		rename
+			new_iterator as at_start
+		end
 
 	V_UPDATABLE_MAP [INTEGER, G]
 		rename

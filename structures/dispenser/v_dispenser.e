@@ -20,7 +20,7 @@ feature -- Access
 		end
 
 feature -- Iteration
-	at_start: V_INPUT_ITERATOR [G]
+	new_iterator: V_INPUT_ITERATOR [G]
 			-- New iterator pointing to the accessible element.
 			-- (Traversal in the order of accessibility.)
 		deferred
@@ -50,7 +50,7 @@ feature -- Specification
 		note
 			status: specification
 		do
-			Result := at_start.sequence
+			Result := new_iterator.sequence
 		end
 
 invariant

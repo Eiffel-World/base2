@@ -6,15 +6,15 @@ note
 	model: map, relation
 
 deferred class
-	V_TABLE [K, G]
+	V_TABLE [K, V]
 
 inherit
-	V_UPDATABLE_MAP [K, G]
+	V_UPDATABLE_MAP [K, V]
 		redefine
 			is_equal
 		end
 
-	V_CONTAINER [G]
+	V_CONTAINER [V]
 		redefine
 			is_equal
 		end
@@ -26,9 +26,18 @@ feature -- Measurement
 		end
 
 feature -- Iteration
-	at_start: V_TABLE_ITERATOR [K, G]
+	new_iterator: V_TABLE_ITERATOR [K, V]
 			-- New iterator pointing to a position in the table, from which it can traverse all elements by going `forth'.
 		deferred
+		end
+
+	at_key (k: K): V_TABLE_ITERATOR [K, V]
+			-- New iterator pointing to a position with key `k'
+		deferred
+		ensure
+			target_definition: Result.target = Current
+			index_definition_found: has_equivalent_key (map, k, relation) implies relation [Result.key_sequence [Result.index], k]
+			index_definition_not_found: not has_equivalent_key (map, k, relation) implies Result.index = Result.key_sequence.count + 1
 		end
 
 feature -- Comparison
@@ -36,13 +45,13 @@ feature -- Comparison
 			-- Does `other' have the same key equivalence relation,
 			-- contain the same set of keys and associate them with then same values?
 		local
-			i, j: V_TABLE_ITERATOR [K, G]
+			i, j: V_TABLE_ITERATOR [K, V]
 		do
 			if key_equivalence ~ other.key_equivalence and count = other.count then
 				from
 					Result := True
-					i := at_start
-					j := other.at_start
+					i := new_iterator
+					j := other.new_iterator
 				until
 					i.off or not Result
 				loop
@@ -54,7 +63,7 @@ feature -- Comparison
 		end
 
 feature -- Extension
-	extend (k: K; v: G)
+	extend (k: K; v: V)
 			-- Extend table with key-value pair <`k', `v'>.
 		require
 			fresh_key: not has_key (k)
@@ -63,7 +72,7 @@ feature -- Extension
 			map_effect: map |=| old map.extended (k, v)
 		end
 
-	force (k: K; v: G)
+	force (k: K; v: V)
 			-- Make sure that `k' is associated with `v'.
 			-- Add `k' if not already present.
 		do
@@ -88,16 +97,16 @@ feature -- Removal
 		end
 
 feature -- Specification
-	map: MML_FINITE_MAP [K, G]
+	map: MML_FINITE_MAP [K, V]
 			-- Map of keys to values.
 		note
 			status: specification
 		local
-			it: V_TABLE_ITERATOR [K, G]
+			it: V_TABLE_ITERATOR [K, V]
 		do
 			create Result.empty
 			from
-				it := at_start
+				it := new_iterator
 			until
 				it.off
 			loop
@@ -117,7 +126,7 @@ feature -- Specification
 invariant
 	key_equivalence_exists: key_equivalence /= Void
 	bag_domain_definition: bag.domain |=| map.range
-	bag_definition: bag.domain.for_all (agent (x: G): BOOLEAN
+	bag_definition: bag.domain.for_all (agent (x: V): BOOLEAN
 		do
 			Result := bag [x] = map.inverse.image_of (x).count
 		end)

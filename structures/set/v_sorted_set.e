@@ -18,7 +18,7 @@ inherit
 			equivalence as order
 		redefine
 			copy,
-			at_start
+			new_iterator
 		end
 
 create
@@ -65,20 +65,20 @@ feature -- Measurement
 		end
 
 feature -- Iteration
-	at_start: V_SORTED_SET_ITERATOR [G]
+	new_iterator: V_SORTED_SET_ITERATOR [G]
 			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'.
 		do
-			Result := new_iterator
+			create Result.make (Current, tree)
 			Result.start
 		end
 
-	new_iterator: V_SORTED_SET_ITERATOR [G]
-			-- New iterator over `Current'.
-			-- (Might have more efficient implementation than `at_start'.)
+	at (v: G): V_SORTED_SET_ITERATOR [G]
+			-- New iterator over `Current' pointing at element `v' if it exists and `off' otherwise.
 		do
 			create Result.make (Current, tree)
+			Result.search (v)
 		end
-
+		
 feature -- Extension
 	extend (v: G)
 			-- Add `v' to the set.

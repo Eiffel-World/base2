@@ -28,7 +28,7 @@ feature -- Search
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
-			it := at_start
+			it := new_iterator
 			it.search_forth (v)
 			Result := not it.off
 		ensure
@@ -42,7 +42,7 @@ feature -- Search
 			it: V_INPUT_ITERATOR [G]
 		do
 			from
-				it := at_start
+				it := new_iterator
 			until
 				it.off
 			loop
@@ -55,7 +55,7 @@ feature -- Search
 			definition: Result = bag [v]
 		end
 
-	hold_count (p: PREDICATE [ANY, TUPLE [G]]): INTEGER
+	count_if (p: PREDICATE [ANY, TUPLE [G]]): INTEGER
 			-- How many elements satisfy `p'?
 		require
 			p_exists: p /= Void
@@ -63,7 +63,7 @@ feature -- Search
 			it: V_INPUT_ITERATOR [G]
 		do
 			from
-				it := at_start
+				it := new_iterator
 			until
 				it.off
 			loop
@@ -83,7 +83,7 @@ feature -- Search
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
-			it := at_start
+			it := new_iterator
 			it.satisfy_forth (p)
 			Result := not it.off
 		ensure
@@ -99,7 +99,7 @@ feature -- Search
 		do
 			from
 				Result := True
-				it := at_start
+				it := new_iterator
 			until
 				it.off or not Result
 			loop
@@ -111,12 +111,11 @@ feature -- Search
 		end
 
 feature -- Iteration
-	at_start: V_INPUT_ITERATOR [G]
+	new_iterator: V_INPUT_ITERATOR [G]
 			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'.
 		deferred
 		ensure
 			target_definition: Result.target = Current
-			sequence_domain_definition: Result.sequence.count = bag.count
 			index_definition: Result.index = 1
 		end
 
@@ -138,7 +137,7 @@ feature -- Specification
 		do
 			create Result.empty
 			from
-				i := at_start
+				i := new_iterator
 			until
 				i.off
 			loop

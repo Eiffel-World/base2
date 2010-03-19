@@ -34,7 +34,7 @@ feature -- Search
 		local
 			i: V_SET_ITERATOR [G]
 		do
-			i := at_start
+			i := new_iterator
 			i.search (v)
 			Result := not i.off
 		ensure
@@ -47,7 +47,7 @@ feature -- Search
 		local
 			i: V_SET_ITERATOR [G]
 		do
-			i := at_start
+			i := new_iterator
 			i.search (v)
 			Result := not i.off and then i.item = v
 		end
@@ -62,19 +62,18 @@ feature -- Search
 		end
 
 feature -- Iteration
-	at_start: V_SET_ITERATOR [G]
+	new_iterator: V_SET_ITERATOR [G]
 			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'.
-		do
-			Result := new_iterator
-			Result.start
+		deferred
 		end
 
-	new_iterator: V_SET_ITERATOR [G]
-			-- New iterator over `Current'.
-			-- (Might have more efficient implementation than `at_start'.)
+	at (v: G): V_SET_ITERATOR [G]
+			-- New iterator over `Current' pointing at element `v' if it exists and `after' otherwise.
 		deferred
 		ensure
 			target_definition: Result.target = Current
+			index_definition_found: has_equivalent (set, v, relation) implies relation [Result.sequence [Result.index], v]
+			index_definition_not_found: not has_equivalent (set, v, relation) implies Result.index = Result.sequence.count + 1
 		end
 
 feature -- Comparison
@@ -144,7 +143,7 @@ feature -- Extension
 			i: V_INPUT_ITERATOR [G]
 		do
 			from
-				i := other.at_start
+				i := other.new_iterator
 			until
 				i.off
 			loop
@@ -180,7 +179,7 @@ feature -- Removal
 		do
 			s := twin
 			from
-				i := s.at_start
+				i := s.new_iterator
 			until
 				i.off
 			loop
@@ -205,7 +204,7 @@ feature -- Removal
 			i: V_INPUT_ITERATOR [G]
 		do
 			from
-				i := other.at_start
+				i := other.new_iterator
 			until
 				i.off
 			loop
@@ -228,7 +227,7 @@ feature -- Removal
 			i: V_INPUT_ITERATOR [G]
 		do
 			from
-				i := other.at_start
+				i := other.new_iterator
 			until
 				i.off
 			loop
@@ -264,7 +263,7 @@ feature -- Specification
 		do
 			create Result.empty
 			from
-				i := at_start
+				i := new_iterator
 			until
 				i.off
 			loop

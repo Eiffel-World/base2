@@ -6,13 +6,13 @@ note
 	model: map, relation
 
 deferred class
-	V_UPDATABLE_MAP [K, G]
+	V_UPDATABLE_MAP [K, V]
 
 inherit
-	V_MAP [K, G]
+	V_MAP [K, V]
 
 feature -- Replacement
-	put (k: K; v: G)
+	put (k: K; v: V)
 			-- Associate `v' with key `k'.
 		require
 			has_key: has_key (k)

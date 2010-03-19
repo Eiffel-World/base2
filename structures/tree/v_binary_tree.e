@@ -11,7 +11,7 @@ class
 inherit
 	V_CONTAINER [G]
 		rename
-			at_start as at_inorder_start
+			new_iterator as at_inorder_start
 		redefine
 			default_create,
 			copy,

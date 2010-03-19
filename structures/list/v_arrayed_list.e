@@ -37,6 +37,8 @@ feature {NONE} -- Initizalization
 
 	make_with_capacity (n: INTEGER)
 			-- Create an empty list with capacity `n'.
+		require
+			n_non_negative: n >= 0
 		do
 			create array.make (1, n)
 			first_index := 1
