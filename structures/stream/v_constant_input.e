@@ -32,6 +32,8 @@ feature -- Cursor movement
 	forth
 			-- Move one position forward.
 		do
+		ensure then
+			item_effect: item = old item
 		end
 
 feature -- Specification

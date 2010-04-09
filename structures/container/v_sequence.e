@@ -176,7 +176,7 @@ feature -- Iteration
 		end
 
 	at (i: INTEGER): V_ITERATOR [G]
-			-- New iterator poiting at `i'-th position.
+			-- New iterator pointing at `i'-th position.
 		require
 			has_index: 1 <= i and i <= count
 		deferred
@@ -251,7 +251,7 @@ feature -- Replacement
 			end
 		ensure
 			map_domain_effect: map.domain |=| old map.domain
-			map_changed_effect: {MML_INTEGER_SET} [[index, index + other_last - other_first]].for_all (agent (i: INTEGER; other_map: MML_MAP [INTEGER, G]; f, of: INTEGER): BOOLEAN
+			map_changed_effect: {MML_INTEGER_SET} [[index, index + other_last - other_first]].for_all (agent (i: INTEGER; other_map: MML_FINITE_MAP [INTEGER, G]; f, of: INTEGER): BOOLEAN
 				do
 					Result := map [i] = other_map [i - f + of]
 				end (?, old other.map, index, other_first))

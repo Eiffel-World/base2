@@ -43,7 +43,7 @@ feature -- Replacement
 		end
 
 	pipe (input: V_INPUT_STREAM [G])
-			-- Copy values from `input' until one either `Current' or `other' is `off'.
+			-- Copy values from `input' until one either `Current' or `input' is `off'.
 		do
 			Precursor (input)
 		ensure then
@@ -53,7 +53,7 @@ feature -- Replacement
 		end
 
 	pipe_n (input: V_INPUT_STREAM [G]; n: INTEGER)
-			-- Copy `n' elements from `input'; stop if either `Current' or `other' is `off'.
+			-- Copy `n' elements from `input'; stop if either `Current' or `input' is `off'.
 		do
 			Precursor (input, n)
 		ensure then

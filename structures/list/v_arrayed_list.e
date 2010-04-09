@@ -112,7 +112,7 @@ feature -- Measurement
 
 feature -- Iteration
 	at (i: INTEGER): V_ARRAYED_LIST_ITERATOR [G]
-			-- New iterator poiting at `i'-th position.
+			-- New iterator pointing at `i'-th position.
 		do
 			create {V_ARRAYED_LIST_ITERATOR [G]} Result.make (Current, i)
 		end
@@ -239,7 +239,7 @@ feature -- Removal
 
 feature -- Resizing		
 	reserve (n: INTEGER)
-			-- Make sure `array' can accomodate `n' elements;
+			-- Make sure `array' can accommodate `n' elements;
 			-- Do not resize by less than `growth_rate'.
 		local
 			old_size, new_size: INTEGER
