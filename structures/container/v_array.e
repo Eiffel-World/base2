@@ -166,7 +166,7 @@ feature -- Replacement
 
 feature -- Resizing
 	resize (l, u: INTEGER)
-			-- Set index interval to [`l', `u']; keep values at old indixes; set to default at new indexes.
+			-- Set index interval to [`l', `u']; keep values at old indexes; set to default at new indexes.
 			-- Reallocate memory unless count stays the same.
 		require
 			valid_indexes: l <= u + 1
@@ -207,7 +207,7 @@ feature -- Resizing
 		end
 
 	include (i: INTEGER)
-			-- Resize in a minimal way to include index `i'; keep values at old indixes; set to default at new indexes.
+			-- Resize in a minimal way to include index `i'; keep values at old indexes; set to default at new indexes.
 			-- Reallocate memory unless count stays the same.
 		do
 			if is_empty then
