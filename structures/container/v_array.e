@@ -115,7 +115,7 @@ feature -- Measurement
 
 feature -- Iteration
 	at (i: INTEGER): V_SEQUENCE_ITERATOR [G]
-			-- New iterator poniting at position `i'.
+			-- New iterator pointing at position `i'.
 		do
 			create Result.make (Current, i - lower + 1)
 		end

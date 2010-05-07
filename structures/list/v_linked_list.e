@@ -69,7 +69,7 @@ feature -- Measurement
 
 feature -- Iteration
 	at (i: INTEGER): V_LINKED_LIST_ITERATOR [G]
-			-- New iterator poniting at position `i'.
+			-- New iterator pointing at position `i'.
 		do
 			create Result.make (Current, count_cell)
 			Result.go_to (i)
