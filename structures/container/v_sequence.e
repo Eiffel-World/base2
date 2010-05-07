@@ -67,7 +67,7 @@ feature -- Search
 			-- out of range, if `v' does not occur.
 		do
 			if not is_empty then
-				Result := index_of_from (v, 1)
+				Result := index_of_from (v, lower)
 			end
 		ensure
 			definition_not_has: not map.has (v) implies not map.domain [Result]
@@ -111,7 +111,7 @@ feature -- Search
 			p_exists: p /= Void
 		do
 			if not is_empty then
-				Result := index_that_from (p, 1)
+				Result := index_that_from (p, lower)
 			end
 		ensure
 			definition_not_has: not map.range.exists (p) implies not map.domain [Result]
@@ -153,7 +153,7 @@ feature -- Iteration
 	at_start: like at
 			-- New iterator pointing to the first position.
 		do
-			Result := at (1)
+			Result := at (lower)
 		ensure then
 			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_FINITE_SEQUENCE [G]): BOOLEAN
 				do
@@ -164,7 +164,7 @@ feature -- Iteration
 	at_finish: like at
 			-- New iterator pointing to the last position.
 		do
-			Result := at (count)
+			Result := at (upper)
 		ensure
 			target_definition: Result.target = Current
 			sequence_domain_definition: Result.sequence.count = bag.count
@@ -176,9 +176,9 @@ feature -- Iteration
 		end
 
 	at (i: INTEGER): V_ITERATOR [G]
-			-- New iterator pointing at `i'-th position.
+			-- New iterator pointing at position `i'.
 		require
-			has_index: 1 <= i and i <= count
+			valid_position: lower - 1 <= i and i <= upper + 1
 		deferred
 		ensure
 			target_definition: Result.target = Current
@@ -187,15 +187,17 @@ feature -- Iteration
 				do
 					Result := s [j] = map [map.domain.lower + j - 1]
 				end (?, Result.sequence))
-			index_definition: Result.index = i
+			index_definition_nonempty: not map.is_empty implies Result.index = i - map.domain.lower + 1
+			index_definition_empty: map.is_empty implies Result.index = i
 		end
 
 feature -- Replacement
 	fill (v: G; l, u: INTEGER)
 			-- Put `v' at positions [`l', `u'].
 		require
-			valid_lower: has_index (l)
-			valid_upper: has_index (u)
+			l_not_too_small: l >= lower
+			u_not_too_large: u <= upper
+			l_not_too_large: l <= u + 1
 		local
 			it: V_ITERATOR [G]
 			j: INTEGER
@@ -219,8 +221,9 @@ feature -- Replacement
 	clear (l, u: INTEGER)
 			-- Put default value at positions [`l', `u'].
 		require
-			valid_lower: has_index (l)
-			valid_upper: has_index (u)
+			l_not_too_small: l >= lower
+			u_not_too_large: u <= upper
+			l_not_too_large: l <= u + 1
 		do
 			fill (default_item, l, u)
 		ensure
@@ -233,10 +236,10 @@ feature -- Replacement
 			-- Copy items of `other' within bounds [`other_first', `other_last'] to current sequence starting at index `index'.
 		require
 			other_exists: other /= Void
-			valid_lower: other.has_index (other_first)
-			valid_upper: other.has_index (other_last) or other_last = 0
-			valid_bounds: other_first <= other_last + 1
-			valid_start: has_index (index)
+			other_first_not_too_small: other_first >= other.lower
+			other_last_not_too_large: other_last <= other.upper
+			other_first_not_too_large: other_first <= other_last + 1
+			index_not_too_small: index >= lower
 			enough_space: upper - index >= other_last - other_first
 		local
 			j: INTEGER

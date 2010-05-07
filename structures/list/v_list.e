@@ -29,7 +29,7 @@ feature -- Measurement
 
 feature -- Iteration
 	at (i: INTEGER): V_LIST_ITERATOR [G]
-			-- New iterator pointing at `i'-th position.
+			-- New iterator poniting at position `i'.
 		deferred
 		end
 

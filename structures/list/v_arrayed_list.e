@@ -112,7 +112,7 @@ feature -- Measurement
 
 feature -- Iteration
 	at (i: INTEGER): V_ARRAYED_LIST_ITERATOR [G]
-			-- New iterator pointing at `i'-th position.
+			-- New iterator poniting at position `i'.
 		do
 			create {V_ARRAYED_LIST_ITERATOR [G]} Result.make (Current, i)
 		end

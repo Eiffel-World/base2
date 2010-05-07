@@ -45,10 +45,13 @@ feature -- Specification
 			-- Does `m' contain a key equivalent to `k' according to `r'?
 		note
 			status: specification
+		require
+			m_exists: m /= Void
+			r_exists: r /= Void
 		do
-			Result := not (relation.image_of (k) * map.domain).as_finite.is_empty
+			Result := not (r.image_of (k) * m.domain).as_finite.is_empty
 		ensure
-			definition: Result = not (relation.image_of (k) * map.domain).as_finite.is_empty
+			definition: Result = not (r.image_of (k) * m.domain).as_finite.is_empty
 		end
 
 	equivalent_key (m: MML_MAP [K, V]; k: K; r: MML_RELATION [K, K]): K
@@ -56,10 +59,12 @@ feature -- Specification
 		note
 			status: specification
 		require
+			m_exists: m /= Void
+			r_exists: r /= Void
 			has_equivalent: has_equivalent_key (m, k, r)
 		do
-			Result := (relation.image_of (k) * map.domain).as_finite.any_item
+			Result := (r.image_of (k) * m.domain).as_finite.any_item
 		ensure
-			Result = (relation.image_of (k) * map.domain).as_finite.any_item
+			Result = (r.image_of (k) * m.domain).as_finite.any_item
 		end
 end

@@ -37,39 +37,33 @@ feature {NONE} -- Initialization
 		local
 			i: INTEGER
 		do
-			create array.make (min, max)
-			from
-				i := min
-			until
-				i > max
-			loop
-				array [i] := i
-				i := i + 1
+			if min <= max then
+				create array.make (min, max)
+				from
+					i := min
+				until
+					i > max
+				loop
+					array [i] := i
+					i := i + 1
+				end
+				interval_computed := True
+				is_interval_cache := True
+				lower_cache := min
+				upper_cache := max
+			else
+				create array.make (1, 0)
+				interval_computed := True
+				is_interval_cache := True
+				lower_cache := {INTEGER}.max_value
+				upper_cache := {INTEGER}.min_value
 			end
-			interval_computed := True
-			is_interval_cache := True
-			lower_cache := min
-			upper_cache := max
 		end
 
 	from_tuple (t: TUPLE [min: INTEGER; max: INTEGER])
 			-- Create interval [min, max]
-		local
-			i: INTEGER
 		do
-			create array.make (t.min, t.max)
-			from
-				i := t.min
-			until
-				i > t.max
-			loop
-				array [i] := i
-				i := i + 1
-			end
-			interval_computed := True
-			is_interval_cache := True
-			lower_cache := t.min
-			upper_cache := t.max
+			from_range (t.min, t.max)
 		end
 
 feature -- Access

@@ -47,6 +47,8 @@ feature {NONE} -- Initialization
 
 	make_filled (l, u: INTEGER; v: G)
 			-- Create array with indexes in [`l', `u']; set all values to `v'.
+		require
+			valid_indexes: l <= u + 1
 		do
 			if l <= u then
 				lower := l
@@ -90,12 +92,12 @@ feature -- Access
 	subarray (l, u: INTEGER): V_ARRAY [G]
 			-- Array consisting of elements of Current in index range [`l', `u'].
 		require
-			valid_bounds: l <= u + 1
+			l_not_too_small: l >= lower
+			u_not_too_large: u <= upper
+			l_not_too_large: l <= u + 1
 		do
 			create Result.make (l, u)
-			if not Result.is_empty then
-				Result.subcopy (Current, l, u, l)
-			end
+			Result.subcopy (Current, l, u, l)
 		ensure
 			map_domain_definition: Result.map.domain |=| {MML_INTEGER_SET}[[l, u]]
 			map_definition: Result.map.domain.for_all (agent (i: INTEGER; r: V_ARRAY [G]): BOOLEAN
@@ -113,9 +115,9 @@ feature -- Measurement
 
 feature -- Iteration
 	at (i: INTEGER): V_SEQUENCE_ITERATOR [G]
-			-- New iterator poniting at `i'-th position.
+			-- New iterator poniting at position `i'.
 		do
-			create Result.make (Current, i)
+			create Result.make (Current, i - lower + 1)
 		end
 
 feature -- Comparison
@@ -172,7 +174,9 @@ feature -- Resizing
 			new_count, offset, min_upper: INTEGER
 		do
 			new_count := u - l + 1
-			if new_count = 0 then
+			if is_empty then
+				make (l, u)
+			elseif new_count = 0 then
 				create area.make (0)
 				lower := 1
 				upper := 0
@@ -206,7 +210,9 @@ feature -- Resizing
 			-- Resize in a minimal way to include index `i'; keep values at old indixes; set to default at new indexes.
 			-- Reallocate memory unless count stays the same.
 		do
-			if i < lower then
+			if is_empty then
+				resize (i, i)
+			elseif i < lower then
 				resize (i, upper)
 			elseif i > upper then
 				resize (lower, i)
