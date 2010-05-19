@@ -1,5 +1,8 @@
 note
-	description: "Binary tree cells with references to the parent and the left and right child."
+	description: "[
+		Binary tree cells with references to the parent and the left and right child.
+		Cells provide a low-level interface and do not ensure neither the consistency of parent and child links, nor the acyclicity property.
+		]"
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -51,38 +54,29 @@ feature -- Status report
 
 feature -- Replacement
 	put_right (r: V_BINARY_TREE_CELL [G])
-			-- Set `right' to `r'; detach `r' from its previous parent; detach previous `right' from Current.
+			-- Set `right' to `r' and `r.parent' to `Current'.
 		do
-			if right /= Void then
-				right.simple_put_parent (Void)
-			end
 			right := r
-			if right /= Void then
-				right.put_parent (Current)
+			if r /= Void then
+				r.simple_put_parent (Current)
 			end
 		ensure
-			old_right_parent_effect: old right /= Void implies (old right).parent = Void
 			right_effect: right = r
 			r_parent_effect: r /= Void implies r.parent = Current
 		end
 
 	put_left (l: V_BINARY_TREE_CELL [G])
-			-- Set `left' to `l'; detach `l' from its previous parent; detach previous `left' from Current.
+			-- Set `left' to `l' and `l.parent' to `Current'.
 		do
-			if left /= Void then
-				left.simple_put_parent (Void)
-			end
 			left := l
-			if left /= Void then
-				left.put_parent (Current)
+			if l /= Void then
+				l.simple_put_parent (Current)
 			end
 		ensure
-			old_left_parent_effect: old left /= Void implies (old left).parent = Void
 			left_effect: left = l
 			l_parent_effect: l /= Void implies l.parent = Current
 		end
 
-feature {V_BINARY_TREE_CELL} -- Implementation
 	simple_put_right (r: V_BINARY_TREE_CELL [G])
 			-- Set `right' to `r'.
 		do
@@ -107,27 +101,9 @@ feature {V_BINARY_TREE_CELL} -- Implementation
 			parent_effect: parent = p
 		end
 
-	put_parent (p: V_BINARY_TREE_CELL [G])
-			-- Set `parent' to `p', detach Current from its previous parent.
-		do
-			if parent /= Void then
-				if parent.left = Current then
-					parent.simple_put_left (Void)
-				else
-					parent.simple_put_right (Void)
-				end
-			end
-			parent := p
-		ensure
-			old_parent_children_effect: old parent /= Void implies (old parent).left /= Current and (old parent).right /= Current
-			parent_effect: parent = p
-		end
-
 invariant
 	is_root_definition: is_root = (parent = Void)
 	is_leaf_definition: is_leaf = (left = Void and right = Void)
 	is_left_definition: is_left = (parent /= Void and then parent.left = Current)
 	is_right_definition: is_right = (parent /= Void and then parent.right = Current)
-	left_constraint: left /= Void implies left.parent = Current
-	right_constraint: right /= Void implies right.parent = Current
 end

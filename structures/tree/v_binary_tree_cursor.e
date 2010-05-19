@@ -133,7 +133,10 @@ feature -- Extension
 		require
 			not_off: not off
 			not_has_left: not has_left
+--		local
+--			new: V_BINARY_TREE_CELL [G]
 		do
+--			create new.put (v)
 			active.put_left (create {V_BINARY_TREE_CELL [G]}.put (v))
 			count_cell.put (count_cell.item + 1)
 		ensure
@@ -146,7 +149,10 @@ feature -- Extension
 		require
 			not_off: not off
 			not_has_right: not has_right
+--		local
+--			new: V_BINARY_TREE_CELL [G]
 		do
+--			create new.put (v)
 			active.put_right (create {V_BINARY_TREE_CELL [G]}.put (v))
 			count_cell.put (count_cell.item + 1)
 		ensure
