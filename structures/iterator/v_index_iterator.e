@@ -102,7 +102,7 @@ feature -- Replacement
 	put (v: G)
 			-- Replace item at current position with `v'.
 		do
-			target.put (target.lower + index - 1, v)
+			target.put (v, target.lower + index - 1)
 		end
 
 feature -- Specification

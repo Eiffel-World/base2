@@ -29,7 +29,7 @@ feature -- Access
 			i: INTEGER
 		do
 			i := index_of (x)
-			if keys.valid_index (i) then
+			if keys.has_index (i) then
 				Result := values [i]
 			end
 		end
@@ -103,22 +103,22 @@ feature -- Basic operations
 	extended (x: G): MML_FINITE_BAG [G]
 			-- Current bag extended with one occurrence of `x'
 		local
-			ks: ARRAY [G]
-			vs: ARRAY [INTEGER]
+			ks: V_ARRAY [G]
+			vs: V_ARRAY [INTEGER]
 			i: INTEGER
 		do
 			i := index_of (x)
-			if keys.valid_index (i) then
+			if keys.has_index (i) then
 				ks := keys
 				vs := values.twin
 				vs [i] := vs [i] + 1
 			else
 				create ks.make (keys.lower, keys.upper + 1)
 				ks.subcopy (keys, keys.lower, keys.upper, keys.lower)
-				ks.put (x, ks.upper)
+				ks [ks.upper] := x
 				create vs.make (values.lower, values.upper + 1)
+				vs [vs.upper] := 1
 				vs.subcopy (values, values.lower, values.upper, values.lower)
-				vs.put (1, vs.upper)
 			end
 			create Result.make_from_arrays (ks, vs, count + 1)
 		end
@@ -128,8 +128,8 @@ feature -- Basic operations
 		require
 			has: domain.has (x)
 		local
-			ks: ARRAY [G]
-			vs: ARRAY [INTEGER]
+			ks: V_ARRAY [G]
+			vs: V_ARRAY [INTEGER]
 			i: INTEGER
 		do
 			i := index_of (x)
@@ -152,12 +152,12 @@ feature -- Basic operations
 			-- Current bag with all occurrences of `x' removed, if contained
 			-- Otherwiese current bag
 		local
-			ks: ARRAY [G]
-			vs: ARRAY [INTEGER]
+			ks: V_ARRAY [G]
+			vs: V_ARRAY [INTEGER]
 			i: INTEGER
 		do
 			i := index_of (x)
-			if keys.valid_index (i) then
+			if keys.has_index (i) then
 				create ks.make (keys.lower, keys.upper - 1)
 				ks.subcopy (keys, keys.lower, i - 1, keys.lower)
 				ks.subcopy (keys, i + 1, keys.upper, i)
@@ -172,10 +172,12 @@ feature -- Basic operations
 
 	restricted (subdomain: MML_SET [G]): MML_FINITE_BAG [G]
 			-- This bag with all elements outside `restriction' removed
+		require
+			subdomain_exists: subdomain /= Void
 		local
 			i, j: INTEGER
-			ks: ARRAY [G]
-			vs: ARRAY [INTEGER]
+			ks: V_ARRAY [G]
+			vs: V_ARRAY [INTEGER]
 			n: INTEGER
 		do
 			create ks.make (keys.lower, keys.upper)
@@ -198,10 +200,10 @@ feature -- Basic operations
 		end
 
 feature {NONE} -- Implementation
-	keys: ARRAY [G]
-	values: ARRAY [INTEGER]
+	keys: V_ARRAY [G]
+	values: V_ARRAY [INTEGER]
 
-	make_from_arrays (ks: ARRAY [G]; vs: ARRAY [INTEGER]; n: INTEGER)
+	make_from_arrays (ks: V_ARRAY [G]; vs: V_ARRAY [INTEGER]; n: INTEGER)
 			-- Create with a predefined array
 		do
 			keys := ks

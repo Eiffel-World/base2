@@ -59,6 +59,7 @@ feature -- Cursor movement
 			-- If `pred' never holds, move `after'.
 		require
 			pred_exists: pred /= Void
+			pred_has_one_arg: pred.open_count = 1
 		do
 			from
 			until

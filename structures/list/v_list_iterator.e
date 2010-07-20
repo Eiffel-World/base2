@@ -47,6 +47,7 @@ feature -- Extension
 			not_off: not off
 			other_exists: other /= Void
 			different_target: target /= other.target
+			other_not_before: not other.before
 		deferred
 		ensure
 			target_sequence_effect: target.sequence |=| old (target.sequence.front (index - 1) + other.sequence.tail (other.index) + target.sequence.tail (index))
@@ -61,6 +62,7 @@ feature -- Extension
 			not_off: not off
 			other_exists: other /= Void
 			different_target: target /= other.target
+			other_not_before: not other.before
 		deferred
 		ensure
 			target_sequence_effect: target.sequence |=| old (target.sequence.front (index) + other.sequence.tail (other.index) + target.sequence.tail (index + 1))

@@ -109,6 +109,7 @@ feature -- Search
 			-- out of range, if `p' is never satisfied.
 		require
 			p_exists: p /= Void
+			p_has_one_arg: p.open_count = 1
 		do
 			if not is_empty then
 				Result := index_that_from (p, lower)
@@ -123,6 +124,7 @@ feature -- Search
 			-- out of range, if `p' is never satisfied.
 		require
 			p_exists: p /= Void
+			p_has_one_arg: p.open_count = 1
 			has_index: has_index (i)
 		local
 			it: V_INPUT_ITERATOR [G]
@@ -249,7 +251,7 @@ feature -- Replacement
 			until
 				j > other_last
 			loop
-				put (j - other_first + index, other [j])
+				put (other [j], j - other_first + index)
 				j := j + 1
 			end
 		ensure

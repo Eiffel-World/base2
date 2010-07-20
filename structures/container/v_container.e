@@ -59,6 +59,7 @@ feature -- Search
 			-- How many elements satisfy `p'?
 		require
 			p_exists: p /= Void
+			p_has_one_arg: p.open_count = 1
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
@@ -80,6 +81,7 @@ feature -- Search
 			-- Is there an element that satisfies `p'?
 		require
 			p_exists: p /= Void
+			p_has_one_arg: p.open_count = 1
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
@@ -94,6 +96,7 @@ feature -- Search
 			-- Do all elements satisfy `p'?
 		require
 			p_exists: p /= Void
+			p_has_one_arg: p.open_count = 1
 		local
 			it: V_INPUT_ITERATOR [G]
 		do

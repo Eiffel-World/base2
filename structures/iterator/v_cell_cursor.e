@@ -11,6 +11,8 @@ deferred class
 feature -- Access
 	item: G
 			-- Item at current position.
+		require
+			not_off: not off
 		do
 			Result := active.item
 		end

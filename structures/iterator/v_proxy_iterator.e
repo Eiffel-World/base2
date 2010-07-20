@@ -11,7 +11,7 @@ class
 inherit
 	V_INPUT_ITERATOR [G]
 
-create
+create {V_CONTAINER}
 	make
 
 feature {NONE} -- Initialization

@@ -42,9 +42,9 @@ feature -- Initialization
 			count_cell := target.count_cell
 		ensure then
 			target_effect: target = other.target
-			path_effect: path = other.path
+			path_effect: path |=| other.path
 			other_target_effect: other.target = old other.target
-			other_path_effect: other.path = old other.path
+			other_path_effect: other.path |=| old other.path
 		end
 
 feature -- Access
@@ -133,10 +133,7 @@ feature -- Extension
 		require
 			not_off: not off
 			not_has_left: not has_left
---		local
---			new: V_BINARY_TREE_CELL [G]
 		do
---			create new.put (v)
 			active.put_left (create {V_BINARY_TREE_CELL [G]}.put (v))
 			count_cell.put (count_cell.item + 1)
 		ensure
@@ -149,10 +146,7 @@ feature -- Extension
 		require
 			not_off: not off
 			not_has_right: not has_right
---		local
---			new: V_BINARY_TREE_CELL [G]
 		do
---			create new.put (v)
 			active.put_right (create {V_BINARY_TREE_CELL [G]}.put (v))
 			count_cell.put (count_cell.item + 1)
 		ensure
@@ -240,7 +234,7 @@ feature -- Specification
 		end
 
 	map: MML_FINITE_MAP [MML_BIT_VECTOR, G]
-			-- Map of paths to values in the subtree startin from current node.
+			-- Map of paths to values in the subtree starting from current node.
 		note
 			status: specification
 		require

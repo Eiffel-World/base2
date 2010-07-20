@@ -89,7 +89,7 @@ feature -- Initialization
 		end
 
 feature -- Access
-	item alias "[]" (i: INTEGER): G
+	item alias "[]" (i: INTEGER): G assign put
 			-- Value associated with `i'.
 		do
 			Result := array [array_index (i)]
@@ -118,10 +118,10 @@ feature -- Iteration
 		end
 
 feature -- Replacement
-	put (i: INTEGER; v: G)
+	put (v: G; i: INTEGER)
 			-- Associate `v' with index `i'.
 		do
-			array.put (array_index (i), v)
+			array.put (v, array_index (i))
 		end
 
 feature -- Extension
@@ -130,11 +130,11 @@ feature -- Extension
 		do
 			reserve (count + 1)
 			if is_empty then
-				array.put (1, v)
+				array [1] := v
 				first_index := 1
 			else
 				first_index := mod_capacity (first_index - 1)
-				array.put (first_index, v)
+				array [first_index] := v
 			end
 			count := count + 1
 		ensure then
@@ -146,14 +146,14 @@ feature -- Extension
 			-- Insert `v' at the back.
 		do
 			reserve (count + 1)
-			array.put (array_index (count + 1), v)
+			array [array_index (count + 1)] := v
 			count := count + 1
 		ensure then
 			capacity_effect_unchanged: sequence.count <= old capacity implies capacity = old capacity
 			capacity_effect_changed: sequence.count > old capacity implies capacity = sequence.count.max (old capacity * growth_rate // 100)
 		end
 
-	extend_at (i: INTEGER; v: G)
+	extend_at (v: G; i: INTEGER)
 			-- Insert `v' at position `i'.
 		do
 			if i = 1 then
@@ -163,7 +163,7 @@ feature -- Extension
 			else
 				reserve (count + 1)
 				circular_copy (i, i + 1, count - i + 1)
-				array.put (array_index (i), v)
+				array [array_index (i)] := v
 				count := count + 1
 			end
 		ensure then
@@ -183,20 +183,18 @@ feature -- Extension
 	prepend (input: V_INPUT_ITERATOR [G])
 			-- Prepend sequence of values, over which `input' iterates.
 		do
-			Precursor (input)
+			insert_at (input, 1)
 		ensure then
 			capacity_effect_unchanged: sequence.count <= old capacity implies capacity = old capacity
 			capacity_effect_changed: sequence.count > old capacity implies capacity = sequence.count.max (old capacity * growth_rate // 100)
 		end
 
-	insert_at (i: INTEGER; input: V_INPUT_ITERATOR [G])
+	insert_at (input: V_INPUT_ITERATOR [G]; i: INTEGER)
 			-- Insert sequence of values, over which `input' iterates, starting at position `i'.
 		local
 			ic: INTEGER
 		do
-			if i = 1 then
-				prepend (input)
-			elseif i = count + 1 then
+			if i = count + 1 then
 				append (input)
 			else
 				ic := input.count
@@ -224,7 +222,7 @@ feature -- Removal
 			count := count - 1
 		end
 
-	remove_at  (i: INTEGER)
+	remove_at (i: INTEGER)
 			-- Remove element at position `i'.
 		do
 			circular_copy (i + 1, i, count - i)
@@ -314,7 +312,7 @@ feature {NONE} -- Implementation
 			until
 				i > n
 			loop
-				array.put (array_index (dest + i - 1), a [array_index (src + i - 1)])
+				array [array_index (dest + i - 1)] := a [array_index (src + i - 1)]
 				i := i + 1
 			end
 		end
@@ -323,5 +321,6 @@ invariant
 	array_exists: array /= Void
 	array_starts_from_one: array.lower = 1
 	growth_rate_valid: growth_rate >= 100
-	first_index_in_bounds: 1 <= first_index and first_index <= capacity
+	first_index_in_bounds: capacity > 0 implies 1 <= first_index and first_index <= capacity
+	first_index_one_in_empty: capacity = 0 implies first_index = 1
 end

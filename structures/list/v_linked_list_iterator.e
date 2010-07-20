@@ -28,14 +28,12 @@ create {V_LINKED_LIST}
 	make
 
 feature {NONE} -- Initialization
-	make (list: V_LINKED_LIST [G]; cc: V_CELL [INTEGER])
+	make (list: V_LINKED_LIST [G])
 			-- Create iterator over `list'.
 		require
 			list_exists: list /= Void
-			valid_cc: cc = list.count_cell
 		do
 			target := list
-			count_cell := cc
 		ensure
 			target_effect: target = list
 			index_effect: index = 0
@@ -48,7 +46,6 @@ feature -- Initialization
 			target := other.target
 			active := other.active
 			after := other.after
-			count_cell := target.count_cell
 		ensure then
 			target_effect: target = other.target
 			index_effect: index = other.index
@@ -67,9 +64,9 @@ feature -- Measurement
 			c: V_LINKABLE [G]
 		do
 			if after then
-				Result := count_cell.item + 1
+				Result := target.count + 1
 			elseif is_last then
-				Result := count_cell.item
+				Result := target.count
 			elseif active /= Void then
 				from
 					c := target.first_cell
@@ -182,17 +179,8 @@ feature -- Extension
 
 	extend_right (v: G)
 			-- Insert `v' to the right of current position. Do not move cursor.
-		local
-			cell: V_LINKABLE [G]
 		do
-			if is_last then
-				target.extend_back (v)
-			else
-				create cell.put (v)
-				cell.put_right (active.right)
-				active.put_right (cell)
-				count_cell.put (count_cell.item + 1)
-			end
+			target.extend_after (v, active)
 		end
 
 	insert_left (other: V_INPUT_ITERATOR [G])
@@ -224,22 +212,10 @@ feature -- Extension
 			-- Merge `other' into `target' after current position. Do not copy elements. Empty `other'.
 		require
 			other_exists: other /= Void
-			not_off: not off
-		local
-			other_first, other_last: V_LINKABLE [G]
+			other_not_target: other /= target
+			not_after: not after
 		do
-			if not other.is_empty then
-				other_first := other.first_cell
-				other_last := other.last_cell
-				count_cell.put (count_cell.item + other.count)
-				other.wipe_out
-				if is_last then
-					target.set_last_cell (other_last)
-				else
-					other_last.put_right (active.right)
-				end
-				active.put_right (other_first)
-			end
+			target.merge_after (other, active)
 		ensure
 			sequence_effect: sequence |=| old (sequence.front (index) + other.sequence + sequence.tail (index + 1))
 			index_effect: index = old index
@@ -274,20 +250,12 @@ feature -- Removal
 	remove_right
 			-- Remove element to the right of current position. Do not move cursor.
 		do
-			if active.right = target.last_cell then
-				target.set_last_cell (active)
-			end
-			active.put_right (active.right.right)
-			count_cell.put (count_cell.item - 1)
+			target.remove_after (active)
 		end
 
 feature {V_CELL_CURSOR} -- Implementation
 	active: V_LINKABLE [G]
 			-- Cell at current position.
-
-feature {NONE} -- Implementation
-	count_cell: V_CELL [INTEGER]
-			-- Cell where `target's	count is stored.
 
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]

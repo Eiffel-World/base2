@@ -76,7 +76,7 @@ feature -- Status report
 				Result := code = 0
 			end
 		end
-		
+
 feature -- Decomposition
 	last: BOOLEAN is
 			-- The last element of `current'.
@@ -95,7 +95,7 @@ feature -- Decomposition
 		end
 
 	tail (lower: INTEGER): MML_BIT_VECTOR
-			-- The elements of `Current' string from `lower'.
+			-- The elements of `Current' vector from `lower'.
 		local
 			l: INTEGER
 		do
@@ -166,6 +166,8 @@ feature -- Comparison
 
 	is_prefix_of (other: MML_BIT_VECTOR): BOOLEAN
 			-- Is `Current' a prefix of `other'?
+		require
+			other_exists: other /= Void
 		local
 			i: INTEGER
 		do
@@ -189,12 +191,16 @@ feature -- Element change
 
 	extended_at (i: INTEGER; b: BOOLEAN): MML_BIT_VECTOR
 			-- Current vector extended with `b' at position `i'
+		require
+			i_in_bounds: 0 <= i and i <= count + 1
 		do
 			Result := front (i - 1).extended (b) + tail (i)
 		end
 
 	removed_at (i: INTEGER): MML_BIT_VECTOR
 			-- Current vector with element at position `i' removed
+		require
+			i_in_bounds: 1 <= i and i <= count
 		do
 			Result := front (i - 1) + tail (i + 1)
 		end
@@ -207,12 +213,16 @@ feature -- Element change
 
 	replaced_at (i: INTEGER; b: BOOLEAN): MML_BIT_VECTOR
 			-- Current vector with `b' at position `i'
+		require
+			i_in_bounds: 1 <= i and i <= count
 		do
 			create Result.make_with_count (code.set_bit (b, i - 1), count)
 		end
 
 	concatenation alias "+" (other : MML_BIT_VECTOR): MML_BIT_VECTOR is
 			-- The concatenation of `current' and `other'.
+		require
+			other_exists: other /= Void
 		do
 			create Result.make_with_count (code + other.code |<< count, count + other.count)
 		end

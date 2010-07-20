@@ -41,8 +41,8 @@ feature -- Initialization
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
 		do
-			Precursor {V_BINARY_TREE_CURSOR} (other)
 			after := other.after
+			Precursor {V_BINARY_TREE_CURSOR} (other)
 		ensure then
 			sequence_effect: sequence |=| other.sequence
 			path_effect: path |=| other.path
@@ -256,6 +256,9 @@ feature -- Specification
 			-- Inorder sequence of values in a subtree of `m' starting from `root'.
 		note
 			status: specification
+		require
+			m_exists: m /= Void
+			root_exists: root /= Void
 		do
 			if not m.domain [root] then
 				create Result.empty
@@ -272,6 +275,10 @@ feature -- Specification
 			-- Predecessor of `node' in inorder.
 		note
 			status: specification
+		require
+			m_exists: m /= Void
+			node_exists: node /= Void
+			node_in_tree: m.domain [node]
 		do
 			if not m.domain [node.extended (False)] then
 				if node [node.count] then
@@ -302,6 +309,11 @@ feature -- Specification
 
 	node_index (m: MML_FINITE_MAP [MML_BIT_VECTOR, G]; node: MML_BIT_VECTOR): INTEGER
 			-- Index of `node' in inorder.
+		note
+			status: specification
+		require
+			m_exists: m /= Void
+			node_exists: node /= Void
 		do
 			if m.domain [node] then
 				 Result := node_index (m, predecessor (m, node)) + 1

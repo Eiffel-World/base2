@@ -10,9 +10,18 @@ deferred class
 
 inherit
 	V_MAP [K, V]
+		redefine
+			item
+		end
+
+feature -- Access
+	item alias "[]" (k: K): V assign put
+			-- Value associated with `k'.
+		deferred
+		end
 
 feature -- Replacement
-	put (k: K; v: V)
+	put (v: V; k: K)
 			-- Associate `v' with key `k'.
 		require
 			has_key: has_key (k)

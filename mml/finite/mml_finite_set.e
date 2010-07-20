@@ -126,12 +126,12 @@ feature -- Element change
 		note
 			mapped_to: "Set.extended(Current, x)"
 		local
-			a: ARRAY [G]
+			a: V_ARRAY [G]
 		do
 			if not has (x) then
 				create a.make (1, array.count + 1)
 				a.subcopy (array, array.lower, array.upper, 1)
-				a.put (x, a.count)
+				a [a.count] := x
 				create Result.make_from_array (a)
 			else
 				Result := Current
@@ -143,9 +143,8 @@ feature -- Element change
 		note
 			mapped_to: "Set.removed(Current, x)"
 		local
-			a: ARRAY [G]
+			a: V_ARRAY [G]
 			i, j: INTEGER
-			found: BOOLEAN
 		do
 			create a.make (array.lower, array.upper)
 			from
@@ -154,18 +153,16 @@ feature -- Element change
 			until
 				i > array.upper
 			loop
-				if model_equals (array[i], x) then
-					found := True
-				else
+				if not model_equals (array[i], x) then
 					a[j] := array[i]
 					j := j + 1
 				end
 				i := i + 1
 			end
-			if found then
-				create Result.make_from_array (a.subarray (a.lower, a.upper - 1))
-			else
+			if j = i then
 				create Result.make_from_array (a)
+			else
+				create Result.make_from_array (a.subarray (a.lower, a.upper - 1))
 			end
 		end
 
@@ -215,7 +212,7 @@ feature -- Basic operations
 	intersection alias "*" (other: MML_SET [G]): MML_FINITE_SET [G]
 			-- Set that consists of values contained in both `Current' and `other'
 		local
-			a: ARRAY [G]
+			a: V_ARRAY [G]
 			i, j: INTEGER
 		do
 			create a.make (array.lower, array.upper)
@@ -236,8 +233,10 @@ feature -- Basic operations
 
 	difference alias "-" (other: MML_SET [G]): MML_FINITE_SET [G]
 			-- Set that consists of values of `Current' that are not in `other'
+		require
+			other_exists: other /= Void
 		local
-			a: ARRAY [G]
+			a: V_ARRAY [G]
 			i, j: INTEGER
 		do
 			create a.make (array.lower, array.upper)
@@ -259,6 +258,9 @@ feature -- Basic operations
 feature -- Quantification
 	for_all (test: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 			-- Does `test' hold for all elements?
+		require
+			test_exists: test /= Void
+			test_has_one_arg: test.open_count = 1
 		local
 			i: INTEGER
 		do
@@ -277,6 +279,9 @@ feature -- Quantification
 
 	exists (test: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 			-- Does `test' hold for all elements?
+		require
+			test_exists: test /= Void
+			test_has_one_arg: test.open_count = 1
 		local
 			i: INTEGER
 		do
@@ -293,9 +298,9 @@ feature -- Quantification
 		end
 
 feature {MML_MODEL} -- Implementation
-	array: ARRAY [G]
+	array: V_ARRAY [G]
 
-	make_from_array (a: ARRAY [G])
+	make_from_array (a: V_ARRAY [G])
 			-- Create with a predefined array
 		do
 			array := a

@@ -40,6 +40,8 @@ feature -- Basic operations
 
 	intersection alias "*" (other: MML_RELATION [G, H]): MML_RELATION [G, H]
 			-- Relation consisting of pair contained in both `Current' and `other'
+		require
+			other_exists: other /= Void
 		deferred
 		end
 end

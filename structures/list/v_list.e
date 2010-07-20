@@ -74,7 +74,7 @@ feature -- Extension
 			sequence_effect: sequence |=| old sequence.extended (v)
 		end
 
-	extend_at (i: INTEGER; v: G)
+	extend_at (v: G; i: INTEGER)
 			-- Insert `v' at position `i'.
 		require
 			valid_index: has_index (i) or i = count + 1
@@ -109,32 +109,20 @@ feature -- Extension
 			input_exists: input /= Void
 			different_target: input.target /= Current
 			not_before: not input.before
-		local
-			i: INTEGER
-		do
-			from
-				i := input.count
-				input.finish
-			until
-				i < 1
-			loop
-				extend_front (input.item)
-				input.back
-				i := i - 1
-			end
-			input.go_after
+		deferred
 		ensure
 			sequence_effect: sequence |=| old (input.sequence.tail (input.index) + sequence)
 			input_index_effect: input.index = input.sequence.count + 1
 			input_sequence_effect: input.sequence |=| old input.sequence
 		end
 
-	insert_at (i: INTEGER; input: V_INPUT_ITERATOR [G])
+	insert_at (input: V_INPUT_ITERATOR [G]; i: INTEGER)
 			-- Insert sequence of values, over which `input' iterates, starting at position `i'.
 		require
 			valid_index: has_index (i) or i = count + 1
 			input_exists: input /= Void
 			different_target: input.target /= Current
+			not_before: not input.before
 		deferred
 		ensure
 			sequence_effect: sequence |=| old (sequence.front (i - 1) + input.sequence.tail (input.index) + sequence.tail (i))

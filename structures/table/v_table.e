@@ -63,7 +63,7 @@ feature -- Comparison
 		end
 
 feature -- Extension
-	extend (k: K; v: V)
+	extend (v: V; k: K)
 			-- Extend table with key-value pair <`k', `v'>.
 		require
 			fresh_key: not has_key (k)
@@ -72,14 +72,14 @@ feature -- Extension
 			map_effect: map |=| old map.extended (k, v)
 		end
 
-	force (k: K; v: V)
+	force (v: V; k: K)
 			-- Make sure that `k' is associated with `v'.
 			-- Add `k' if not already present.
 		do
 			if has_key (k) then
-				put (k, v)
+				put (v, k)
 			else
-				extend (k, v)
+				extend (v, k)
 			end
 		ensure
 			map_effect_has: old has_equivalent_key (map, k, relation) implies map |=| old map.replaced_at (equivalent_key (map, k, relation), v)

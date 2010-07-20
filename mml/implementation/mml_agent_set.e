@@ -19,6 +19,9 @@ convert
 feature {NONE} -- Initialization
 	such_that (p: PREDICATE [ANY, TUPLE [G]])
 			-- Create a set {x | p(x)}
+		require
+			p_exists: p /= Void
+			p_has_one_arg: p.open_count = 1
 		do
 			predicate := p
 		end

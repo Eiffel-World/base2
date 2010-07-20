@@ -41,15 +41,4 @@ feature -- Replacement
 				print (separator)
 			end
 		end
-
-feature -- Specification
-	sequence: MML_FINITE_SEQUENCE [ANY]
-			-- Sequence of elements already read.
-		note
-			status: specification_only
-		do
-		end
-
-	executable: BOOLEAN = False
-			-- Are model-based contracts for this class executable?
 end

@@ -83,7 +83,7 @@ feature -- Initialization
 		end
 
 feature -- Access
-	item alias "[]" (i: INTEGER): G
+	item alias "[]" (i: INTEGER): G assign put
 			-- Value associated with `i'.
 		do
 			Result := area [i - lower]
@@ -97,7 +97,7 @@ feature -- Access
 			l_not_too_large: l <= u + 1
 		do
 			create Result.make (l, u)
-			Result.subcopy (Current, l, u, l)
+			Result.subcopy (Current, l, u, Result.lower)
 		ensure
 			map_domain_definition: Result.map.domain |=| {MML_INTEGER_SET}[[l, u]]
 			map_definition: Result.map.domain.for_all (agent (i: INTEGER; r: V_ARRAY [G]): BOOLEAN
@@ -136,7 +136,7 @@ feature -- Comparison
 		end
 
 feature -- Replacement
-	put (i: INTEGER; v: G)
+	put (v: G; i: INTEGER)
 			-- Put `v' at position `i'.
 		do
 			area.put (v, i - lower)
@@ -171,12 +171,10 @@ feature -- Resizing
 		require
 			valid_indexes: l <= u + 1
 		local
-			new_count, offset, min_upper: INTEGER
+			new_count, x, y: INTEGER
 		do
 			new_count := u - l + 1
-			if is_empty then
-				make (l, u)
-			elseif new_count = 0 then
+			if new_count = 0 then
 				create area.make (0)
 				lower := 1
 				upper := 0
@@ -184,15 +182,16 @@ feature -- Resizing
 				if new_count > area.count then
 					area := area.aliased_resized_area (new_count)
 				end
-				min_upper := upper.min (u)
-				if l < lower then
-					offset := lower - l
-					area.move_data (0, offset, min_upper - lower + 1)
-					area.fill_with_default (0, offset - 1)
-				elseif l > lower then
-					offset := l - lower
-					area.move_data (offset, 0, min_upper - l + 1)
-					area.fill_with_default (min_upper - l + 1, min_upper - lower)
+				x := lower.max (l)
+				y := upper.min (u)
+				if x > y then
+					-- No intersection
+					area.fill_with_default (0, area.count - 1)
+				else
+					-- Intersection
+					area.move_data (x - lower, x - l, y - x + 1)
+					area.fill_with_default (0, x - l - 1)
+					area.fill_with_default (y - l + 1, area.count - 1)
 				end
 				if new_count < area.count then
 					area := area.resized_area (new_count)
@@ -223,12 +222,12 @@ feature -- Resizing
 			map_new_effect: (map | (map.domain - old map.domain)).is_constant (default_item)
 		end
 
-	force (i: INTEGER; v: G)
+	force (v: G; i: INTEGER)
 			-- Put `v' at position `i'; if position is not defined, include it.
 			-- Reallocate memory unless count stays the same.
 		do
 			include (i)
-			put (i, v)
+			put (v, i)
 		ensure
 			map_domain_effect: map.domain |=| {MML_INTEGER_SET} [[i.min (old map.domain.lower), i.max (old map.domain.upper)]]
 			map_i_effect: map [i] = v

@@ -188,10 +188,12 @@ feature {NONE} -- Initialization
 feature --Basic operations
 	restricted alias "|" (subdomain: MML_SET [K]): MML_FINITE_MAP [K, G]
 			-- This map with all key-value pairs where key is outside `restriction' removed
+		require
+			subdomain_exists: subdomain /= Void
 		local
 			i, j: INTEGER
-			ks: ARRAY [K]
-			vs: ARRAY [G]
+			ks: V_ARRAY [K]
+			vs: V_ARRAY [G]
 		do
 			create ks.make (keys.lower, keys.upper)
 			create vs.make (values.lower, values.upper)
@@ -213,10 +215,12 @@ feature --Basic operations
 
 	override alias "+" (other: MML_FINITE_MAP [K, G]): MML_FINITE_MAP [K, G]
 			-- Map that is equal to `other' on its domain and to `Current' on its domain minus the domain of `other'
+		require
+			other_exists: other /= Void
 		local
 			i, j: INTEGER
-			ks: ARRAY [K]
-			vs: ARRAY [G]
+			ks: V_ARRAY [K]
+			vs: V_ARRAY [G]
 		do
 			create ks.make (1, keys.count + other.keys.count)
 			create vs.make (1, values.count + other.values.count)
@@ -237,7 +241,7 @@ feature --Basic operations
 			end
 			create Result.make_from_arrays (ks.subarray (ks.lower, j - 1), vs.subarray (vs.lower, j - 1))
 		end
-		
+
 	inverse: MML_FINITE_RELATION [G, K]
 			-- Relation consisting of inverted pairs from `Current'
 		do
@@ -252,15 +256,15 @@ feature -- Element change
 		require
 			fresh_key: not domain.has (k)
 		local
-			ks: ARRAY [K]
-			vs: ARRAY [G]
+			ks: V_ARRAY [K]
+			vs: V_ARRAY [G]
 		do
 			create ks.make (keys.lower, keys.upper + 1)
 			ks.subcopy (keys, keys.lower, keys.upper, keys.lower)
-			ks.put (k, ks.upper)
+			ks [ks.upper] := k
 			create vs.make (values.lower, values.upper + 1)
 			vs.subcopy (values, values.lower, values.upper, values.lower)
-			vs.put (x, vs.upper)
+			vs [vs.upper] := x
 			create Result.make_from_arrays (ks, vs)
 		end
 
@@ -271,8 +275,8 @@ feature -- Element change
 		require
 			has_key: domain.has (k)
 		local
-			ks: ARRAY [K]
-			vs: ARRAY [G]
+			ks: V_ARRAY [K]
+			vs: V_ARRAY [G]
 			i, j: INTEGER
 		do
 			create ks.make (keys.lower, keys.upper - 1)
@@ -299,7 +303,7 @@ feature -- Replacement
 		local
 			i: INTEGER
 			found: BOOLEAN
-			vs: ARRAY [G]
+			vs: V_ARRAY [G]
 		do
 			vs := values.twin
 			from
@@ -334,10 +338,10 @@ feature -- Replacement
 --		end
 
 feature {MML_MODEL} -- Implementation
-	keys: ARRAY [K]
-	values: ARRAY [G]
+	keys: V_ARRAY [K]
+	values: V_ARRAY [G]
 
-	make_from_arrays (ks: ARRAY [K]; vs: ARRAY [G])
+	make_from_arrays (ks: V_ARRAY [K]; vs: V_ARRAY [G])
 			-- Create with a predefined array
 		do
 			keys := ks

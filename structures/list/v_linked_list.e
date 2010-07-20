@@ -25,8 +25,7 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create an empty list.
 		do
-			create count_cell.put (0)
-			create iterator.make (Current, count_cell)
+			create iterator.make (Current)
 		ensure then
 			sequence_effect: sequence.is_empty
 		end
@@ -36,15 +35,9 @@ feature -- Initialization
 			-- Initialize by copying all the items of `other'.
 		do
 			if other /= Current then
-				first_cell := Void
-				last_cell := Void
-				if count_cell = Void then
-					create count_cell.put (0)
-				else
-					count_cell.put (0)
-				end
+				wipe_out
 				if iterator = Void then
-					create iterator.make (Current, count_cell)
+					create iterator.make (Current)
 				end
 				append (other.at_start)
 			end
@@ -54,7 +47,7 @@ feature -- Initialization
 		end
 
 feature -- Access
-	item alias "[]" (i: INTEGER): G
+	item alias "[]" (i: INTEGER): G assign put
 			-- Value associated with `i'.
 		do
 			Result := at (i).item
@@ -63,20 +56,17 @@ feature -- Access
 feature -- Measurement		
 	count: INTEGER
 			-- Number of elements.
-		do
-			Result := count_cell.item
-		end
 
 feature -- Iteration
 	at (i: INTEGER): V_LINKED_LIST_ITERATOR [G]
 			-- New iterator pointing at position `i'.
 		do
-			create Result.make (Current, count_cell)
+			create Result.make (Current)
 			Result.go_to (i)
 		end
 
 feature -- Replacement
-	put (i: INTEGER; v: G)
+	put (v: G; i: INTEGER)
 			-- Associate `v' with index `i'.
 		do
 			iterator.go_to (i)
@@ -96,7 +86,7 @@ feature -- Extension
 				cell.put_right (first_cell)
 			end
 			first_cell := cell
-			count_cell.put (count + 1)
+			count := count + 1
 		end
 
 	extend_back (v: G)
@@ -111,10 +101,10 @@ feature -- Extension
 				last_cell.put_right (cell)
 			end
 			last_cell := cell
-			count_cell.put (count + 1)
+			count := count + 1
 		end
 
-	extend_at (i: INTEGER; v: G)
+	extend_at (v: G; i: INTEGER)
 			-- Insert `v' at position `i'.
 		do
 			if i = 1 then
@@ -145,17 +135,21 @@ feature -- Extension
 			end
 		end
 
-	insert_at (i: INTEGER; input: V_INPUT_ITERATOR [G])
+	insert_at (input: V_INPUT_ITERATOR [G]; i: INTEGER)
 			-- Insert sequence of values, over which `input' iterates, starting at position `i'.
 		do
-			from
-				iterator.go_to (i - 1)
-			until
-				input.off
-			loop
-				iterator.extend_right (input.item)
-				iterator.forth
-				input.forth
+			if i = 1 then
+				prepend (input)
+			else
+				from
+					iterator.go_to (i - 1)
+				until
+					input.off
+				loop
+					iterator.extend_right (input.item)
+					iterator.forth
+					input.forth
+				end
 			end
 		end
 
@@ -167,7 +161,7 @@ feature -- Removal
 				last_cell := Void
 			end
 			first_cell := first_cell.right
-			count_cell.put (count - 1)
+			count := count - 1
 		end
 
 	remove_back
@@ -176,7 +170,7 @@ feature -- Removal
 			if count = 1 then
 				first_cell := Void
 				last_cell := Void
-				count_cell.put (0)
+				count := 0
 			else
 				iterator.go_to (count - 1)
 				iterator.remove_right
@@ -199,23 +193,74 @@ feature -- Removal
 		do
 			first_cell := Void
 			last_cell := Void
-			count_cell.put (0)
+			count := 0
 		end
 
-feature {V_LINKED_LIST_ITERATOR} -- Implementation
+feature {V_LINKED_LIST, V_LINKED_LIST_ITERATOR} -- Implementation
 	first_cell: V_LINKABLE [G]
 			-- First cell of the list.
 
 	last_cell: V_LINKABLE [G]
 			-- Last cell of the list.
 
-	count_cell: V_CELL [INTEGER]
-			-- Cell to store count, where it can be updated by iterators.
-
-	set_last_cell (c: V_LINKABLE [G])
-			-- Set `last_cell' to `c'.
+	extend_after (v: G; c: V_LINKABLE [G])
+			-- Add a new cell with value `v' after `c'.
+		require
+			c_exists: c /= Void
+		local
+			new: V_LINKABLE [G]
 		do
-			last_cell := c
+			create new.put (v)
+			if c.right = Void then
+				last_cell := new
+			else
+				new.put_right (c.right)
+			end
+			c.put_right (new)
+			count := count + 1
+		end
+
+	remove_after (c: V_LINKABLE [G])
+			-- Remove the cell to the right of `c'.
+		require
+			c_exists: c /= Void
+			c_right_exists: c.right /= Void
+		do
+			c.put_right (c.right.right)
+			if c.right = Void then
+				last_cell := c
+			end
+			count := count - 1
+		end
+
+	merge_after (other: V_LINKED_LIST [G]; c: V_LINKABLE [G])
+			-- Merge `other' into `Current' after cell `c'. If `c' is `Void', merge to the front.
+		require
+			other_exists: other /= Void
+		local
+			other_first, other_last: V_LINKABLE [G]
+		do
+			if not other.is_empty then
+				other_first := other.first_cell
+				other_last := other.last_cell
+				count := count + other.count
+				other.wipe_out
+				if c = Void then
+					if first_cell = Void then
+						last_cell := other_last
+					else
+						other_last.put_right (first_cell)
+					end
+					first_cell := other_first
+				else
+					if c.right = Void then
+						last_cell := other_last
+					else
+						other_last.put_right (c.right)
+					end
+					c.put_right (other_first)
+				end
+			end
 		end
 
 feature {NONE} --Implementation

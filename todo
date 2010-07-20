@@ -1,0 +1,7 @@
+- Remove count_cell from V_BINARY_TREE like from V_LINKED_LIST (try)
+- Change implementation of model classes making use of V_ARRAY
+- V_LINKED_LIST_ITERATOR.merge should take an iterator?
+
+Known bugs:
+
+- Search doesn't work properly if model objects put inside data structures (wrong meaning of the postcondition)

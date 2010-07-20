@@ -39,6 +39,8 @@ feature -- Extension
 feature -- Removal
 	remove
 			-- Remove the accessible element.
+		require
+			not_empty: not is_empty
 		deferred
 		ensure
 			sequence_effect: sequence |=| old sequence.but_first

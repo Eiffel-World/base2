@@ -231,6 +231,8 @@ feature -- Comparison
 
 	is_prefix_of (other: MML_FINITE_SEQUENCE [G]): BOOLEAN
 			-- Is `Current' a prefix of `other'?
+		require
+			other_exists: other /= Void
 		local
 			i: INTEGER
 		do
@@ -268,29 +270,33 @@ feature -- Element change
 		note
 			mapped_to: "Sequence.extended(Current, x)"
 		local
-			a: ARRAY [G]
+			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count + 1)
-			a.subcopy (array, array.lower, array.upper, 1)
-			a.put (x, a.count)
+			if not array.is_empty then
+				a.subcopy (array, array.lower, array.upper, 1)
+			end
+			a [a.count] := x
 			create Result.make_from_array (a)
 		end
 
 	prepended (x: G): MML_FINITE_SEQUENCE [G]
 			-- Current sequence prepended with `x' at the beginning
 		local
-			a: ARRAY [G]
+			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count + 1)
 			a.subcopy (array, array.lower, array.upper, 2)
-			a.put (x, 1)
+			a [1] := x
 			create Result.make_from_array (a)
 		end
 
 	concatenation alias "+" (other : MML_FINITE_SEQUENCE[G]): MML_FINITE_SEQUENCE [G] is
 			-- The concatenation of `current' and `other'.
+		require
+			other_exists: other /= Void
 		local
-			a: ARRAY[G]
+			a: V_ARRAY[G]
 		do
 			if is_empty then
 				Result := other
@@ -306,6 +312,8 @@ feature -- Element change
 
 	infinite_concatenation alias "|+|" (other : MML_SEQUENCE[G]): MML_SEQUENCE [G] is
 			-- The concatenation of `current' and `other'.
+		require
+			other_exists: other /= Void
 		do
 			if attached {MML_FINITE_SEQUENCE [G]} other as sequence then
 				Result := Current + sequence
@@ -317,10 +325,10 @@ feature -- Element change
 		note
 			mapped_to: "Sequence.replaced_at(Current, i, x)"
 		local
-			a: ARRAY [G]
+			a: V_ARRAY [G]
 		do
 			a := array.twin
-			a.put (x, i)
+			a [i] := x
 			create Result.make_from_array (a)
 		end
 
@@ -342,9 +350,9 @@ feature -- Element change
 --		end
 
 feature {MML_MODEL} -- Implementation
-	array: ARRAY [G]
+	array: V_ARRAY [G]
 
-	make_from_array (a: ARRAY [G])
+	make_from_array (a: V_ARRAY [G])
 			-- Create with a predefined array
 		do
 			array := a

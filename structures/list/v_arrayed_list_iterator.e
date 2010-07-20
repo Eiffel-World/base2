@@ -42,14 +42,14 @@ feature -- Extension
 	extend_left (v: G)
 			-- Insert `v' to the left of current position. Do not move cursor.
 		do
-			target.extend_at (index, v)
+			target.extend_at (v, index)
 			index := index + 1
 		end
 
 	extend_right (v: G)
 			-- Insert `v' to the right of current position. Do not move cursor.
 		do
-			target.extend_at (index + 1, v)
+			target.extend_at (v, index + 1)
 		end
 
 	insert_left (other: V_INPUT_ITERATOR [G])
@@ -58,7 +58,7 @@ feature -- Extension
 			old_other_count: INTEGER
 		do
 			old_other_count := other.count
-			target.insert_at (index, other)
+			target.insert_at (other, index)
 			index := index + old_other_count
 		end
 
@@ -68,7 +68,7 @@ feature -- Extension
 			old_other_count: INTEGER
 		do
 			old_other_count := other.count
-			target.insert_at (index + 1, other)
+			target.insert_at (other, index + 1)
 			index := index + old_other_count
 		end
 

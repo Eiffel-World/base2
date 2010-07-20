@@ -51,7 +51,7 @@ feature -- Initialization
 		end
 
 feature -- Access
-	item alias "[]" (k: K): V
+	item alias "[]" (k: K): V assign put
 			-- Value associated with `k'.
 		local
 			i: V_SORTED_TABLE_ITERATOR [K, V]
@@ -90,7 +90,7 @@ feature -- Iteration
 		end
 
 feature -- Replacement
-	put (k: K; v: V)
+	put (v: V; k: K)
 			-- Associate `v' with key `k'.
 		local
 			i: V_SORTED_TABLE_ITERATOR [K, V]
@@ -100,7 +100,7 @@ feature -- Replacement
 		end
 
 feature -- Extension
-	extend (k: K; v: V)
+	extend (v: V; k: K)
 			-- Extend table with key-value pair <`k', `v'>.
 		do
 			set.extend ([k, v])

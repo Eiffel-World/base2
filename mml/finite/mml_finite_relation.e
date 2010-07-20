@@ -100,6 +100,8 @@ feature -- Access
 
 	image (subdomain: MML_SET [G]): MML_FINITE_SET [H]
 			-- The set of values related to keys in `subdomain'
+		require
+			subdomain_exists: subdomain /= Void
 		local
 			i: INTEGER
 		do
@@ -135,8 +137,8 @@ feature -- Basic operations
 	intersection alias "*" (other: MML_RELATION [G, H]): MML_FINITE_RELATION [G, H]
 			-- Relation consisting of pair contained in both `Current' and `other'
 		local
-			ks: ARRAY [G]
-			vs: ARRAY [H]
+			ks: V_ARRAY [G]
+			vs: V_ARRAY [H]
 			i, j: INTEGER
 		do
 			create ks.make (keys.lower, keys.upper)
@@ -177,10 +179,10 @@ feature -- Comparison
 		end
 
 feature {NONE} -- Implementation
-	keys: ARRAY [G]
-	values: ARRAY [H]
+	keys: V_ARRAY [G]
+	values: V_ARRAY [H]
 
-	make_from_arrays (ks: ARRAY [G]; vs: ARRAY [H])
+	make_from_arrays (ks: V_ARRAY [G]; vs: V_ARRAY [H])
 			-- Create with a predefined array
 		do
 			keys := ks

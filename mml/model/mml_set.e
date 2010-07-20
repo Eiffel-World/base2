@@ -41,6 +41,8 @@ feature -- Conversion
 feature -- Basic operations
 	intersection alias "*" (other: MML_SET [G]): MML_SET [G]
 			-- Set that consists of values contained in both `Current' and `other'
+		require
+			other_exists: other /= Void
 		deferred
 		end
 end

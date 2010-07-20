@@ -62,6 +62,8 @@ feature {NONE} -- Initialization
 
 	from_tuple (t: TUPLE [min: INTEGER; max: INTEGER])
 			-- Create interval [min, max]
+		require
+			t_exists: t /= Void
 		do
 			from_range (t.min, t.max)
 		end
@@ -116,9 +118,9 @@ feature {NONE} -- Implementation
 			lower_cache := {INTEGER}.max_value
 			upper_cache := {INTEGER}.min_value
 			from
-				i := 1
+				i := array.lower
 			until
-				i > array.count
+				i > array.upper
 			loop
 				if attached {INTEGER} array.item (i) as n then
 					if int_set.has (n) then
