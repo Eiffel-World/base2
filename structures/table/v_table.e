@@ -36,8 +36,8 @@ feature -- Iteration
 		deferred
 		ensure
 			target_definition: Result.target = Current
-			index_definition_found: has_equivalent_key (map, k, relation) implies relation [Result.key_sequence [Result.index], k]
-			index_definition_not_found: not has_equivalent_key (map, k, relation) implies Result.index = Result.key_sequence.count + 1
+			index_definition_found: has_equivalent_key (k) implies relation [Result.key_sequence [Result.index], k]
+			index_definition_not_found: not has_equivalent_key (k) implies Result.index = Result.key_sequence.count + 1
 		end
 
 feature -- Comparison
@@ -82,8 +82,8 @@ feature -- Extension
 				extend (v, k)
 			end
 		ensure
-			map_effect_has: old has_equivalent_key (map, k, relation) implies map |=| old map.replaced_at (equivalent_key (map, k, relation), v)
-			map_effect_not_has: not old has_equivalent_key (map, k, relation) implies map |=| old map.extended (k, v)
+			map_effect_has: old has_equivalent_key (k) implies map |=| old map.replaced_at (equivalent_key (k), v)
+			map_effect_not_has: not old has_equivalent_key (k) implies map |=| old map.extended (k, v)
 		end
 
 feature -- Removal
@@ -93,7 +93,7 @@ feature -- Removal
 			has_key: has_key (k)
 		deferred
 		ensure
-			map_effect: map |=| old map.removed (equivalent_key (map, k, relation))
+			map_effect: map |=| old map.removed (equivalent_key (k))
 		end
 
 feature -- Specification

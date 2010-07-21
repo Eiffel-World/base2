@@ -24,7 +24,7 @@ feature -- Cursor movement
 			-- (Use `target.equivalence'.)
 		deferred
 		ensure
-			index_effect_found: target.has_equivalent (target.set, v, target.relation) implies target.relation [sequence [index], v]
-			index_effect_not_found: not target.has_equivalent (target.set, v, target.relation) implies index = sequence.count + 1
+			index_effect_found: target.has_equivalent (v) implies target.relation [sequence [index], v]
+			index_effect_not_found: not target.has_equivalent (v) implies index = sequence.count + 1
 		end
 end

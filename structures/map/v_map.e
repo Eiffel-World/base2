@@ -15,7 +15,7 @@ feature -- Access
 			has_key: has_key (k)
 		deferred
 		ensure
-			definition: Result = map [equivalent_key (map, k, relation)]
+			definition: Result = map [equivalent_key (k)]
 		end
 
 feature -- Measurement
@@ -23,7 +23,7 @@ feature -- Measurement
 			-- Is any value associated with `k'?
 		deferred
 		ensure
-			definition: Result = has_equivalent_key (map, k, relation)
+			definition: Result = has_equivalent_key (k)
 		end
 
 feature -- Specification
@@ -41,30 +41,25 @@ feature -- Specification
 		deferred
 		end
 
-	has_equivalent_key (m: MML_MAP [K, V]; k: K; r: MML_RELATION [K, K]): BOOLEAN
-			-- Does `m' contain a key equivalent to `k' according to `r'?
+	has_equivalent_key (k: K): BOOLEAN
+			-- Does `map' contain a key equivalent to `k' according to `relation'?
 		note
 			status: specification
-		require
-			m_exists: m /= Void
-			r_exists: r /= Void
 		do
-			Result := not (r.image_of (k) * m.domain).as_finite.is_empty
+			Result := not (relation.image_of (k) * map.domain).as_finite.is_empty
 		ensure
-			definition: Result = not (r.image_of (k) * m.domain).as_finite.is_empty
+			definition: Result = not (relation.image_of (k) * map.domain).as_finite.is_empty
 		end
 
-	equivalent_key (m: MML_MAP [K, V]; k: K; r: MML_RELATION [K, K]): K
-			-- Key in `m' equivalent to `k' according to `r'.
+	equivalent_key (k: K): K
+			-- Key in `map' equivalent to `k' according to `relation'.
 		note
 			status: specification
 		require
-			m_exists: m /= Void
-			r_exists: r /= Void
-			has_equivalent: has_equivalent_key (m, k, r)
+			has_equivalent: has_equivalent_key (k)
 		do
-			Result := (r.image_of (k) * m.domain).as_finite.any_item
+			Result := (relation.image_of (k) * map.domain).as_finite.any_item
 		ensure
-			Result = (r.image_of (k) * m.domain).as_finite.any_item
+			Result = (relation.image_of (k) * map.domain).as_finite.any_item
 		end
 end

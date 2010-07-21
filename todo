@@ -1,4 +1,3 @@
-- Remove count_cell from V_BINARY_TREE like from V_LINKED_LIST (try)
 - Change implementation of model classes making use of V_ARRAY
 - V_LINKED_LIST_ITERATOR.merge should take an iterator?
 

@@ -43,16 +43,15 @@ feature {NONE} -- Initialization
 			valid_tree: t = s.tree
 		do
 			target := s
-			make_with_tree (t, t.count_cell)
+			make_with_tree (t)
 		ensure
 			target_effect: target = s
 		end
 
-	make_with_tree (t: V_BINARY_TREE [G]; cc: V_CELL [INTEGER])
+	make_with_tree (t: V_BINARY_TREE [G])
 			-- Create iterator over `tree'.
 		do
 			tree := t
-			count_cell := cc
 		end
 
 feature -- Initialization
@@ -63,7 +62,6 @@ feature -- Initialization
 				target := other.target
 				tree := other.tree
 				active := other.active
-				count_cell := tree.count_cell
 				after := other.after
 			end
 		ensure then

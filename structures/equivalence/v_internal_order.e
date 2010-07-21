@@ -15,7 +15,7 @@ feature -- Basic operations
 	greater_equal (x, y: G): BOOLEAN
 			-- Is `x' >= `y'?
 		do
-			Result := x >= y
+			Result := y = Void or else (x /= Void and then x >= y)
 		end
 
 feature -- Specification

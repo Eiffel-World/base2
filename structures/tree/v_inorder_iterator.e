@@ -21,21 +21,11 @@ inherit
 			is_equal
 		redefine
 			copy,
-			go_root,
-			make
+			go_root
 		end
 
 create {V_CONTAINER}
 	make
-
-feature {NONE} -- Initialization
-	make (tree: V_BINARY_TREE [G]; cc: V_CELL [INTEGER])
-			-- Create iterator over `tree'.
-		do
-			Precursor (tree, cc)
-		ensure then
-			after_effect: not after
-		end
 
 feature -- Initialization
 	copy (other: like Current)
@@ -60,7 +50,7 @@ feature -- Measurement
 			old_after: BOOLEAN
 		do
 			if after then
-				Result := count_cell.item + 1
+				Result := target.count + 1
 			elseif not off then
 				old_active := active
 				old_after := after
@@ -252,35 +242,33 @@ feature -- Specification
 			after := old_after
 		end
 
-	subtree_sequence (m: MML_FINITE_MAP [MML_BIT_VECTOR, G]; root: MML_BIT_VECTOR): MML_FINITE_SEQUENCE [G]
-			-- Inorder sequence of values in a subtree of `m' starting from `root'.
+	subtree_sequence (root: MML_BIT_VECTOR): MML_FINITE_SEQUENCE [G]
+			-- Inorder sequence of values in a subtree of `target.map' starting from `root'.
 		note
 			status: specification
 		require
-			m_exists: m /= Void
 			root_exists: root /= Void
 		do
-			if not m.domain [root] then
+			if not target.map.domain [root] then
 				create Result.empty
 			else
-				Result := subtree_sequence (m, root.extended (False)).extended (m [root]) + subtree_sequence (m, root.extended (True))
+				Result := subtree_sequence (root.extended (False)).extended (target.map [root]) + subtree_sequence (root.extended (True))
 			end
 		ensure
-			definition_base: not m.domain [root] implies Result.is_empty
-			definition_step: m.domain [root] implies
-				Result = subtree_sequence (m, root.extended (False)).extended (m [root]) + subtree_sequence (m, root.extended (True))
+			definition_base: not target.map.domain [root] implies Result.is_empty
+			definition_step: target.map.domain [root] implies
+				Result |=| (subtree_sequence (root.extended (False)).extended (target.map [root]) + subtree_sequence (root.extended (True)))
 		end
 
-	predecessor (m: MML_FINITE_MAP [MML_BIT_VECTOR, G]; node: MML_BIT_VECTOR): MML_BIT_VECTOR
-			-- Predecessor of `node' in inorder.
+	predecessor (node: MML_BIT_VECTOR): MML_BIT_VECTOR
+			-- Predecessor of `node' in inorder in `target.map'.
 		note
 			status: specification
 		require
-			m_exists: m /= Void
 			node_exists: node /= Void
-			node_in_tree: m.domain [node]
+			node_in_tree: target.map.domain [node]
 		do
-			if not m.domain [node.extended (False)] then
+			if not target.map.domain [node.extended (False)] then
 				if node [node.count] then
 					Result := node.but_last
 				else
@@ -290,41 +278,40 @@ feature -- Specification
 				from
 					Result := node.extended (False)
 				until
-					not m.domain [Result]
+					not target.map.domain [Result]
 				loop
 					Result := Result.extended (True)
 				end
 				Result := Result.but_last
 			end
 		ensure
-			definition_has_left: m.domain [node.extended (False)] implies
+			definition_has_left: target.map.domain [node.extended (False)] implies
 				node.extended (False).is_prefix_of (Result) and
-				not m.domain [Result.extended (True)] and
+				not target.map.domain [Result.extended (True)] and
 				Result.tail (node.count + 2).is_constant (True)
-			definition_not_has_left_is_right: not m.domain [node.extended (False)] and node [node.count] implies
+			definition_not_has_left_is_right: not target.map.domain [node.extended (False)] and node [node.count] implies
 				Result |=| node.but_last
-			definition_not_has_left_is_left: not m.domain [node.extended (False)] and not node [node.count] implies
+			definition_not_has_left_is_left: not target.map.domain [node.extended (False)] and not node [node.count] implies
 				Result |=| node.front (node.last_index_of (True) - 1)
 		end
 
-	node_index (m: MML_FINITE_MAP [MML_BIT_VECTOR, G]; node: MML_BIT_VECTOR): INTEGER
-			-- Index of `node' in inorder.
+	node_index (node: MML_BIT_VECTOR): INTEGER
+			-- Index of `node' in inorder in `target.map'.
 		note
 			status: specification
 		require
-			m_exists: m /= Void
 			node_exists: node /= Void
 		do
-			if m.domain [node] then
-				 Result := node_index (m, predecessor (m, node)) + 1
+			if target.map.domain [node] then
+				 Result := node_index (predecessor (node)) + 1
 			end
 		ensure
-			definition_base: not m.domain [node] implies Result = 0
-			definition_step: m.domain [node] implies Result = node_index (m, predecessor (m, node)) + 1
+			definition_base: not target.map.domain [node] implies Result = 0
+			definition_step: target.map.domain [node] implies Result = node_index (predecessor (node)) + 1
 		end
 
 invariant
-	sequence_definition: sequence |=| subtree_sequence (target.map, {MML_BIT_VECTOR} [1])
-	index_definition_not_after: not after implies index = node_index (target.map, path)
+	sequence_definition: sequence |=| subtree_sequence ({MML_BIT_VECTOR} [1])
+	index_definition_not_after: not after implies index = node_index (path)
 	index_definition_after: after implies index = target.map.count + 1
 end

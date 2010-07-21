@@ -20,14 +20,12 @@ create {V_BINARY_TREE}
 	make
 
 feature {NONE} -- Initialization
-	make (tree: V_BINARY_TREE [G]; cc: V_CELL [INTEGER])
+	make (tree: V_BINARY_TREE [G])
 			-- Create iterator over `tree'.
 		require
 			tree_exists: tree /= Void
-			valid_cc: cc = tree.count_cell
 		do
 			target := tree
-			count_cell := cc
 		ensure
 			target_effect: target = tree
 			path_effect: path.is_empty
@@ -39,7 +37,6 @@ feature -- Initialization
 		do
 			target := other.target
 			active := other.active
-			count_cell := target.count_cell
 		ensure then
 			target_effect: target = other.target
 			path_effect: path |=| other.path
@@ -134,8 +131,7 @@ feature -- Extension
 			not_off: not off
 			not_has_left: not has_left
 		do
-			active.put_left (create {V_BINARY_TREE_CELL [G]}.put (v))
-			count_cell.put (count_cell.item + 1)
+			target.extend_left (v, active)
 		ensure
 			target_map_effect: target.map |=| old target.map.extended (path.extended (False), v)
 			path_effect: path |=| old path
@@ -147,8 +143,7 @@ feature -- Extension
 			not_off: not off
 			not_has_right: not has_right
 		do
-			active.put_right (create {V_BINARY_TREE_CELL [G]}.put (v))
-			count_cell.put (count_cell.item + 1)
+			target.extend_right (v, active)
 		ensure
 			target_map_effect: target.map |=| old target.map.extended (path.extended (True), v)
 			path_effect: path |=| old path
@@ -156,35 +151,12 @@ feature -- Extension
 
 feature -- Removal
 	remove
-			-- Remove current node (it must have less than two child nodes).
+			-- Remove current node (it must have less than two child nodes). Go off.
 		require
 			not_off: not off
 			not_two_children: not has_left or not has_right
-		local
-			child: V_BINARY_TREE_CELL [G]
 		do
-			if has_left then
-				child := active.left
-			else
-				child := active.right
-			end
-			if is_root then
-				if is_leaf then
-					target.wipe_out
-				else
-					active.put (child.item)
-					active.put_left (child.left)
-					active.put_right (child.right)
-					count_cell.put (count_cell.item - 1)
-				end
-			else
-				if active.is_left then
-					active.parent.put_left (child)
-				else
-					active.parent.put_right (child)
-				end
-				count_cell.put (count_cell.item - 1)
-			end
+			target.remove (active)
 			active := Void
 		ensure
 			target_map_domain_effect: (old target.map.domain).for_all (agent (x, p: MML_BIT_VECTOR): BOOLEAN
@@ -204,10 +176,6 @@ feature -- Removal
 feature {V_CELL_CURSOR, V_INPUT_ITERATOR} -- Implementation
 	active: V_BINARY_TREE_CELL [G]
 			-- Cell at current position.
-
-feature {NONE} -- Implementation
-	count_cell: V_CELL [INTEGER]
-			-- Cell where `target's	count is stored.
 
 feature -- Specification
 	path: MML_BIT_VECTOR

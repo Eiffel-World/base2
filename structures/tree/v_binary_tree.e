@@ -13,22 +13,12 @@ inherit
 		rename
 			new_iterator as at_inorder_start
 		redefine
-			default_create,
 			copy,
 			is_equal
 		end
 
 create
 	default_create
-
-feature {NONE} -- Initialization
-	default_create
-			-- Create an empty tree.
-		do
-			create count_cell.put (0)
-		ensure then
-			map_effect: map.is_empty
-		end
 
 feature -- Initialization
 	copy (other: like Current)
@@ -37,17 +27,8 @@ feature -- Initialization
 			i: V_BINARY_TREE_CURSOR [G]
 		do
 			if other /= Current then
-				root := Void
-				if count_cell = Void then
-					create count_cell.put (0)
-				else
-					count_cell.put (0)
-				end
-				if not other.is_empty then
-					i := other.at_root
-					add_root (i.item)
-					copy_subtree (i, at_root)
-				end
+				root := subtree_twin (other.root)
+				count := other.count
 			end
 		ensure then
 			map_effect: map |=| other.map
@@ -57,15 +38,12 @@ feature -- Initialization
 feature -- Measurement
 	count: INTEGER
 			-- Number of elements.
-		do
-			Result := count_cell.item
-		end
 
 feature -- Iteration
 	at_root: V_BINARY_TREE_CURSOR [G]
 			-- New cursor pointing to the root.
 		do
-			create Result.make (Current, count_cell)
+			create Result.make (Current)
 			Result.go_root
 		ensure
 			target_definition: Result.target = Current
@@ -76,7 +54,7 @@ feature -- Iteration
 	at_inorder_start: V_INORDER_ITERATOR [G]
 			-- New inorder iterator pointing to the leftmost node.
 		do
-			create Result.make (Current, count_cell)
+			create Result.make (Current)
 			Result.start
 		end
 
@@ -84,11 +62,7 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Does `other' has the same structure and contain the same objects?
 		do
-			if is_empty and other.is_empty then
-				Result := True
-			elseif count = other.count then
-				Result := equal_subtree (at_root, other.at_root)
-			end
+			Result := equal_subtree (root, other.root)
 		ensure then
 			definition: Result = (map |=| other.map)
 		end
@@ -100,7 +74,7 @@ feature -- Extension
 			is_empty: is_empty
 		do
 			create root.put (v)
-			count_cell.put (1)
+			count := 1
 		ensure
 			map_effect: map |=| create {like map}.singleton (1, v)
 		end
@@ -110,74 +84,85 @@ feature -- Removal
 			-- Remove all elements.
 		do
 			root := Void
-			count_cell.put (0)
+			count := 0
 		ensure then
 			map_effect: map.is_empty
 		end
 
-feature {V_BINARY_TREE_CURSOR} -- Implementation
+feature {V_BINARY_TREE, V_BINARY_TREE_CURSOR} -- Implementation
 	root: V_BINARY_TREE_CELL [G]
 			-- Root node.
 
-	count_cell: V_CELL [INTEGER]
-			-- Cell to store count, where it can be updated by iterators.
-
-	copy_subtree (input, output: V_BINARY_TREE_CURSOR [G])
-			-- Copy subtree to which `input' points as a subtree of a leaf node, to which `output' points.
+feature {V_BINARY_TREE_CURSOR} -- Implementation
+	extend_left (v: G; cell: V_BINARY_TREE_CELL [G])
+			-- Add a left child with value `v' to `cell'.
 		require
-			input_not_off: not input.off
-			output_not_off: not output.off
-			output_if_leaf: output.is_leaf
+			cell_exists: cell /= Void
+			not_cell_has_left: cell.left = Void
 		do
-			if input.has_left then
-				input.left
-				output.extend_left (input.item)
-				output.left
-				copy_subtree (input, output)
-				input.up
-				output.up
+			cell.put_left (create {V_BINARY_TREE_CELL [G]}.put (v))
+			count := count + 1
+		end
+
+	extend_right (v: G; cell: V_BINARY_TREE_CELL [G])
+			-- Add a right child with value `v' to `cell'.
+		require
+			cell_exists: cell /= Void
+			not_cell_has_left: cell.right = Void
+		do
+			cell.put_right (create {V_BINARY_TREE_CELL [G]}.put (v))
+			count := count + 1
+		end
+
+	remove (cell: V_BINARY_TREE_CELL [G])
+			-- Remove `cell' from the tree (it must have less than two child nodes).
+		require
+			cell_exists: cell /= Void
+			not_two_children: cell.left = Void or cell.right = Void
+		local
+			child: V_BINARY_TREE_CELL [G]
+		do
+			if cell.left /= Void then
+				child := cell.left
+			else
+				child := cell.right
 			end
-			if input.has_right then
-				input.right
-				output.extend_right (input.item)
-				output.right
-				copy_subtree (input, output)
-				input.up
-				output.up
+			if cell.is_root then
+				if cell.is_leaf then
+					root := Void
+				else
+					cell.put (child.item)
+					cell.put_left (child.left)
+					cell.put_right (child.right)
+				end
+			else
+				if cell.is_left then
+					cell.parent.put_left (child)
+				else
+					cell.parent.put_right (child)
+				end
+			end
+			count := count - 1
+		end
+
+feature {NONE} -- Implementation
+	subtree_twin (cell: V_BINARY_TREE_CELL [G]): V_BINARY_TREE_CELL [G]
+			-- Copy of subtree with root `cell'.
+		do
+			if cell /= Void then
+				create Result.put (cell.item)
+				Result.put_left (subtree_twin (cell.left))
+				Result.put_right (subtree_twin (cell.right))
 			end
 		end
 
-	equal_subtree (i, j: V_BINARY_TREE_CURSOR [G]): BOOLEAN
-			-- Is subtree starting from `i' equal to that starting from `j' both in structure in values?
-		require
-			i_not_off: not i.off
-			j_not_off: not j.off
+	equal_subtree (i, j: V_BINARY_TREE_CELL [G]): BOOLEAN
+			-- Is subtree with root `i' equal to that with root `j' both in structure in values?
 		do
-			if i.item = j.item then
-				if i.has_left and j.has_left then
-					i.left
-					j.left
-					Result := equal_subtree (i, j)
-					i.up
-					j.up
-				elseif not i.has_left and not j.has_left then
-					Result := True
-				else
-					Result := False
-				end
-				if Result then
-					if i.has_right and j.has_right then
-						i.right
-						j.right
-						Result := equal_subtree (i, j)
-						i.up
-						j.up
-					elseif not i.has_right and not j.has_right then
-						Result := True
-					else
-						Result := False
-					end
-				end
+			if i /= Void and j /= Void then
+				Result := (i.item = j.item) and equal_subtree (i.left, j.left) and equal_subtree (i.right, j.right)
+			else
+				Result := (i = Void) and (j = Void)
 			end
 		end
 
