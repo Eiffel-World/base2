@@ -36,18 +36,6 @@ feature -- Access
 
 	count: INTEGER
 			-- Total number of elements
---		local
---			i: INTEGER
---		do
---			from
---				i := values.lower
---			until
---				i > values.upper
---			loop
---				Result := Result + values [i]
---				i := i + 1
---			end
---		end
 
 feature -- Status report
 	is_empty: BOOLEAN
@@ -222,7 +210,7 @@ feature {NONE} -- Implementation
 			until
 				Result > keys.upper or found
 			loop
-				if model_equals (keys[Result], x) then
+				if model_equals (keys [Result], x) then
 					found := True
 				else
 					Result := Result + 1

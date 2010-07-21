@@ -33,6 +33,7 @@ feature -- Access
 		local
 			i: INTEGER
 		do
+			-- Workaround: cannot use `exists' because of agent typing issues
 			from
 				i := array.lower
 			until
@@ -88,19 +89,9 @@ feature -- Comparison
 			-- Is `Current' mathematically equal to `other'?
 		note
 			mapped_to: "Current == other"
-		local
-			i: INTEGER
 		do
 			if attached {MML_FINITE_SET[G]} other as set and then count = set.count then
-				from
-					Result := True
-					i := array.lower
-				until
-					i > array.upper or not Result
-				loop
-					Result := set.has (array [i])
-					i := i + 1
-				end
+				Result := array.for_all (agent set.has)
 			end
 		end
 
@@ -261,18 +252,8 @@ feature -- Quantification
 		require
 			test_exists: test /= Void
 			test_has_one_arg: test.open_count = 1
-		local
-			i: INTEGER
 		do
-			from
-				Result := True
-				i := array.lower
-			until
-				i > array.upper or not Result
-			loop
-				Result := test.item ([array[i]])
-				i := i + 1
-			end
+			Result := array.for_all (test)
 		ensure
 			definition: Result = (intersection (create {MML_AGENT_SET [G]}.such_that (test)).count = count)
 		end
@@ -282,17 +263,8 @@ feature -- Quantification
 		require
 			test_exists: test /= Void
 			test_has_one_arg: test.open_count = 1
-		local
-			i: INTEGER
 		do
-			from
-				i := array.lower
-			until
-				i > array.upper or Result
-			loop
-				Result := test.item ([array[i]])
-				i := i + 1
-			end
+			Result := array.exists (test)
 		ensure
 			definition: Result = not intersection (create {MML_AGENT_SET [G]}.such_that (test)).is_empty
 		end

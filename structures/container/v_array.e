@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 				lower := 1
 				upper := 0
 			end
-			create area.make (u - l + 1)
+			create area.make (upper - lower + 1)
 		ensure
 			map_domain_effect: map.domain |=| {MML_INTEGER_SET}[[l, u]]
 			map_effect: map.is_constant (default_item)
@@ -158,7 +158,9 @@ feature -- Replacement
 			-- Copy items of `other' within bounds [`other_first', `other_last'] to current array starting at index `i'.
 		do
 			if attached {V_ARRAY [G]} other as a then
-				area.copy_data (a.area, other_first - other.lower, index - lower, other_last - other_first + 1)
+				if other_last >= other_first then
+					area.copy_data (a.area, other_first - other.lower, index - lower, other_last - other_first + 1)
+				end
 			else
 				Precursor (other, other_first, other_last, index)
 			end

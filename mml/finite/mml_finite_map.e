@@ -86,42 +86,6 @@ feature -- Access
 			end
 		end
 
---	preimage_of (x: G): MML_FINITE_SET [K]
---			-- Set of keys associated with `x'
---		local
---			i: INTEGER
---		do
---			create Result.empty
---			from
---				i := values.lower
---			until
---				i > values.upper
---			loop
---				if model_equals (values [i], x) then
---					Result := Result.extended (keys [i])
---				end
---				i := i + 1
---			end
---		end
-
---	preimage (subrange: MML_SET [G]): MML_FINITE_SET [K]
---			-- Set of keys, for which associated values are from `subrange'
---		local
---			i: INTEGER
---		do
---			create Result.empty
---			from
---				i := values.lower
---			until
---				i > values.upper
---			loop
---				if subrange [values [i]] then
---					Result := Result.extended (keys [i])
---				end
---				i := i + 1
---			end
---		end
-
 feature -- Status report
 	is_empty: BOOLEAN
 			-- Is map empty?
@@ -319,23 +283,6 @@ feature -- Replacement
 			end
 			create Result.make_from_arrays (keys, vs)
 		end
-
---feature -- Iteration
---	for_all (test: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
---			-- Does `test' hold for all values?
---		local
---			i: INTEGER
---		do
---			from
---				Result := True
---				i := values.lower
---			until
---				i > values.upper or not Result
---			loop
---				Result := test.item ([values[i]])
---				i := i + 1
---			end
---		end
 
 feature {MML_MODEL} -- Implementation
 	keys: V_ARRAY [K]

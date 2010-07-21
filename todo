@@ -1,4 +1,3 @@
-- Change implementation of model classes making use of V_ARRAY
 - V_LINKED_LIST_ITERATOR.merge should take an iterator?
 
 Known bugs:

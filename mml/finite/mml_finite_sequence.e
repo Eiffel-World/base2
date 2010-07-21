@@ -13,7 +13,6 @@ inherit
 
 create
 	empty
---	const
 
 create {MML_MODEL}
 	make_from_array
@@ -127,14 +126,6 @@ feature -- Search
 		end
 
 feature -- Decomposition
---	first : G
---			-- First element.
---		require
---			non_empty: not is_empty
---		do
---			Result := array [array.lower]
---		end
-
 	last: G
 			-- The last element of `current'.
 		require
@@ -145,8 +136,6 @@ feature -- Decomposition
 
 	but_first: MML_FINITE_SEQUENCE [G]
 			-- The elements of `current' except for the first one.
---		require
---			not_empty: not is_empty
 		do
 			Result := interval (2, count)
 		end
@@ -165,24 +154,10 @@ feature -- Decomposition
 			Result := interval (lower, count)
 		end
 
---	front (upper: INTEGER): MML_FINITE_SEQUENCE [G]
---			-- Prefix up to `upper'.
---		do
---			Result := interval (1, upper)
---		end
-
 	interval (lower, upper: INTEGER): MML_FINITE_SEQUENCE [G]
 			-- Subsequence from `lower' to `upper'.
-		local
-			l, u: INTEGER
 		do
-			l := lower.max (1)
-			u := upper.min (count)
-			if l <= u then
-				create Result.make_from_array (array.subarray (array.lower + l - 1, array.lower + u - 1))
-			else
-				create Result.empty
-			end
+			create Result.make_from_array (array.subarray (array.lower + lower.max (1) - 1, array.lower + upper.min (count) - 1))
 		end
 
 feature -- Status report
@@ -242,7 +217,7 @@ feature -- Comparison
 			until
 				i > count or not Result
 			loop
-				Result := item (i) = other.item (i)
+				Result := model_equals (item (i), other.item (i))
 				i := i + 1
 			end
 		end
@@ -256,14 +231,6 @@ feature {NONE} -- Initialization
 			create array.make (1, 0)
 		end
 
---	const (n: INTEGER; v: G)
---			-- Create sequence of `n' copies of `v'
---		note
---			mapped_to: "Sequence.const(n, v)"
---		do
---			create array.make_filled (v, 1, n)
---		end
-
 feature -- Element change
 	extended (x: G): MML_FINITE_SEQUENCE [G]
 			-- Current sequence extended with `x' at the end
@@ -273,9 +240,7 @@ feature -- Element change
 			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count + 1)
-			if not array.is_empty then
-				a.subcopy (array, array.lower, array.upper, 1)
-			end
+			a.subcopy (array, array.lower, array.upper, 1)
 			a [a.count] := x
 			create Result.make_from_array (a)
 		end
@@ -331,23 +296,6 @@ feature -- Element change
 			a [i] := x
 			create Result.make_from_array (a)
 		end
-
---feature -- Iteration
---	for_all (test: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
---			-- Does `test' hold for all values?
---		local
---			i: INTEGER
---		do
---			from
---				Result := True
---				i := array.lower
---			until
---				i > array.upper or not Result
---			loop
---				Result := test.item ([array[i]])
---				i := i + 1
---			end
---		end
 
 feature {MML_MODEL} -- Implementation
 	array: V_ARRAY [G]
