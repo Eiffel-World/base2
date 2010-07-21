@@ -15,7 +15,7 @@ feature -- Comparison
 
 	frozen model_equals (v1, v2: ANY): BOOLEAN
 			-- Are `v1' and `v2' mathematically equal?
-			-- If they are models use model eqality, otherwise reference equality
+			-- If they are models use model equality, otherwise reference equality
 		do
 			if attached {MML_MODEL} v1 as m1 and attached {MML_MODEL} v2 as m2 then
 				Result := m1 |=| m2

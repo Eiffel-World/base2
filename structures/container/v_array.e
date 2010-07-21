@@ -123,7 +123,7 @@ feature -- Iteration
 feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Is array made of the same items as `other'?
-			-- (Use reference comarison.)
+			-- (Use reference comparison.)
 		do
 			if other = Current then
 				Result := True

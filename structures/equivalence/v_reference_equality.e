@@ -23,7 +23,7 @@ feature -- Basic operations
 
 feature -- Specification
 	relation: MML_IDENTITY [G]
-			-- Corresponding matematical relation.
+			-- Corresponding mathematical relation.
 		note
 			status: specification
 		do

@@ -76,7 +76,7 @@ feature -- Status report
 feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to the same container at the same position?
-			-- (Use reference comarison)
+			-- (Use reference comparison)
 		do
 			if other = Current then
 				Result := True
@@ -163,7 +163,7 @@ feature -- Cursor movement
 	search_forth (v: G)
 			-- Move to the first occurrence of `v' at or after current position.
 			-- If `v' does not occur, move `after'.
-			-- (Use refernce equality.)
+			-- (Use reference equality.)
 		do
 			if before then
 				start
@@ -204,7 +204,7 @@ feature -- Cursor movement
 	search_back (v: G)
 			-- Move to the last occurrence of `v' at or before current position.
 			-- If `v' does not occur, move `before'.
-			-- (Use refernce equality.)
+			-- (Use reference equality.)
 		do
 			if after then
 				finish

@@ -19,7 +19,7 @@ create
 
 feature -- Access
 	right: V_BINARY_TREE_CELL [G]
-			-- Rigth child.
+			-- Right child.
 
 	left: V_BINARY_TREE_CELL [G]
 			-- Left child.

@@ -131,7 +131,7 @@ feature -- Cursor movement
 				after := True
 			end
 		ensure then
-			after_effect_nonemtpy: not target.map.is_empty implies not after
+			after_effect_nonempty: not target.map.is_empty implies not after
 			after_effect_empty: target.map.is_empty implies after
 		end
 
@@ -326,5 +326,5 @@ feature -- Specification
 invariant
 	sequence_definition: sequence |=| subtree_sequence (target.map, {MML_BIT_VECTOR} [1])
 	index_definition_not_after: not after implies index = node_index (target.map, path)
-	index_definition_afetr: after implies index = target.map.count + 1
+	index_definition_after: after implies index = target.map.count + 1
 end

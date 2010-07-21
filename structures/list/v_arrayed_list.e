@@ -27,7 +27,7 @@ create
 	make_with_capacity,
 	make_with_capacity_and_rate
 
-feature {NONE} -- Initizalization
+feature {NONE} -- Initialization
 	default_create
 			-- Create an empty list with default `capacity' and `growth_rate'.
 		do
@@ -253,7 +253,7 @@ feature -- Resizing
 				end
 			end
 		ensure
-			capacity_effect_unhanged: n <= old capacity implies capacity = old capacity
+			capacity_effect_unchanged: n <= old capacity implies capacity = old capacity
 			capacity_effect_changed: n > old capacity implies capacity = n.max (old capacity * growth_rate // 100)
 		end
 

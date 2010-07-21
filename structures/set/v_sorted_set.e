@@ -24,7 +24,7 @@ inherit
 create
 	make
 
-feature {NONE} -- Initizalization
+feature {NONE} -- Initialization
 	make (o: V_TOTAL_ORDER [G])
 			-- Create an empty set with elements order `o'.
 		require

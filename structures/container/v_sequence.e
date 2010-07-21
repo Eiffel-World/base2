@@ -1,5 +1,5 @@
 note
-	description: "Containers where values are associated with integer indexes from a continious interval."
+	description: "Containers where values are associated with integer indexes from a continuous interval."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -298,9 +298,9 @@ feature -- Specification
 invariant
 	indexes_in_interval: map.domain.is_interval
 	lower_definition_nonempty: not map.is_empty implies lower = map.domain.lower
-	lower_defintion_empty: map.is_empty implies lower = 1
+	lower_definition_empty: map.is_empty implies lower = 1
 	upper_definition_nonempty: not map.is_empty implies upper = map.domain.upper
-	upper_defintion_empty: map.is_empty implies upper = 0
+	upper_definition_empty: map.is_empty implies upper = 0
 	first_definition: not map.is_empty implies first = map [lower]
 	last_definition: not map.is_empty implies last = map [upper]
 	relation_definition: relation.is_identity

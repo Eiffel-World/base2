@@ -13,7 +13,7 @@ inherit
 
 feature -- Access
 	item: G
-			-- The accessable element.
+			-- The accessible element.
 		require
 			not_empty: not is_empty
 		deferred

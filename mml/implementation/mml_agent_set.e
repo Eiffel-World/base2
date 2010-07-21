@@ -56,6 +56,6 @@ feature -- Basic operations
 
 feature {MML_AGENT_SET} -- Implementation
 	predicate: PREDICATE [ANY, TUPLE [G]]
-			-- Definiting predicate of a set
+			-- Defining predicate of a set
 end
 

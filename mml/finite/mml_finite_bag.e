@@ -18,7 +18,7 @@ create {MML_MODEL}
 
 feature -- Access
 	domain: MML_FINITE_SET [G]
-			-- Set of values that occure at leat once
+			-- Set of values that occur at least once
 		do
 			create Result.make_from_array (keys)
 		end
@@ -150,7 +150,7 @@ feature -- Basic operations
 
 	removed_all (x: G): MML_FINITE_BAG [G]
 			-- Current bag with all occurrences of `x' removed, if contained
-			-- Otherwiese current bag
+			-- Otherwise current bag
 		local
 			ks: V_ARRAY [G]
 			vs: V_ARRAY [INTEGER]

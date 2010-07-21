@@ -123,7 +123,7 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 			-- Cell to store count, where it can be updated by iterators.
 
 	copy_subtree (input, output: V_BINARY_TREE_CURSOR [G])
-			-- Copy subtree to which `input' points as a subtree of a leaf node, to which `ouput' points.
+			-- Copy subtree to which `input' points as a subtree of a leaf node, to which `output' points.
 		require
 			input_not_off: not input.off
 			output_not_off: not output.off

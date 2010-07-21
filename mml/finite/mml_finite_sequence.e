@@ -128,7 +128,7 @@ feature -- Search
 
 feature -- Decomposition
 --	first : G
---			-- First elemrnt.
+--			-- First element.
 --		require
 --			non_empty: not is_empty
 --		do

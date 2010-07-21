@@ -1,5 +1,5 @@
 note
-	description: "Equivance relations."
+	description: "Equivalence relations."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -18,7 +18,7 @@ feature -- Basic operations
 
 feature -- Specification
 	relation: MML_ENDORELATION [G]
-			-- Corresponding matematical relation.
+			-- Corresponding mathematical relation.
 		note
 			status: specification
 		do
@@ -32,7 +32,7 @@ feature -- Specification
 		deferred
 		end
 invariant
-	relation_reflaxive: executable implies relation.reflexive
+	relation_reflexive: executable implies relation.reflexive
 	relation_symmetric: executable implies relation.symmetric
 	relation_transitive: executable implies relation.transitive
 end

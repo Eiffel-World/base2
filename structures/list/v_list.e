@@ -36,7 +36,7 @@ feature -- Iteration
 feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Is list made of the same values in the same order as `other'?
-			-- (Use reference comarison.)
+			-- (Use reference comparison.)
 		local
 			i, j: V_INPUT_ITERATOR [G]
 		do

@@ -1,6 +1,6 @@
 note
 	description: "[
-		Container where all elements are unique with repect to some equivalence relation. 
+		Container where all elements are unique with respect to some equivalence relation. 
 		Elements can be added and removed.
 		]"
 	author: "Nadia Polikarpova"
@@ -78,7 +78,7 @@ feature -- Iteration
 
 feature -- Comparison
 	is_subset_of (other: V_SET [G]): BOOLEAN
-			-- Does `other' have all ellement of `Current'?
+			-- Does `other' have all elements of `Current'?
 			-- (Uses `other.equivalence'.)
 		require
 			other_exists: other /= Void
@@ -89,7 +89,7 @@ feature -- Comparison
 		end
 
 	is_superset_of (other: V_SET [G]): BOOLEAN
-			-- Does `Current' have all ellement of `other'?
+			-- Does `Current' have all elements of `other'?
 			-- (Uses `equivalence'.)
 		require
 			other_exists: other /= Void

@@ -38,7 +38,7 @@ feature -- Cursor movement
 	search (v: G)
 			-- Move to the first occurrence of `v' at or after current position.
 			-- If `v' does not occur, move `after'.
-			-- (Use refernce equality.)
+			-- (Use reference equality.)
 		do
 			from
 			until

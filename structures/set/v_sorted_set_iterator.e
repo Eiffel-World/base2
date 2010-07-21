@@ -100,7 +100,7 @@ feature -- Access
 	search_forth (v: G)
 			-- Move to the first occurrence of `v' starting from current position.
 			-- If `v' does not occur, move `off'.
-			-- (Use refernce equality.)
+			-- (Use reference equality.)
 		do
 			if before or (not off and then target.order.greater_than (v, item)) then
 				search (v)
@@ -113,7 +113,7 @@ feature -- Access
 	search_back (v: G)
 			-- Move to the last occurrence of `v' at or before current position.
 			-- If `v' does not occur, move `before'.
-			-- (Use refernce equality.)
+			-- (Use reference equality.)
 		do
 			if after or (not off and then target.order.less_than (v, item)) then
 				search (v)

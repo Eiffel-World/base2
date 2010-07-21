@@ -51,7 +51,7 @@ feature -- Status report
 feature -- Comparison
 	is_model_equal alias "|=|" (other: MML_MODEL): BOOLEAN
 			-- Is this model mathematically equal to `other'?
-			-- Inifinite sets are never equal
+			-- Infinite sets are never equal
 		do
 			if attached {MML_IDENTITY [G]} other then
 				Result := True
