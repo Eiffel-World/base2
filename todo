@@ -1,4 +1,7 @@
-- V_LINKED_LIST_ITERATOR.merge should take an iterator?
+Implement HASH_TABLE
+Simplify implementation of "remove" in SORTED_SET?
+Add "remove" to set iterator?
+Test sets and tables
 
 Known bugs:
 

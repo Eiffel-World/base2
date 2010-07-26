@@ -75,6 +75,7 @@ feature -- Access
 	target: V_SORTED_SET [G]
 			-- Set to iterate over.
 
+feature -- Cursor movement
 	search (v: G)
 			-- Move to an element equivalent to `v'.
 			-- (Use `target.equivalence'.)

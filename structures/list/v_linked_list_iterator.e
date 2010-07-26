@@ -24,16 +24,18 @@ inherit
 			copy
 		end
 
-create {V_LINKED_LIST}
+create {V_CONTAINER, V_INPUT_ITERATOR}
 	make
 
-feature {NONE} -- Initialization
+feature {V_CONTAINER, V_INPUT_ITERATOR} -- Initialization
 	make (list: V_LINKED_LIST [G])
 			-- Create iterator over `list'.
 		require
 			list_exists: list /= Void
 		do
 			target := list
+			active := Void
+			after := False
 		ensure
 			target_effect: target = list
 			index_effect: index = 0

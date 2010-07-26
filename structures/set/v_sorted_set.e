@@ -78,7 +78,7 @@ feature -- Iteration
 			create Result.make (Current, tree)
 			Result.search (v)
 		end
-		
+
 feature -- Extension
 	extend (v: G)
 			-- Add `v' to the set.
@@ -138,7 +138,6 @@ feature -- Removal
 			end
 		end
 
-feature -- Removal
 	wipe_out
 			-- Remove all elements.
 		do

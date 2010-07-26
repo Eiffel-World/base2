@@ -23,8 +23,6 @@ create
 feature -- Initialization
 	copy (other: like Current)
 			-- Copy values and structure from `other'.
-		local
-			i: V_BINARY_TREE_CURSOR [G]
 		do
 			if other /= Current then
 				root := subtree_twin (other.root)
