@@ -1,6 +1,6 @@
 note
 	description: "[
-			Sets implemented as hash tables with chaining.
+			Hash sets with chaining.
 			Search, extension and removal are amortized contant time.
 		]"
 	author: "Nadia Polikarpova"
@@ -18,7 +18,10 @@ inherit
 		end
 
 create
-	make
+	make_reference_equality,
+	make_object_equality,
+	make,
+	make_with_capacity_and_load
 
 feature {NONE} -- Initialization
 	make_reference_equality (h: V_HASH [G])
@@ -87,7 +90,7 @@ feature {NONE} -- Initialization
 
 feature -- Initialization
 	copy (other: like Current)
-			-- Copy order relation, hash function and values values from `other'.
+			-- Copy equivalence relation, hash function, capacity, optimal load and values values from `other'.
 		local
 			i: INTEGER
 		do
@@ -300,7 +303,7 @@ feature {NONE} -- Implementation
 		do
 			if count * optimal_load // 100 > default_growth * capacity then
 				resize (capacity * default_growth)
-			elseif buckets.count > default_capacity and count * optimal_load // 100 < capacity // (default_growth * default_growth) then
+			elseif buckets.count > default_capacity and count * optimal_load // 100 < capacity // default_growth then
 				resize (capacity // default_growth)
 			end
 		end

@@ -3,6 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
+	model: map
 
 class
 	V_INTERNAL_HASH [G -> HASHABLE]

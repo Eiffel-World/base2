@@ -13,6 +13,7 @@ feature -- Basic operations
 			-- Hash value of `v'.
 		deferred
 		ensure
+			definition: Result = map [v]
 			non_negative: Result >= 0
 		end
 

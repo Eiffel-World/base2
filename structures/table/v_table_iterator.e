@@ -6,10 +6,10 @@ note
 	model: target, key_sequence, index
 
 deferred class
-	V_TABLE_ITERATOR [K, G]
+	V_TABLE_ITERATOR [K, V]
 
 inherit
-	V_ITERATOR [G]
+	V_ITERATOR [V]
 		rename
 			item as value,
 			sequence as value_sequence
@@ -25,7 +25,7 @@ feature -- Access
 		deferred
 		end
 
-	target: V_TABLE [K, G]
+	target: V_TABLE [K, V]
 			-- Table to iterate over.
 		deferred
 		end

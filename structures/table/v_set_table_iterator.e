@@ -1,40 +1,43 @@
 note
-	description: "Iterators to read from and update sorted tables."
+	description: "Iterators over tables implemented as set of key-value pairs."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: target, index
+	model: target, key_sequence, index
 
 class
-	V_SORTED_TABLE_ITERATOR [K, G]
+	V_SET_TABLE_ITERATOR [K, V]
 
 inherit
-	V_TABLE_ITERATOR [K, G]
+	V_TABLE_ITERATOR [K, V]
 		redefine
 			copy
 		end
 
-create {V_SORTED_TABLE}
+create {V_SET_TABLE}
 	make_at_start,
 	make_at_key
 
 feature {NONE} -- Initialization
-	make_at_start (t: V_SORTED_TABLE [K, G])
+	make_at_start (t: V_SET_TABLE [K, V])
 			-- Create an iterator at start of `t'.
 		do
 			target := t
 			set_iterator := target.set.new_iterator
 		ensure
 			target_effect: target = t
+			index_effect: index = 1
 		end
 
-	make_at_key (t: V_SORTED_TABLE [K, G]; k: K)
+	make_at_key (t: V_SET_TABLE [K, V]; k: K)
 			-- Create an iterator over `t' pointing to the position with key `k'.
 		do
 			target := t
 			set_iterator := target.set.at ([k, default_item])
 		ensure
 			target_effect: target = t
+			index_effect_found: target.has_equivalent_key (k) implies target.relation [key_sequence [index], k]
+			index_effect_not_found: not target.has_equivalent_key (k) implies index = key_sequence.count + 1
 		end
 
 feature -- Initialization
@@ -53,7 +56,7 @@ feature -- Initialization
 		end
 
 feature -- Access
-	target: V_SORTED_TABLE [K, G]
+	target: V_SET_TABLE [K, V]
 			-- Container to iterate over.
 
 	key: K
@@ -62,7 +65,7 @@ feature -- Access
 			Result := set_iterator.item.key
 		end
 
-	value: G
+	value: V
 			-- Value at current position.
 		do
 			Result := set_iterator.item.value
@@ -146,7 +149,7 @@ feature -- Cursor movement
 		end
 
 feature -- Replacement
-	put (v: G)
+	put (v: V)
 			-- Replace item at current position with `v'.
 		do
 			set_iterator.item.value := v
@@ -154,8 +157,8 @@ feature -- Replacement
 			target_map_effect: target.map |=| old target.map.replaced_at (key_sequence [index], v)
 		end
 
-feature {V_SORTED_TABLE_ITERATOR} -- Implementation
-	set_iterator: V_SORTED_SET_ITERATOR [TUPLE [key: K; value: G]]
+feature {V_SET_TABLE_ITERATOR} -- Implementation
+	set_iterator: V_SET_ITERATOR [TUPLE [key: K; value: V]]
 			-- Iterator over the underlying set.
 
 feature -- Specification
@@ -164,7 +167,7 @@ feature -- Specification
 		note
 			status: specification
 		local
-			pair_sequence: MML_FINITE_SEQUENCE [TUPLE [key: K; value: G]]
+			pair_sequence: MML_FINITE_SEQUENCE [TUPLE [key: K; value: V]]
 			i: INTEGER
 		do
 			create Result.empty
@@ -179,12 +182,12 @@ feature -- Specification
 			end
 		end
 
-	value_sequence: MML_FINITE_SEQUENCE [G]
+	value_sequence: MML_FINITE_SEQUENCE [V]
 			-- Sequence of values.
 		note
 			status: specification
 		local
-			pair_sequence: MML_FINITE_SEQUENCE [TUPLE [key: K; value: G]]
+			pair_sequence: MML_FINITE_SEQUENCE [TUPLE [key: K; value: V]]
 			i: INTEGER
 		do
 			create Result.empty
@@ -199,8 +202,8 @@ feature -- Specification
 			end
 		end
 
-	default_item: G
-			-- Default value of type `G'.
+	default_item: V
+			-- Default value of type `V'.
 		note
 			status: specification
 		do

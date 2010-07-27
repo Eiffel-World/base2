@@ -19,6 +19,16 @@ inherit
 			is_equal
 		end
 
+feature -- Access
+	item alias "[]" (k: K): V assign put
+			-- Value associated with `k'.
+		local
+			i: V_TABLE_ITERATOR [K, V]
+		do
+			i := at_key (k)
+			Result := i.value
+		end
+
 feature -- Measurement
 	key_equivalence: V_EQUIVALENCE [K]
 			-- Equivalence relation on keys.
@@ -60,6 +70,16 @@ feature -- Comparison
 					i.forth
 				end
 			end
+		end
+
+feature -- Replacement
+	put (v: V; k: K)
+			-- Associate `v' with key `k'.
+		local
+			i: V_TABLE_ITERATOR [K, V]
+		do
+			i := at_key (k)
+			i.put (v)
 		end
 
 feature -- Extension
