@@ -63,10 +63,10 @@ feature -- Comparison
 					i := new_iterator
 					j := other.new_iterator
 				until
-					i.off or not Result
+					i.after or not Result
 				loop
 					j.search_key (i.key)
-					Result := not j.off and then i.value = j.value
+					Result := not j.after and then i.value = j.value
 					i.forth
 				end
 			end
@@ -128,7 +128,7 @@ feature -- Specification
 			from
 				it := new_iterator
 			until
-				it.off
+				it.after
 			loop
 				Result := Result.extended (it.key, it.value)
 				it.forth

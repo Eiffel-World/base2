@@ -38,31 +38,31 @@ feature -- Decomposition
 			Result := item (1)
 		end
 
-	but_first : MML_SEQUENCE[G] is
+	but_first: like Current is
 			-- The elements of `current' except for the first one.
 		require
 			not_empty: not is_empty
 		deferred
 		end
 
-	tail (lower: INTEGER): MML_SEQUENCE[G] is
+	tail (lower: INTEGER): like Current is
 			-- Suffix from `lower'.
 		deferred
 		end
 
-	front (upper: INTEGER): MML_FINITE_SEQUENCE[G] is
+	front (upper: INTEGER): like Current is
 			-- Prefix up to `upper'.
 		do
 			Result := interval (1, upper)
 		end
 
-	interval (lower : INTEGER; upper : INTEGER) : MML_FINITE_SEQUENCE[G] is
+	interval (lower: INTEGER; upper: INTEGER): like Current is
 			-- Subsequence from `lower' to `upper'.
 		deferred
 		end
 
 feature -- Replacement
-	replaced_at (i: INTEGER; x: G): MML_SEQUENCE [G]
+	replaced_at (i: INTEGER; x: G): like Current
 			-- Current sequence with `x' at position `i'
 		require
 			in_domain: domain [i]

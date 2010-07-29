@@ -12,7 +12,8 @@ inherit
 	MML_SEQUENCE [G]
 
 create
-	empty
+	empty,
+	singleton
 
 create {MML_MODEL}
 	make_from_array
@@ -134,13 +135,13 @@ feature -- Decomposition
 			Result := array [array.upper]
 		end
 
-	but_first: MML_FINITE_SEQUENCE [G]
+	but_first: like Current
 			-- The elements of `current' except for the first one.
 		do
 			Result := interval (2, count)
 		end
 
-	but_last: MML_FINITE_SEQUENCE [G]
+	but_last: like Current
 			-- The elements of `current' except for the last one.
 		require
 			not_empty: not is_empty
@@ -148,13 +149,13 @@ feature -- Decomposition
 			Result := interval (1, count - 1)
 		end
 
-	tail (lower: INTEGER): MML_FINITE_SEQUENCE [G]
+	tail (lower: INTEGER): like Current
 			-- Suffix from `lower'.
 		do
 			Result := interval (lower, count)
 		end
 
-	interval (lower, upper: INTEGER): MML_FINITE_SEQUENCE [G]
+	interval (lower, upper: INTEGER): like Current
 			-- Subsequence from `lower' to `upper'.
 		do
 			create Result.make_from_array (array.subarray (array.lower + lower.max (1) - 1, array.lower + upper.min (count) - 1))
@@ -231,8 +232,15 @@ feature {NONE} -- Initialization
 			create array.make (1, 0)
 		end
 
+	singleton (x: G)
+			-- Create sequence with one element
+		do
+			create array.make (1, 1)
+			array [1] := x
+		end
+
 feature -- Element change
-	extended (x: G): MML_FINITE_SEQUENCE [G]
+	extended (x: G): like Current
 			-- Current sequence extended with `x' at the end
 		note
 			mapped_to: "Sequence.extended(Current, x)"
@@ -245,7 +253,7 @@ feature -- Element change
 			create Result.make_from_array (a)
 		end
 
-	prepended (x: G): MML_FINITE_SEQUENCE [G]
+	prepended (x: G): like Current
 			-- Current sequence prepended with `x' at the beginning
 		local
 			a: V_ARRAY [G]
@@ -256,7 +264,7 @@ feature -- Element change
 			create Result.make_from_array (a)
 		end
 
-	concatenation alias "+" (other : MML_FINITE_SEQUENCE[G]): MML_FINITE_SEQUENCE [G] is
+	concatenation alias "+" (other : MML_FINITE_SEQUENCE[G]): like Current is
 			-- The concatenation of `current' and `other'.
 		require
 			other_exists: other /= Void
@@ -285,7 +293,7 @@ feature -- Element change
 			end
 		end
 
-	replaced_at (i: INTEGER; x: G): MML_FINITE_SEQUENCE [G]
+	replaced_at (i: INTEGER; x: G): like Current
 			-- Current sequence with `x' at position `i'
 		note
 			mapped_to: "Sequence.replaced_at(Current, i, x)"
@@ -294,6 +302,17 @@ feature -- Element change
 		do
 			a := array.twin
 			a [i] := x
+			create Result.make_from_array (a)
+		end
+
+	removed_at (i: INTEGER): like Current
+			-- Current sequence with element at position `i' removed
+		local
+			a: V_ARRAY [G]
+		do
+			create a.make (1, array.count - 1)
+			a.subcopy (array, 1, i - 1, 1)
+			a.subcopy (array, i + 1, array.count, i)
 			create Result.make_from_array (a)
 		end
 

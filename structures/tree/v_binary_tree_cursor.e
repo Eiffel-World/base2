@@ -20,14 +20,14 @@ create {V_BINARY_TREE}
 	make
 
 feature {NONE} -- Initialization
-	make (tree: V_BINARY_TREE [G])
+	make (t: V_BINARY_TREE [G])
 			-- Create iterator over `tree'.
 		require
-			tree_exists: tree /= Void
+			tree_exists: t /= Void
 		do
-			target := tree
+			target := t
 		ensure
-			target_effect: target = tree
+			target_effect: target = t
 			path_effect: path.is_empty
 		end
 
@@ -52,32 +52,38 @@ feature -- Status report
 	is_root: BOOLEAN
 			-- Is cursor at root?
 		do
-			Result := active /= Void and then active.is_root
+			Result := active /= Void and active = target.root
 		end
 
 	is_leaf: BOOLEAN
 			-- Is cursor at leaf?
+		require
+			not_off: not off
 		do
-			Result := active /= Void and then active.is_leaf
+			Result := active.is_leaf
 		end
 
 	has_left: BOOLEAN
 			-- Does current node have a left child?
+		require
+			not_off: not off
 		do
-			Result := active /= Void and then active.left /= Void
+			Result := active.left /= Void
 		end
 
 	has_right: BOOLEAN
 			-- Does current node have a right child?
+		require
+			no_off: not off
 		do
-			Result := active /= Void and then active.right /= Void
+			Result := active.right /= Void
 		end
 
 feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Does `other' have the same `target' and `path'?
 		do
-			Result := target = other.target and active = other.active
+			Result := target = other.target and (off and other.off or active = other.active)
 		ensure then
 			definition: Result = (target = other.target and path |=| other.path)
 		end
@@ -120,7 +126,7 @@ feature -- Cursor movement
 		do
 			active := target.root
 		ensure
-			path_effect_non_empty: not target.map.is_empty implies path |=| {MML_BIT_VECTOR} [1]
+			path_effect_non_empty: not target.map.is_empty implies path |=| {MML_BIT_VECTOR} [True]
 			path_effect_empty: target.map.is_empty implies path.is_empty
 		end
 
@@ -177,6 +183,23 @@ feature {V_CELL_CURSOR, V_INPUT_ITERATOR} -- Implementation
 	active: V_BINARY_TREE_CELL [G]
 			-- Cell at current position.
 
+feature {NONE} -- Implementation
+	reachable: BOOLEAN
+			-- Is `active' part of the target container?
+		do
+			Result := reachable_from (target.root)
+		end
+
+	reachable_from (c: V_BINARY_TREE_CELL [G]): BOOLEAN
+			-- Is `active' in subtree with root `c'?
+		do
+			if c = active then
+				Result := True
+			elseif c /= Void then
+				Result := reachable_from (c.left) or reachable_from (c.right)
+			end
+		end
+
 feature -- Specification
 	path: MML_BIT_VECTOR
 			-- Path from root to current node.
@@ -187,7 +210,7 @@ feature -- Specification
 		do
 			old_active := active
 			from
-				create Result.make_with_count (0, 0)
+				create Result.empty
 			until
 				off
 			loop
@@ -224,9 +247,9 @@ feature -- Specification
 invariant
 	item_definition: target.map.domain.has (path) implies item = target.map [path]
 	off_definition: off = not target.map.domain.has (path)
-	is_root_definition: is_root = (path |=| {MML_BIT_VECTOR} [1])
-	is_leaf_definition: is_leaf = (target.map.domain.has (path) and
-		not target.map.domain.has (path.extended (True)) and not target.map.domain.has (path.extended (False)))
-	has_left_definition: has_left = (target.map.domain.has (path) and target.map.domain.has (path.extended (False)))
-	has_right_definition: has_right = (target.map.domain.has (path) and target.map.domain.has (path.extended (True)))
+	is_root_definition: is_root = (path |=| {MML_BIT_VECTOR} [True])
+	is_leaf_definition: target.map.domain.has (path) implies
+		is_leaf = (not target.map.domain.has (path.extended (True)) and not target.map.domain.has (path.extended (False)))
+	has_left_definition: target.map.domain.has (path) implies has_left = target.map.domain.has (path.extended (False))
+	has_right_definition: target.map.domain.has (path) implies has_right = target.map.domain.has (path.extended (True))
 end

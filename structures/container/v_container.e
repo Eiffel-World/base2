@@ -30,7 +30,7 @@ feature -- Search
 		do
 			it := new_iterator
 			it.search_forth (v)
-			Result := not it.off
+			Result := not it.after
 		ensure
 			definition: Result = bag.domain [v]
 		end
@@ -44,7 +44,7 @@ feature -- Search
 			from
 				it := new_iterator
 			until
-				it.off
+				it.after
 			loop
 				if it.item = v then
 					Result := Result + 1
@@ -66,7 +66,7 @@ feature -- Search
 			from
 				it := new_iterator
 			until
-				it.off
+				it.after
 			loop
 				if p.item ([it.item]) then
 					Result := Result + 1
@@ -87,7 +87,7 @@ feature -- Search
 		do
 			it := new_iterator
 			it.satisfy_forth (p)
-			Result := not it.off
+			Result := not it.after
 		ensure
 			definition: Result = bag.domain.exists (p)
 		end
@@ -104,7 +104,7 @@ feature -- Search
 				Result := True
 				it := new_iterator
 			until
-				it.off or not Result
+				it.after or not Result
 			loop
 				Result := p.item ([it.item])
 				it.forth
@@ -142,7 +142,7 @@ feature -- Specification
 			from
 				i := new_iterator
 			until
-				i.off
+				i.after
 			loop
 				Result := Result.extended (i.item)
 				i.forth

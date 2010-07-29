@@ -30,7 +30,7 @@ feature -- Comparison
 					i := new_iterator
 					j := other.new_iterator
 				until
-					i.off or not Result
+					i.after or not Result
 				loop
 					Result := i.item = j.item
 					i.forth

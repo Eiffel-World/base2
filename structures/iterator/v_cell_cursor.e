@@ -21,7 +21,7 @@ feature -- Status report
 	off: BOOLEAN
 			-- Is current position off scope?
 		do
-			Result := active = Void
+			Result := active = Void or not reachable
 		end
 
 feature -- Replacement
@@ -38,6 +38,11 @@ feature -- Replacement
 feature {V_CELL_CURSOR} -- Implementation
 	active: V_CELL [G]
 			-- Cell at current position.
+		deferred
+		end
+
+	reachable: BOOLEAN
+			--Is `active' part of the target container?
 		deferred
 		end
 end

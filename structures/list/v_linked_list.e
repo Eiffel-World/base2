@@ -120,13 +120,13 @@ feature -- Extension
 	prepend (input: V_INPUT_ITERATOR [G])
 			-- Prepend sequence of values, over which `input' iterates.
 		do
-			if not input.off then
+			if not input.after then
 				extend_front (input.item)
 				input.forth
 				from
 					iterator.start
 				until
-					input.off
+					input.after
 				loop
 					iterator.extend_right (input.item)
 					iterator.forth
@@ -144,7 +144,7 @@ feature -- Extension
 				from
 					iterator.go_to (i - 1)
 				until
-					input.off
+					input.after
 				loop
 					iterator.extend_right (input.item)
 					iterator.forth

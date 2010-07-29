@@ -48,7 +48,7 @@ feature -- Comparison
 					i := at_start
 					j := other.at_start
 				until
-					i.off or not Result
+					i.after or not Result
 				loop
 					Result := i.item = j.item
 					i.forth
@@ -92,7 +92,7 @@ feature -- Extension
 		do
 			from
 			until
-				input.off
+				input.after
 			loop
 				extend_back (input.item)
 				input.forth

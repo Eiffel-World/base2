@@ -62,23 +62,13 @@ feature -- Access
 feature -- Measurement			
 	index: INTEGER
 			-- Current position.
-		local
-			c: V_LINKABLE [G]
 		do
 			if after then
 				Result := target.count + 1
 			elseif is_last then
 				Result := target.count
 			elseif active /= Void then
-				from
-					c := target.first_cell
-					Result := 1
-				until
-					c = active
-				loop
-					Result := Result + 1
-					c := c.right
-				end
+				Result := active_index
 			end
 		end
 
@@ -92,7 +82,7 @@ feature -- Status report
 	is_last: BOOLEAN
 			-- Is cursor at the last position?
 		do
-			Result := not (active = Void) and then active.right = Void
+			Result := not (active = Void) and then active = target.last_cell
 		end
 
 	after: BOOLEAN
@@ -202,7 +192,7 @@ feature -- Extension
 		do
 			from
 			until
-				other.off
+				other.after
 			loop
 				extend_right (other.item)
 				forth
@@ -217,7 +207,11 @@ feature -- Extension
 			other_not_target: other /= target
 			not_after: not after
 		do
-			target.merge_after (other, active)
+			if before then
+				target.merge_after (other, Void)
+			else
+				target.merge_after (other, active)
+			end
 		ensure
 			sequence_effect: sequence |=| old (sequence.front (index) + other.sequence + sequence.tail (index + 1))
 			index_effect: index = old index
@@ -258,6 +252,36 @@ feature -- Removal
 feature {V_CELL_CURSOR} -- Implementation
 	active: V_LINKABLE [G]
 			-- Cell at current position.
+			-- If unreachable from `target.first_cell' iterator is considered `before'.
+
+	active_index: INTEGER
+			-- Distance from `target.first_cell' to `active'.
+			-- 0 if `active' is not reachable from `target.first_cell'.
+		require
+			active_exists: active /= Void
+		local
+			c: V_LINKABLE [G]
+		do
+			from
+				c := target.first_cell
+				Result := 1
+			until
+				c = active or c = Void
+			loop
+				Result := Result + 1
+				c := c.right
+			end
+			if c = Void then
+				Result := 0
+				active := Void
+			end
+		end
+
+	reachable: BOOLEAN
+			--Is `active' part of the target container?
+		do
+			Result := active_index > 0
+		end
 
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]

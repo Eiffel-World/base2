@@ -45,7 +45,7 @@ feature -- Iteration
 			Result.go_root
 		ensure
 			target_definition: Result.target = Current
-			path_definition_non_empty: not map.is_empty implies Result.path |=| {MML_BIT_VECTOR} [1]
+			path_definition_non_empty: not map.is_empty implies Result.path |=| {MML_BIT_VECTOR} [True]
 			path_definition_empty: map.is_empty implies Result.path.is_empty
 		end
 
@@ -74,7 +74,7 @@ feature -- Extension
 			create root.put (v)
 			count := 1
 		ensure
-			map_effect: map |=| create {like map}.singleton (1, v)
+			map_effect: map |=| create {like map}.singleton (True, v)
 		end
 
 feature -- Removal		
@@ -126,12 +126,9 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 				child := cell.right
 			end
 			if cell.is_root then
-				if cell.is_leaf then
-					root := Void
-				else
-					cell.put (child.item)
-					cell.put_left (child.left)
-					cell.put_right (child.right)
+				root := child
+				if child /= Void then
+					child.simple_put_parent (Void)
 				end
 			else
 				if cell.is_left then

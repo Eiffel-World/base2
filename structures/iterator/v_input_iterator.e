@@ -170,7 +170,7 @@ feature -- Cursor movement
 			end
 			from
 			until
-				off or else item = v
+				after or else item = v
 			loop
 				forth
 			end
@@ -190,7 +190,7 @@ feature -- Cursor movement
 			end
 			from
 			until
-				off or else pred.item ([item])
+				after or else pred.item ([item])
 			loop
 				forth
 			end
@@ -211,7 +211,7 @@ feature -- Cursor movement
 			end
 			from
 			until
-				off or else item = v
+				before or else item = v
 			loop
 				back
 			end
@@ -234,7 +234,7 @@ feature -- Cursor movement
 			end
 			from
 			until
-				off or else pred.item ([item])
+				before or else pred.item ([item])
 			loop
 				back
 			end

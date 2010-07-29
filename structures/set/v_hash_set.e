@@ -1,7 +1,7 @@
 note
 	description: "[
 			Hash sets with chaining.
-			Search, extension and removal are amortized contant time.
+			Search, extension and removal are amortized constant time.
 		]"
 	author: "Nadia Polikarpova"
 	date: "$Date$"
@@ -175,24 +175,6 @@ feature -- Extension
 		end
 
 feature -- Removal
-	remove (v: G)
-			-- Remove `v' from the set, if contained.
-			-- Otherwise do nothing.		
-		local
-			li: V_LINKED_LIST_ITERATOR [G]
-		do
-			iterator.search (v)
-			if not iterator.off then
-				li := iterator.list_iterator
-				iterator.go_after
-				li.remove
-				count := count - 1
-				auto_resize
-			end
-		ensure then
-			capacity_effect: capacity <= old capacity
-		end
-
 	wipe_out
 			-- Remove all elements.
 		local
@@ -264,6 +246,16 @@ feature {V_HASH_SET_ITERATOR, V_HASH_SET} -- Implementation
 			Result := bucket_index (v, capacity)
 		ensure
 			result_in_bounds: 1 <= Result and Result <= buckets.count
+		end
+
+	remove_at (li: V_LINKED_LIST_ITERATOR [G])
+			-- Remove element to which `li' points.
+		require
+			not_off: not li.off
+		do
+			li.remove
+			count := count - 1
+			auto_resize
 		end
 
 feature {NONE} -- Implementation

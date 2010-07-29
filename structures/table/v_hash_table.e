@@ -1,7 +1,7 @@
 note
 	description: "[
 			Hash tables with chaining.
-			Search, extension and removal are amortized contant time.
+			Search, extension and removal are amortized constant time.
 		]"
 	author: "Nadia Polikarpova"
 	date: "$Date$"
@@ -18,7 +18,10 @@ inherit
 		end
 
 create
-	make
+	make_reference_equality,
+	make_object_equality,
+	make,
+	make_with_capacity_and_load
 
 feature {NONE} -- Initialization
 	make_reference_equality (h: V_HASH [K])
@@ -89,6 +92,7 @@ feature -- Initialization
 		do
 			if other /= Current then
 				key_equivalence := other.key_equivalence
+				key_hash := other.key_hash
 				set := other.set.twin
 			end
 		ensure then

@@ -41,9 +41,9 @@ feature -- Measurement
 	index: INTEGER
 			-- Current position.
 		do
-			if bucket_index = target.buckets.count + 1 then
+			if after then
 				Result := target.count + 1
-			elseif bucket_index /= 0 then
+			elseif not before then
 				Result := count_sum (1, bucket_index - 1) + list_iterator.index
 			end
 		end
@@ -52,13 +52,13 @@ feature -- Status report
 	before: BOOLEAN
 			-- Is current position before any position in `target'?
 		do
-			Result := bucket_index = 0
+			Result := bucket_index = 0 or else (bucket_index <= target.capacity and list_iterator.off)
 		end
 
 	after: BOOLEAN
 			-- Is current position after any position in `target'?
 		do
-			Result := bucket_index = target.buckets.count + 1
+			Result := bucket_index = target.capacity + 1
 		end
 
 	is_first: BOOLEAN
@@ -70,19 +70,19 @@ feature -- Status report
 	is_last: BOOLEAN
 			-- Is cursor at the last position?
 		do
-			Result := not off and list_iterator.is_last and count_sum (bucket_index + 1, target.buckets.count) = 0
+			Result := not off and list_iterator.is_last and count_sum (bucket_index + 1, target.capacity) = 0
 		end
 
 feature -- Cursor movement
 	search (v: G)
 			-- Move to an element equivalent to `v'.
-			-- If `v' does not appear, go off.
+			-- If `v' does not appear, go after.
 			-- (Use `target.equivalence'.)
 		do
 			bucket_index := target.index (v)
 			list_iterator.make (target.buckets [bucket_index])
 			list_iterator.satisfy_forth (agent equivalent (v, ?))
-			if list_iterator.off then
+			if list_iterator.after then
 				go_after
 			end
 		end
@@ -93,11 +93,11 @@ feature -- Cursor movement
 			from
 				bucket_index := 1
 			until
-				bucket_index > target.buckets.count or else not target.buckets [bucket_index].is_empty
+				bucket_index > target.capacity or else not target.buckets [bucket_index].is_empty
 			loop
 				bucket_index := bucket_index + 1
 			end
-			if bucket_index <= target.buckets.count then
+			if bucket_index <= target.capacity then
 				list_iterator.make (target.buckets [bucket_index])
 				list_iterator.start
 			end
@@ -107,7 +107,7 @@ feature -- Cursor movement
 			-- Go to the last position.
 		do
 			from
-				bucket_index := target.buckets.count
+				bucket_index := target.capacity
 			until
 				bucket_index < 1 or else not target.buckets [bucket_index].is_empty
 			loop
@@ -123,19 +123,7 @@ feature -- Cursor movement
 			-- Move one position forward.
 		do
 			list_iterator.forth
-			if list_iterator.after then
-				from
-					bucket_index := bucket_index + 1
-				until
-					bucket_index > target.buckets.count or else not target.buckets [bucket_index].is_empty
-				loop
-					bucket_index := bucket_index + 1
-				end
-				if bucket_index <= target.buckets.count then
-					list_iterator.make (target.buckets [bucket_index])
-					list_iterator.start
-				end
-			end
+			to_next_bucket
 		end
 
 	back
@@ -166,7 +154,15 @@ feature -- Cursor movement
 	go_after
 			-- Go after any position of `target'.
 		do
-			bucket_index := target.buckets.count + 1
+			bucket_index := target.capacity + 1
+		end
+
+feature -- Removal
+	remove
+			-- Remove element at current position. Move cursor to the next position.
+		do
+			target.remove_at (list_iterator)
+			to_next_bucket
 		end
 
 feature {V_HASH_SET} -- Implementation
@@ -199,6 +195,24 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	to_next_bucket
+			-- If `list_iterator' is `after' move to the start of next bucket is there is one, otherwise go `after'
+		do
+			if list_iterator.after then
+				from
+					bucket_index := bucket_index + 1
+				until
+					bucket_index > target.capacity or else not target.buckets [bucket_index].is_empty
+				loop
+					bucket_index := bucket_index + 1
+				end
+				if bucket_index <= target.capacity then
+					list_iterator.make (target.buckets [bucket_index])
+					list_iterator.start
+				end
+			end
+		end
+
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
 			-- Sequence of elements	in `target'.
@@ -211,7 +225,7 @@ feature -- Specification
 				i := 1
 				create Result.empty
 			until
-				i > target.buckets.count
+				i > target.capacity
 			loop
 				Result := Result + target.buckets [i].sequence
 				i := i + 1
@@ -219,8 +233,7 @@ feature -- Specification
 		end
 
 invariant
-	bucket_index_in_bounds: 0 <= bucket_index and bucket_index <= target.buckets.count + 1
+	bucket_index_in_bounds: 0 <= bucket_index and bucket_index <= target.capacity + 1
 	list_iterator_exists: list_iterator /= Void
-	inside_list_when_not_off: (1 <= bucket_index and bucket_index <= target.buckets.count) implies
-		(list_iterator.target = target.buckets [bucket_index] and not list_iterator.off)
+	valid_list: 1 <= bucket_index and bucket_index <= target.capacity implies list_iterator.target = target.buckets [bucket_index]
 end

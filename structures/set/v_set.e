@@ -36,7 +36,7 @@ feature -- Search
 		do
 			i := new_iterator
 			i.search (v)
-			Result := not i.off
+			Result := not i.after
 		ensure
 			definition: Result = has_equivalent (v)
 		end
@@ -49,7 +49,7 @@ feature -- Search
 		do
 			i := new_iterator
 			i.search (v)
-			Result := not i.off and then i.item = v
+			Result := not i.after and then i.item = v
 		end
 
 	occurrences (v: G): INTEGER
@@ -139,16 +139,14 @@ feature -- Extension
 			-- Add all elements from `other'.
 		require
 			other_exists: other /= Void
-		local
-			i: V_INPUT_ITERATOR [G]
 		do
 			from
-				i := other.new_iterator
+				other.iterator.start
 			until
-				i.off
+				other.iterator.after
 			loop
-				extend (i.item)
-				i.forth
+				extend (other.iterator.item)
+				other.iterator.forth
 			end
 		ensure
 			set_effect_old: (old set).for_all (agent has_equivalent)
@@ -162,8 +160,12 @@ feature -- Extension
 feature -- Removal
 	remove (v: G)
 			-- Remove `v' from the set, if contained.
-			-- Otherwise do nothing.
-		deferred
+			-- Otherwise do nothing.		
+		do
+			iterator.search (v)
+			if not iterator.after then
+				iterator.remove
+			end
 		ensure
 			set_effect_has: old has_equivalent (v) implies set |=| old (set.removed (equivalent (v)))
 			set_effect_not_has: not old has_equivalent (v) implies set |=| old set
@@ -173,21 +175,17 @@ feature -- Removal
 			-- Remove elements that are not in `other'.
 		require
 			other_exists: other /= Void
-		local
-			i: V_INPUT_ITERATOR [G]
-			s: V_SET [G]
 		do
-			s := twin
 			from
-				i := s.new_iterator
+				iterator.start
 			until
-				i.off
+				iterator.after
 			loop
-				if not other.has (i.item) then
-					remove (i.item)
+				if not other.has (iterator.item) then
+					iterator.remove
+				else
+					iterator.forth
 				end
-
-				i.forth
 			end
 		ensure
 			set_effect_old: (old set).for_all (agent (x: G; o: V_SET [G]): BOOLEAN
@@ -201,16 +199,14 @@ feature -- Removal
 			-- Remove elements that are in `other'.
 		require
 			other_exists: other /= Void
-		local
-			i: V_INPUT_ITERATOR [G]
 		do
 			from
-				i := other.new_iterator
+				other.iterator.start
 			until
-				i.off
+				other.iterator.after
 			loop
-				remove (i.item)
-				i.forth
+				remove (other.iterator.item)
+				other.iterator.forth
 			end
 		ensure
 			set_effect_old: (old set).for_all (agent (x: G; o: V_SET [G]): BOOLEAN
@@ -224,20 +220,18 @@ feature -- Removal
 			-- Remove elements that are also in `other' and add elements of `other' that are not in `Current'.
 		require
 			other_exists: other /= Void
-		local
-			i: V_INPUT_ITERATOR [G]
 		do
 			from
-				i := other.new_iterator
+				other.iterator.start
 			until
-				i.off
+				other.iterator.after
 			loop
-				if has (i.item) then
-					remove (i.item)
+				if has (other.iterator.item) then
+					remove (other.iterator.item)
 				else
-					extend (i.item)
+					extend (other.iterator.item)
 				end
-				i.forth
+				other.iterator.forth
 			end
 		ensure
 			set_effect_old: (old set).for_all (agent (x: G; o: V_SET [G]): BOOLEAN
@@ -254,6 +248,12 @@ feature -- Removal
 				end (?, old Current.twin, other))
 		end
 
+feature {V_SET} -- Implementation
+	iterator: V_SET_ITERATOR [G]
+			-- Internal iterator (to be used only in procedures).		
+		deferred
+		end
+
 feature -- Specification
 	set: MML_FINITE_SET [G]
 			-- Set of elements.
@@ -266,7 +266,7 @@ feature -- Specification
 			from
 				i := new_iterator
 			until
-				i.off
+				i.after
 			loop
 				Result := Result.extended (i.item)
 				i.forth

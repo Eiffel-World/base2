@@ -45,26 +45,11 @@ feature -- Initialization
 feature -- Measurement
 	index: INTEGER
 			-- Index of current position.
-		local
-			old_active: V_BINARY_TREE_CELL [G]
-			old_after: BOOLEAN
 		do
 			if after then
 				Result := target.count + 1
-			elseif not off then
-				old_active := active
-				old_after := after
-				from
-					start
-					Result := 1
-				until
-					active = old_active
-				loop
-					forth
-					Result := Result + 1
-				end
-				active := old_active
-				after := old_after
+			elseif active /= Void then
+				Result := active_index
 			end
 		end
 
@@ -218,6 +203,35 @@ feature -- Cursor movement
 			after := True
 		end
 
+feature {NONE} -- Implementation
+	active_index: INTEGER
+			-- Index of `active' in inorder.
+			-- 0 if `active' is not part of the tree.
+		require
+			active_exists: active /= Void
+		local
+			old_active: V_BINARY_TREE_CELL [G]
+			old_after: BOOLEAN
+		do
+			old_active := active
+			old_after := after
+			from
+				start
+				Result := 1
+			until
+				active = old_active or active = Void
+			loop
+				forth
+				Result := Result + 1
+			end
+			if active = Void then
+				Result := 0
+			else
+				active := old_active
+			end
+			after := old_after
+		end
+
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
 			-- Sequence of elements.
@@ -233,7 +247,7 @@ feature -- Specification
 			from
 				start
 			until
-				off
+				after
 			loop
 				Result := Result.extended (item)
 				forth
@@ -311,7 +325,7 @@ feature -- Specification
 		end
 
 invariant
-	sequence_definition: sequence |=| subtree_sequence ({MML_BIT_VECTOR} [1])
+	sequence_definition: sequence |=| subtree_sequence ({MML_BIT_VECTOR} [True])
 	index_definition_not_after: not after implies index = node_index (path)
 	index_definition_after: after implies index = target.map.count + 1
 end

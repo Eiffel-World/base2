@@ -115,29 +115,6 @@ feature -- Extension
 		end
 
 feature -- Removal
-	remove (v: G)
-			-- Remove `v' from the set, if contained.
-			-- Otherwise do nothing.		
-		local
-			found: V_SORTED_SET_ITERATOR [G]
-		do
-			iterator.search (v)
-			if not iterator.off then
-				if iterator.has_left and iterator.has_right then
-					found := iterator.twin
-					iterator.right
-					from
-					until
-						not iterator.has_left
-					loop
-						iterator.left
-					end
-					found.put (iterator.item)
-				end
-				iterator.remove
-			end
-		end
-
 	wipe_out
 			-- Remove all elements.
 		do

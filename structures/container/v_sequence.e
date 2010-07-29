@@ -89,7 +89,7 @@ feature -- Search
 				j := i
 				Result := upper + 1
 			until
-				it.off or found
+				it.after or found
 			loop
 				if it.item = v then
 					found := True
@@ -136,7 +136,7 @@ feature -- Search
 				j := i
 				Result := upper + 1
 			until
-				it.off or found
+				it.after or found
 			loop
 				if p.item ([it.item]) then
 					found := True
@@ -279,7 +279,7 @@ feature -- Specification
 				i := lower
 				it := at_start
 			until
-				it.off
+				it.after
 			loop
 				Result := Result.extended (i, it.item)
 				it.forth

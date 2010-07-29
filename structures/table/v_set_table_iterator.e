@@ -142,7 +142,7 @@ feature -- Cursor movement
 
 	search_key (k: K)
 			-- Move to a position where key is equivalent to `k'.
-			-- If `k' does not appear, go off.
+			-- If `k' does not appear, go after.
 			-- (Use `target.key_equivalence')
 		do
 			set_iterator.search ([k, default_item])
@@ -155,6 +155,13 @@ feature -- Replacement
 			set_iterator.item.value := v
 		ensure then
 			target_map_effect: target.map |=| old target.map.replaced_at (key_sequence [index], v)
+		end
+
+feature -- Removal
+	remove
+			-- Remove key-value pair at current position. Move to the next position.
+		do
+			set_iterator.remove
 		end
 
 feature {V_SET_TABLE_ITERATOR} -- Implementation
