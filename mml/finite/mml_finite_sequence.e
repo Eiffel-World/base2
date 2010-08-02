@@ -157,8 +157,12 @@ feature -- Decomposition
 
 	interval (lower, upper: INTEGER): like Current
 			-- Subsequence from `lower' to `upper'.
+		local
+			l, u: INTEGER
 		do
-			create Result.make_from_array (array.subarray (array.lower + lower.max (1) - 1, array.lower + upper.min (count) - 1))
+			l := lower.max (1)
+			u := upper.min (count).max (l - 1)
+			create Result.make_from_array (array.subarray (array.lower + l - 1, array.lower + u - 1))
 		end
 
 feature -- Status report

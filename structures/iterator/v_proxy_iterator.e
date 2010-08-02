@@ -108,6 +108,10 @@ feature -- Cursor movement
 			iterator.go_after
 		end
 
+feature {NONE} -- Implementation
+	iterator: V_INPUT_ITERATOR [G]
+			-- Iterator over the storage.
+
 feature -- Specification
 	sequence: MML_FINITE_SEQUENCE [G]
 			-- Sequence of elements	in `target'.
@@ -116,10 +120,6 @@ feature -- Specification
 		do
 			Result := iterator.sequence
 		end
-
-feature {NONE} -- Implementation
-	iterator: V_INPUT_ITERATOR [G]
-			-- Iterator over the storage.
 
 invariant
 	iterator_exists: iterator /= Void

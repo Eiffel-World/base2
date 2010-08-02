@@ -42,7 +42,7 @@ feature {V_CELL_CURSOR} -- Implementation
 		end
 
 	reachable: BOOLEAN
-			--Is `active' part of the target container?
+			-- Is `active' part of the target container?
 		deferred
 		end
 end

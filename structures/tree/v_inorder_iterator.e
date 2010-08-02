@@ -274,6 +274,22 @@ feature -- Specification
 				Result |=| (subtree_sequence (root.extended (False)).extended (target.map [root]) + subtree_sequence (root.extended (True)))
 		end
 
+	node_index (node: MML_BIT_VECTOR): INTEGER
+			-- Index of `node' in inorder in `target.map'.
+		note
+			status: specification
+		require
+			node_exists: node /= Void
+		do
+			if target.map.domain [node] then
+				 Result := node_index (predecessor (node)) + 1
+			end
+		ensure
+			definition_base: not target.map.domain [node] implies Result = 0
+			definition_step: target.map.domain [node] implies Result = node_index (predecessor (node)) + 1
+		end
+
+feature {NONE} -- Specification
 	predecessor (node: MML_BIT_VECTOR): MML_BIT_VECTOR
 			-- Predecessor of `node' in inorder in `target.map'.
 		note
@@ -307,21 +323,6 @@ feature -- Specification
 				Result |=| node.but_last
 			definition_not_has_left_is_left: not target.map.domain [node.extended (False)] and not node [node.count] implies
 				Result |=| node.front (node.last_index_of (True) - 1)
-		end
-
-	node_index (node: MML_BIT_VECTOR): INTEGER
-			-- Index of `node' in inorder in `target.map'.
-		note
-			status: specification
-		require
-			node_exists: node /= Void
-		do
-			if target.map.domain [node] then
-				 Result := node_index (predecessor (node)) + 1
-			end
-		ensure
-			definition_base: not target.map.domain [node] implies Result = 0
-			definition_step: target.map.domain [node] implies Result = node_index (predecessor (node)) + 1
 		end
 
 invariant

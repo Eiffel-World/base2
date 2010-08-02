@@ -206,22 +206,23 @@ feature -- Specification
 		note
 			status: specification
 		local
-			old_active: V_BINARY_TREE_CELL [G]
+			cell: V_BINARY_TREE_CELL [G]
 		do
-			old_active := active
-			from
-				create Result.empty
-			until
-				off
-			loop
-				if active.is_left then
-					Result := Result.prepended (False)
-				else
-					Result := Result.prepended (True)
+			create Result.empty
+			if not off then
+				from
+					cell := active
+				until
+					cell = Void
+				loop
+					if cell.is_left then
+						Result := Result.prepended (False)
+					else
+						Result := Result.prepended (True)
+					end
+					cell := cell.parent
 				end
-				up
 			end
-			active := old_active
 		end
 
 	map: MML_FINITE_MAP [MML_BIT_VECTOR, G]
