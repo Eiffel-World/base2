@@ -52,7 +52,8 @@ feature -- Status report
 	before: BOOLEAN
 			-- Is current position before any position in `target'?
 		do
-			Result := bucket_index = 0 or else (bucket_index <= target.capacity and list_iterator.off)
+			Result := bucket_index = 0 or else (bucket_index <= target.capacity and
+				(list_iterator.target /= target.buckets [bucket_index] or list_iterator.off)
 		end
 
 	after: BOOLEAN
@@ -235,5 +236,4 @@ feature -- Specification
 invariant
 	bucket_index_in_bounds: 0 <= bucket_index and bucket_index <= target.capacity + 1
 	list_iterator_exists: list_iterator /= Void
-	valid_list: 1 <= bucket_index and bucket_index <= target.capacity implies list_iterator.target = target.buckets [bucket_index]
 end

@@ -215,4 +215,7 @@ feature -- Specification
 			status: specification
 		do
 		end
+
+invariant
+	valid_set: target.set = set_iterator.target
 end

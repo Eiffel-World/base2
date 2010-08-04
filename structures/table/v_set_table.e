@@ -59,7 +59,8 @@ feature -- Removal
 
 feature {V_SET_TABLE, V_SET_TABLE_ITERATOR} -- Implementation
 	set: V_SET [TUPLE [key: K; value: V]]
-			-- Underlying set of key-value pairs
+			-- Underlying set of key-value pairs.
+			-- Should not be reassigned after creation.
 		deferred
 		end
 

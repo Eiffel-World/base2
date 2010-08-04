@@ -29,7 +29,12 @@ feature -- Initialization
 			-- Initialize by copying all the items of `other'.
 		do
 			if other /= Current then
-				list := other.list.twin
+				if list = Void then
+					-- Copy used as creation procedure
+					list := other.list.twin
+				else
+					list.copy (other.list)
+				end
 			end
 		ensure then
 			sequence_effect: sequence |=| other.sequence
@@ -80,4 +85,5 @@ feature -- Removal
 feature {V_LINKED_STACK} -- Implementation
 	list: V_LINKED_LIST [G]
 			-- Underlying list.
+			-- Should not be reassigned after creation.			
 end

@@ -93,7 +93,12 @@ feature -- Initialization
 			if other /= Current then
 				key_equivalence := other.key_equivalence
 				key_hash := other.key_hash
-				set := other.set.twin
+				if set = Void then
+					-- Copy used as a creation procedure
+					set := other.set.twin
+				else
+					set.copy (other.set)
+				end
 			end
 		ensure then
 			map_effect: map |=| other.map
@@ -160,6 +165,7 @@ feature -- Defaults
 feature {V_SET_TABLE, V_SET_TABLE_ITERATOR} -- Implementation
 	set: V_HASH_SET [TUPLE [key: K; value: V]]
 			-- Underlying set of key-value pairs.
+			-- Should not be reassigned after creation.
 
 feature -- Specification
 	hash_function: MML_MAP [K, INTEGER]

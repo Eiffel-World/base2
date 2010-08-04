@@ -112,7 +112,7 @@ feature -- Cursor movement
 			if after or (not off and then target.order.less_than (v, item)) then
 				search (v)
 			end
-			if not off and then v /= item then
+			if after or (active /= Void and then v /= item) then
 				go_before
 			end
 		end
@@ -135,4 +135,7 @@ feature -- Removal
 				tree.remove (found)
 			end
 		end
+
+invariant
+	valid_tree: tree = target.tree
 end

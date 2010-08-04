@@ -44,8 +44,13 @@ feature -- Initialization
 		do
 			if other /= Current then
 				order := other.order
-				tree := other.tree.twin
-				create iterator.make (Current, tree)
+				if tree = Void then
+					-- Copy used as a creation procedure
+					tree := other.tree.twin
+					create iterator.make (Current, tree)
+				else
+					tree.copy (other.tree)
+				end
 			end
 		ensure then
 			order_effect: order_relation |=| other.order_relation
@@ -124,6 +129,7 @@ feature -- Removal
 feature {V_SORTED_SET, V_SORTED_SET_ITERATOR} -- Implementation
 	tree: V_BINARY_TREE [G]
 			-- Element storage.
+			-- Should not be reassigned after creation.
 
 feature {NONE} -- Implementation
 	iterator: V_SORTED_SET_ITERATOR [G]

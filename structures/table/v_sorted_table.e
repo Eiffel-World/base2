@@ -41,7 +41,12 @@ feature -- Initialization
 		do
 			if other /= Current then
 				key_order := other.key_order
-				set := other.set.twin
+				if set = Void then
+					-- Copy used as a creation procedure
+					set := other.set.twin
+				else
+					set.copy (other.set)
+				end
 			end
 		ensure then
 			map_effect: map |=| other.map
@@ -57,6 +62,7 @@ feature -- Measurement
 feature {V_SET_TABLE, V_SET_TABLE_ITERATOR} -- Implementation
 	set: V_SORTED_SET [TUPLE [key: K; value: V]]
 			-- Underlying set of key-value pairs.
+			-- Should not be reassigned after creation.
 
 feature -- Specification
 	order_relation: MML_RELATION [K, K]
