@@ -191,29 +191,31 @@ feature -- Removal
 			count := 0
 			auto_resize
 		ensure then
-			capacity_effect: capacity = default_capacity
+			capacity_effect: capacity <= default_capacity
 		end
 
 feature -- Resizing		
-	resize (n: INTEGER)
-			-- Set bucket array size to `n'.
+	resize (c: INTEGER)
+			-- Set capacity to `c'.
+		require
+			c_positive: c > 0
 		local
 			i: INTEGER
 			b: V_ARRAY [V_LINKED_LIST [G]]
 		do
-			b := empty_buckets (n)
+			b := empty_buckets (c)
 			from
 				iterator.start
 			until
 				iterator.after
 			loop
-				i := bucket_index (iterator.item, n)
+				i := bucket_index (iterator.item, c)
 				b [i].extend_back (iterator.item)
 				iterator.forth
 			end
 			buckets := b
 		ensure
-			capacity_effect: capacity = n
+			capacity_effect: capacity = c
 		end
 
 	set_optimal_load (l: INTEGER)
@@ -291,7 +293,7 @@ feature {NONE} -- Implementation
 		end
 
 	auto_resize
-			-- Enlarge `buckets'.
+			-- Resize `buckets' to an optimal size for current `count'.
 		do
 			if count * optimal_load // 100 > default_growth * capacity then
 				resize (capacity * default_growth)

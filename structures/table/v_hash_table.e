@@ -134,12 +134,14 @@ feature -- Efficiency parameters
 		end
 
 feature -- Resizing		
-	resize (n: INTEGER)
-			-- Set bucket array size to `n'.
+	resize (c: INTEGER)
+			-- Set capacity to `c'.
+		require
+			c_positive: c > 0
 		do
-			set.resize (n)
+			set.resize (c)
 		ensure
-			capacity_effect: capacity = n
+			capacity_effect: capacity = c
 		end
 
 	set_optimal_load (l: INTEGER)

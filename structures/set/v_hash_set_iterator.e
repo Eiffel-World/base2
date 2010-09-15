@@ -53,13 +53,13 @@ feature -- Status report
 			-- Is current position before any position in `target'?
 		do
 			Result := bucket_index = 0 or else (bucket_index <= target.capacity and
-				(list_iterator.target /= target.buckets [bucket_index] or list_iterator.off)
+				(list_iterator.target /= target.buckets [bucket_index] or list_iterator.off))
 		end
 
 	after: BOOLEAN
 			-- Is current position after any position in `target'?
 		do
-			Result := bucket_index = target.capacity + 1
+			Result := bucket_index > target.capacity
 		end
 
 	is_first: BOOLEAN
@@ -234,6 +234,7 @@ feature -- Specification
 		end
 
 invariant
-	bucket_index_in_bounds: 0 <= bucket_index and bucket_index <= target.capacity + 1
+	bucket_index_non_negative: bucket_index >= 0
+	-- Cannot guarantee bucket_index <= target.capacity + 1 because target might shrink behind my back
 	list_iterator_exists: list_iterator /= Void
 end

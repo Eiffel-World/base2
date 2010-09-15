@@ -95,11 +95,14 @@ feature -- Extension
 	force (v: V; k: K)
 			-- Make sure that `k' is associated with `v'.
 			-- Add `k' if not already present.
+		local
+			i: V_TABLE_ITERATOR [K, V]
 		do
-			if has_key (k) then
-				put (v, k)
-			else
+			i := at_key (k)
+			if i.after then
 				extend (v, k)
+			else
+				i.put (v)
 			end
 		ensure
 			map_effect_has: old has_equivalent_key (k) implies map |=| old map.replaced_at (equivalent_key (k), v)
