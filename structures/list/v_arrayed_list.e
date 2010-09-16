@@ -8,7 +8,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: sequence, capacity, growth_rate
+	model: sequence
 
 class
 	V_ARRAYED_LIST [G]
@@ -22,51 +22,14 @@ inherit
 			prepend
 		end
 
-create
-	default_create,
-	make_with_capacity,
-	make_with_capacity_and_rate
-
 feature {NONE} -- Initialization
 	default_create
 			-- Create an empty list with default `capacity' and `growth_rate'.
 		do
 			create array.make (1, default_capacity)
-			set_growth_rate (default_growth_rate)
 			first_index := 1
 		ensure then
 			sequence_effect: sequence.is_empty
-			capacity_effect: capacity > 0
-			growth_rate_effect: growth_rate > 100
-		end
-
-	make_with_capacity (c: INTEGER)
-			-- Create an empty list with capacity `c' and default `growth_rate'.
-		require
-			c_non_negative: c >= 0
-		do
-			create array.make (1, c)
-			set_growth_rate (default_growth_rate)
-			first_index := 1
-		ensure
-			sequence_effect: sequence.is_empty
-			capacity_effect: capacity = c
-			growth_rate_effect: growth_rate > 100
-		end
-
-	make_with_capacity_and_rate (c, r: INTEGER)
-			-- Create an empty list with capacity `c' and growth rate `r'
-		require
-			c_non_negative: c >= 0
-			r_large_enough: r >= 100
-		do
-			create array.make (1, c)
-			set_growth_rate (r)
-			first_index := 1
-		ensure
-			sequence_effect: sequence.is_empty
-			capacity_effect: capacity = c
-			growth_rate_effect: growth_rate = r
 		end
 
 feature -- Initialization
@@ -77,15 +40,10 @@ feature -- Initialization
 				array := other.array.twin
 				first_index := other.first_index
 				count := other.count
-				growth_rate := other.growth_rate
 			end
 		ensure then
 			sequence_effect: sequence |=| other.sequence
-			capacity_effect: capacity = other.capacity
-			growth_rate_effect: growth_rate = other.growth_rate
 			other_sequence_effect: other.sequence |=| old other.sequence
-			other_capacity_effect: other.capacity = old other.capacity
-			other_growth_rate_effect: other.growth_rate = old other.growth_rate
 		end
 
 feature -- Access
@@ -98,17 +56,6 @@ feature -- Access
 feature -- Measurement		
 	count: INTEGER
 			-- Number of elements.
-
-	capacity: INTEGER
-			-- Size of the underlying array.
-		do
-			Result := array.count
-		end
-
-	growth_rate: INTEGER
-			-- Minimum percentage by which underlying array grows when resized.
-			-- Higher values improve runtime efficiency at the cost of higher memory consumption.
-			-- Minimum value is 100%: only resize the array so that all list elements fit.	
 
 feature -- Iteration
 	at (i: INTEGER): V_ARRAYED_LIST_ITERATOR [G]
@@ -137,9 +84,6 @@ feature -- Extension
 				array [first_index] := v
 			end
 			count := count + 1
-		ensure then
-			capacity_effect_unchanged: sequence.count <= old capacity implies capacity = old capacity
-			capacity_effect_changed: sequence.count > old capacity implies capacity = sequence.count.max (old capacity * growth_rate // 100)
 		end
 
 	extend_back (v: G)
@@ -148,9 +92,6 @@ feature -- Extension
 			reserve (count + 1)
 			array [array_index (count + 1)] := v
 			count := count + 1
-		ensure then
-			capacity_effect_unchanged: sequence.count <= old capacity implies capacity = old capacity
-			capacity_effect_changed: sequence.count > old capacity implies capacity = sequence.count.max (old capacity * growth_rate // 100)
 		end
 
 	extend_at (v: G; i: INTEGER)
@@ -166,27 +107,18 @@ feature -- Extension
 				array [array_index (i)] := v
 				count := count + 1
 			end
-		ensure then
-			capacity_effect_unchanged: sequence.count <= old capacity implies capacity = old capacity
-			capacity_effect_changed: sequence.count > old capacity implies capacity = sequence.count.max (old capacity * growth_rate // 100)
 		end
 
 	append (input: V_INPUT_ITERATOR [G])
 			-- Append sequence of values, over which `input' iterates.
 		do
 			Precursor (input)
-		ensure then
-			capacity_effect_unchanged: sequence.count <= old capacity implies capacity = old capacity
-			capacity_effect_changed: sequence.count > old capacity implies capacity = sequence.count.max (old capacity * growth_rate // 100)
 		end
 
 	prepend (input: V_INPUT_ITERATOR [G])
 			-- Prepend sequence of values, over which `input' iterates.
 		do
 			insert_at (input, 1)
-		ensure then
-			capacity_effect_unchanged: sequence.count <= old capacity implies capacity = old capacity
-			capacity_effect_changed: sequence.count > old capacity implies capacity = sequence.count.max (old capacity * growth_rate // 100)
 		end
 
 	insert_at (input: V_INPUT_ITERATOR [G]; i: INTEGER)
@@ -203,9 +135,6 @@ feature -- Extension
 				count := count + ic
 				at (i).pipe (input)
 			end
-		ensure then
-			capacity_effect_unchanged: sequence.count <= old capacity implies capacity = old capacity
-			capacity_effect_changed: sequence.count > old capacity implies capacity = sequence.count.max (old capacity * growth_rate // 100)
 		end
 
 feature -- Removal
@@ -235,38 +164,6 @@ feature -- Removal
 			count := 0
 		end
 
-feature -- Resizing		
-	reserve (n: INTEGER)
-			-- Make sure `array' can accommodate `n' elements;
-			-- Do not resize by less than `growth_rate'.
-		local
-			old_size, new_size: INTEGER
-		do
-			if capacity < n then
-				old_size := capacity
-				new_size := n.max (capacity * growth_rate // 100)
-				array.resize (1, new_size)
-				if first_index > 1 then
-					array.subcopy (array, first_index, old_size, new_size - old_size + first_index)
-					array.clear (first_index, old_size.min (new_size - old_size + first_index - 1))
-					first_index := new_size - old_size + first_index
-				end
-			end
-		ensure
-			capacity_effect_unchanged: n <= old capacity implies capacity = old capacity
-			capacity_effect_changed: n > old capacity implies capacity = n.max (old capacity * growth_rate // 100)
-		end
-
-	set_growth_rate (r: INTEGER)
-			-- Set `growth_rate' to `r'
-		require
-			r_large_enough: r >= 100
-		do
-			growth_rate := r
-		ensure
-			growth_rate_effect: growth_rate = r
-		end
-
 feature {V_ARRAYED_LIST} -- Implementation
 	array: V_ARRAY [G]
 			-- Element storage.
@@ -275,11 +172,19 @@ feature {V_ARRAYED_LIST} -- Implementation
 			-- Index of the first list element in `array'.
 
 feature {NONE} -- Implementation
+	capacity: INTEGER
+			-- Size of the underlying array.
+		do
+			Result := array.count
+		end
+
 	default_capacity: INTEGER = 10
 			-- Default value for `capacity'.
 
-	default_growth_rate: INTEGER = 150
-			-- Default values for `growth_rate'
+	growth_rate: INTEGER = 150
+			-- Minimum percentage by which underlying array grows when resized.
+			-- Higher values improve runtime efficiency at the cost of higher memory consumption.
+			-- Minimum value is 100%: only resize the array so that all list elements fit.						
 
 	mod_capacity (i: INTEGER): INTEGER
 			-- `i' modulo `capacity' in range [`1', `capacity'].
@@ -317,10 +222,30 @@ feature {NONE} -- Implementation
 			end
 		end
 
+	reserve (n: INTEGER)
+			-- Make sure `array' can accommodate `n' elements;
+			-- Do not resize by less than `growth_rate'.
+		local
+			old_size, new_size: INTEGER
+		do
+			if capacity < n then
+				old_size := capacity
+				new_size := n.max (capacity * growth_rate // 100)
+				array.resize (1, new_size)
+				if first_index > 1 then
+					array.subcopy (array, first_index, old_size, new_size - old_size + first_index)
+					array.clear (first_index, old_size.min (new_size - old_size + first_index - 1))
+					first_index := new_size - old_size + first_index
+				end
+			end
+		ensure
+			capacity_effect_unchanged: n <= old capacity implies capacity = old capacity
+			capacity_effect_changed: n > old capacity implies capacity = n.max (old capacity * growth_rate // 100)
+		end
+
 invariant
 	array_exists: array /= Void
 	array_starts_from_one: array.lower = 1
-	growth_rate_valid: growth_rate >= 100
 	first_index_in_bounds: capacity > 0 implies 1 <= first_index and first_index <= capacity
 	first_index_one_in_empty: capacity = 0 implies first_index = 1
 end

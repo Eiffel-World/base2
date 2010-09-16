@@ -28,6 +28,7 @@ feature -- Replacement
 			-- Copy values from `input' until either `Current' or `input' is `off'.
 		require
 			input_exists: input /= Void
+			input_not_current: input /= Current
 		do
 			from
 			until
@@ -44,6 +45,7 @@ feature -- Replacement
 			-- Copy `n' elements from `input'; stop if either `Current' or `input' is `off'.
 		require
 			input_exists: input /= Void
+			input_not_current: input /= Current
 			n_non_negative: n >= 0
 		local
 			i: INTEGER
