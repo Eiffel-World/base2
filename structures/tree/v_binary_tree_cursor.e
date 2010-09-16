@@ -89,7 +89,7 @@ feature -- Comparison
 		end
 
 feature -- Cursor movement
-	up is
+	up
 			-- Move cursor up to the parent.
 		require
 			not_off: not off
@@ -99,7 +99,7 @@ feature -- Cursor movement
 			path_effect: path |=| old path.but_last
 		end
 
-	left is
+	left
 			-- Move cursor down to the left child.
 		require
 			not_off: not off
@@ -110,7 +110,7 @@ feature -- Cursor movement
 			path_effect_off: not old (map.domain.has (path.extended (False))) implies path.is_empty
 		end
 
-	right is
+	right
 			-- Move cursor down to the right child.
 		require
 			not_off: not off
@@ -121,7 +121,7 @@ feature -- Cursor movement
 			path_effect_off: not old (map.domain.has (path.extended (True))) implies path.is_empty
 		end
 
-	go_root is
+	go_root
 			-- Move cursor to the root.
 		do
 			active := target.root

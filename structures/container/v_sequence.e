@@ -227,10 +227,10 @@ feature -- Replacement
 			u_not_too_large: u <= upper
 			l_not_too_large: l <= u + 1
 		do
-			fill (default_item, l, u)
+			fill (({G}).default, l, u)
 		ensure
 			map_domain_effect: map.domain |=| old map.domain
-			map_changed_effect: (map | {MML_INTEGER_SET}[[l, u]]).is_constant (default_item)
+			map_changed_effect: (map | {MML_INTEGER_SET}[[l, u]]).is_constant (({G}).default)
 			map_unchanged_effect: (map | (map.domain - {MML_INTEGER_SET}[[l, u]])) |=| old (map | (map.domain - {MML_INTEGER_SET}[[l, u]]))
 		end
 

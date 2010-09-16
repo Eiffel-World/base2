@@ -38,22 +38,22 @@ feature -- Status report
 			-- Is sequence empty?
 
 feature -- Decomposition
-	but_first : MML_SEQUENCE[G] is
+	but_first : MML_SEQUENCE[G]
 			-- The elements of `current' except for the first one.
 		do
 			create {MML_AGENT_SEQUENCE [G]} Result.such_that (agent (i: INTEGER): G do Result := item (i + 1) end)
 		end
 
-	tail (lower: INTEGER): MML_SEQUENCE[G] is
+	tail (lower: INTEGER): MML_SEQUENCE[G]
 			-- Suffix from `lower'.
 		do
 			create {MML_AGENT_SEQUENCE [G]} Result.such_that (agent (i, l: INTEGER): G do Result := item (i + l - 1) end (?, lower))
 		end
 
-	interval (lower, upper: INTEGER) : MML_FINITE_SEQUENCE[G] is
+	interval (lower, upper: INTEGER) : MML_FINITE_SEQUENCE[G]
 			-- Subsequence from `lower' to `upper'.
 		local
-			a: ARRAY [G]
+			a: V_ARRAY [G]
 			i: INTEGER
 		do
 			create a.make (1, upper - lower + 1)

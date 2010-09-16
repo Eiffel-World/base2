@@ -21,7 +21,7 @@ feature -- Measurement
 	has_key (k: K): BOOLEAN
 			-- Is any value associated with `k'?
 		do
-			Result := set.has ([k, default_item])
+			Result := set.has ([k, ({V}).default])
 		end
 
 feature -- Iteration
@@ -48,7 +48,7 @@ feature -- Removal
 	remove (k: K)
 			-- Remove key `k' and its associated value.
 		do
-			set.remove ([k, default_item])
+			set.remove ([k, ({V}).default])
 		end
 
 	wipe_out

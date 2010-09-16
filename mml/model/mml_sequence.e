@@ -30,7 +30,7 @@ feature -- Status report
 		end
 
 feature -- Decomposition
-	first : G is
+	first : G
 			-- First element.
 		require
 			non_empty: not is_empty
@@ -38,25 +38,25 @@ feature -- Decomposition
 			Result := item (1)
 		end
 
-	but_first: like Current is
+	but_first: like Current
 			-- The elements of `current' except for the first one.
 		require
 			not_empty: not is_empty
 		deferred
 		end
 
-	tail (lower: INTEGER): like Current is
+	tail (lower: INTEGER): like Current
 			-- Suffix from `lower'.
 		deferred
 		end
 
-	front (upper: INTEGER): like Current is
+	front (upper: INTEGER): like Current
 			-- Prefix up to `upper'.
 		do
 			Result := interval (1, upper)
 		end
 
-	interval (lower: INTEGER; upper: INTEGER): like Current is
+	interval (lower: INTEGER; upper: INTEGER): like Current
 			-- Subsequence from `lower' to `upper'.
 		deferred
 		end

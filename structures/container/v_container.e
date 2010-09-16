@@ -149,13 +149,6 @@ feature -- Specification
 			end
 		end
 
-	default_item: G
-			-- Default value of type `G'.
-		note
-			status: specification
-		do
-		end
-
 invariant
 	count_definition: count = bag.count
 	is_empty_definition: is_empty = bag.is_empty

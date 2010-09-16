@@ -39,10 +39,10 @@ feature {NONE} -- Initialization
 				lower := 1
 				upper := 0
 			end
-			create area.make (upper - lower + 1)
+			create area.make_filled (({G}).default, upper - lower + 1)
 		ensure
 			map_domain_effect: map.domain |=| {MML_INTEGER_SET}[[l, u]]
-			map_effect: map.is_constant (default_item)
+			map_effect: map.is_constant (({G}).default)
 		end
 
 	make_filled (l, u: INTEGER; v: G)
@@ -177,12 +177,12 @@ feature -- Resizing
 		do
 			new_count := u - l + 1
 			if new_count = 0 then
-				create area.make (0)
+				create area.make_empty (0)
 				lower := 1
 				upper := 0
 			else
 				if new_count > area.count then
-					area := area.aliased_resized_area (new_count)
+					area := area.aliased_resized_area_with_default (({G}).default, new_count)
 				end
 				x := lower.max (l)
 				y := upper.min (u)
@@ -204,7 +204,7 @@ feature -- Resizing
 		ensure
 			map_domain_effect: map.domain |=| {MML_INTEGER_SET} [[l, u]]
 			map_old_effect: (map | (map.domain * old map.domain)) |=| (old map | (map.domain * old map.domain))
-			map_new_effect: (map | (map.domain - old map.domain)).is_constant (default_item)
+			map_new_effect: (map | (map.domain - old map.domain)).is_constant (({G}).default)
 		end
 
 	include (i: INTEGER)
@@ -221,7 +221,7 @@ feature -- Resizing
 		ensure
 			map_domain_effect: map.domain |=| {MML_INTEGER_SET} [[i.min (old map.domain.lower), i.max (old map.domain.upper)]]
 			map_old_effect: (map | (map.domain * old map.domain)) |=| (old map | (map.domain * old map.domain))
-			map_new_effect: (map | (map.domain - old map.domain)).is_constant (default_item)
+			map_new_effect: (map | (map.domain - old map.domain)).is_constant (({G}).default)
 		end
 
 	force (v: G; i: INTEGER)
@@ -234,7 +234,7 @@ feature -- Resizing
 			map_domain_effect: map.domain |=| {MML_INTEGER_SET} [[i.min (old map.domain.lower), i.max (old map.domain.upper)]]
 			map_i_effect: map [i] = v
 			map_old_effect: (map | (map.domain * old map.domain - {MML_INTEGER_SET}[i])) |=| (old map | (map.domain * old map.domain - {MML_INTEGER_SET}[i]))
-			map_new_effect: (map | (map.domain - old map.domain - {MML_INTEGER_SET}[i])).is_constant (default_item)
+			map_new_effect: (map | (map.domain - old map.domain - {MML_INTEGER_SET}[i])).is_constant (({G}).default)
 		end
 
 	wipe_out

@@ -96,7 +96,7 @@ feature -- Status report
 		end
 
 feature -- Cursor movement
-	go_root is
+	go_root
 			-- Move cursor to the root.
 		do
 			Precursor
@@ -110,7 +110,7 @@ feature -- Cursor movement
 			after_effect_empty: target.map.is_empty implies after
 		end
 
-	start is
+	start
 			-- Move cursor to the leftmost node.
 		do
 			if not target.is_empty then

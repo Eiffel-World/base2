@@ -268,7 +268,7 @@ feature -- Element change
 			create Result.make_from_array (a)
 		end
 
-	concatenation alias "+" (other : MML_FINITE_SEQUENCE[G]): like Current is
+	concatenation alias "+" (other : MML_FINITE_SEQUENCE[G]): like Current
 			-- The concatenation of `current' and `other'.
 		require
 			other_exists: other /= Void
@@ -287,7 +287,7 @@ feature -- Element change
 			end
 		end
 
-	infinite_concatenation alias "|+|" (other : MML_SEQUENCE[G]): MML_SEQUENCE [G] is
+	infinite_concatenation alias "|+|" (other : MML_SEQUENCE[G]): MML_SEQUENCE [G]
 			-- The concatenation of `current' and `other'.
 		require
 			other_exists: other /= Void
