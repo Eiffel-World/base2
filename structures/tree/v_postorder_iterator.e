@@ -1,12 +1,12 @@
 note
-	description: "Iterators to traverse binary trees in order left subtree - root - right subtree."
+	description: "Iterators to traverse binary trees in order left subtree - right subtree - root."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
 	model: target, path, after
 
 class
-	V_INORDER_ITERATOR [G]
+	V_POSTORDER_ITERATOR [G]
 
 inherit
 	V_BINARY_TREE_ITERATOR [G]
@@ -22,9 +22,13 @@ feature -- Cursor movement
 				from
 					go_root
 				until
-					active.left = Void
+					active.is_leaf
 				loop
-					left
+					if active.left /= Void then
+						left
+					else
+						right
+					end
 				end
 				after := False
 			else
@@ -35,36 +39,27 @@ feature -- Cursor movement
 	finish
 			-- Go to the last position.
 		do
-			if not target.is_empty then
-				from
-					go_root
-				until
-					active.right = Void
-				loop
-					right
-				end
-			end
+			go_root
 			after := False
 		end
 
 	forth
 			-- Go one position forward.
 		do
-			if active.right /= Void then
+			if active.is_left and then active.parent.right /= Void then
+				up
 				right
 				from
 				until
-					active.left = Void
+					active.is_leaf
 				loop
-					left
+					if active.left /= Void then
+						left
+					else
+						right
+					end
 				end
 			else
-				from
-				until
-					active.is_root or active.is_left
-				loop
-					up
-				end
 				up
 			end
 			if active = Void then
@@ -75,22 +70,21 @@ feature -- Cursor movement
 	back
 			-- Go one position backward.
 		do
-			if active.left /= Void then
-				left
+			if active.is_leaf then
 				from
 				until
-					active.right = Void
-				loop
-					right
-				end
-			else
-				from
-				until
-					active.is_root or active.is_right
+					(active = Void) or else (active.is_right and active.parent.left /= Void)
 				loop
 					up
 				end
-				up
+				if not off then
+					up
+					left
+				end
+			elseif active.right /= Void then
+				right
+			else
+				left
 			end
 		end
 
@@ -103,11 +97,11 @@ feature -- Specification
 			if not target.map.domain [root] then
 				create Result.empty
 			else
-				Result := subtree_path_sequence (root.extended (False)).extended (root) + subtree_path_sequence (root.extended (True))
+				Result := subtree_path_sequence (root.extended (False)) + subtree_path_sequence (root.extended (True)).extended (root)
 			end
 		ensure then
 			definition_base: not target.map.domain [root] implies Result.is_empty
 			definition_step: target.map.domain [root] implies
-				Result |=| (subtree_path_sequence (root.extended (False)).extended (root) + subtree_path_sequence (root.extended (True)))
+				Result |=| (subtree_path_sequence (root.extended (False)) + subtree_path_sequence (root.extended (True))).extended (root)
 		end
 end

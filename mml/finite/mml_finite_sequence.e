@@ -93,36 +93,26 @@ feature -- Access
 
 feature -- Search
 	first_index_of (x: G): INTEGER
-			-- Index of the first occurrence of `x'
-		local
-			i: INTEGER
+			-- Index of the first occurrence of `x'. If `x' is not present, `count' + 1.
 		do
 			from
-				i := array.lower
+				Result := 1
 			until
-				i > array.upper or Result > 0
+				Result > count or else model_equals (array [Result + array.lower - 1], x)
 			loop
-				if model_equals (array [i], x) then
-					Result := i
-				end
-				i := i + 1
+				Result := Result + 1
 			end
 		end
 
 	last_index_of (x: G): INTEGER
-			-- Index of the last occurrence of `x'
-		local
-			i: INTEGER
+			-- Index of the last occurrence of `x'. If `x' is not present, 0.
 		do
 			from
-				i := array.upper
+				Result := count
 			until
-				i < array.lower or Result > 0
+				Result < 1 or else model_equals (array [Result + array.lower - 1], x)
 			loop
-				if model_equals (array [i], x) then
-					Result := i
-				end
-				i := i - 1
+				Result := Result - 1
 			end
 		end
 

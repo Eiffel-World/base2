@@ -103,14 +103,14 @@ feature -- Cursor movement
 		end
 
 	forth
-			-- Move one position forward.
+			-- Go one position forward.
 		deferred
 		ensure then
 			index_effect: index = old index + 1
 		end
 
 	back
-			-- Go one position backwards.
+			-- Go one position backward.
 		require
 			not_off: not off
 		deferred

@@ -1,12 +1,12 @@
 note
-	description: "Iterators to traverse binary trees in order left subtree - root - right subtree."
+	description: "Iterators to traverse binary trees in order root - left subtree - right subtree."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
 	model: target, path, after
 
 class
-	V_INORDER_ITERATOR [G]
+	V_PREORDER_ITERATOR [G]
 
 inherit
 	V_BINARY_TREE_ITERATOR [G]
@@ -18,18 +18,7 @@ feature -- Cursor movement
 	start
 			-- Go to the first position.
 		do
-			if not target.is_empty then
-				from
-					go_root
-				until
-					active.left = Void
-				loop
-					left
-				end
-				after := False
-			else
-				after := True
-			end
+			go_root
 		end
 
 	finish
@@ -39,9 +28,13 @@ feature -- Cursor movement
 				from
 					go_root
 				until
-					active.right = Void
+					active.is_leaf
 				loop
-					right
+					if active.right /= Void then
+						right
+					else
+						left
+					end
 				end
 			end
 			after := False
@@ -50,22 +43,21 @@ feature -- Cursor movement
 	forth
 			-- Go one position forward.
 		do
-			if active.right /= Void then
-				right
+			if active.is_leaf then
 				from
 				until
-					active.left = Void
-				loop
-					left
-				end
-			else
-				from
-				until
-					active.is_root or active.is_left
+					(active = Void) or else (active.is_left and active.parent.right /= Void)
 				loop
 					up
 				end
-				up
+				if not off then
+					up
+					right
+				end
+			elseif active.left /= Void then
+				left
+			else
+				right
 			end
 			if active = Void then
 				after := True
@@ -75,39 +67,38 @@ feature -- Cursor movement
 	back
 			-- Go one position backward.
 		do
-			if active.left /= Void then
+			if active.is_right and then active.parent.left /= Void then
+				up
 				left
 				from
 				until
-					active.right = Void
+					active.is_leaf
 				loop
-					right
+					if active.right /= Void then
+						right
+					else
+						left
+					end
 				end
 			else
-				from
-				until
-					active.is_root or active.is_right
-				loop
-					up
-				end
 				up
 			end
 		end
 
 feature -- Specification
 	subtree_path_sequence (root: MML_BIT_VECTOR): MML_FINITE_SEQUENCE [MML_BIT_VECTOR]
-			-- Sequence of paths in subtree of `target.map' strating from `root' by order of traversal.
+			-- Sequence of paths in subtree of `target.map' strating from `root' in order of traversal.
 		note
 			status: specification
 		do
 			if not target.map.domain [root] then
 				create Result.empty
 			else
-				Result := subtree_path_sequence (root.extended (False)).extended (root) + subtree_path_sequence (root.extended (True))
+				Result := subtree_path_sequence (root.extended (False)).prepended (root) + subtree_path_sequence (root.extended (True))
 			end
 		ensure then
 			definition_base: not target.map.domain [root] implies Result.is_empty
 			definition_step: target.map.domain [root] implies
-				Result |=| (subtree_path_sequence (root.extended (False)).extended (root) + subtree_path_sequence (root.extended (True)))
+				Result |=| (subtree_path_sequence (root.extended (False)).prepended (root) + subtree_path_sequence (root.extended (True)))
 		end
 end

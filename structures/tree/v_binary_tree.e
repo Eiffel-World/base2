@@ -50,7 +50,21 @@ feature -- Iteration
 		end
 
 	at_inorder_start: V_INORDER_ITERATOR [G]
-			-- New inorder iterator pointing to the leftmost node.
+			-- New inorder iterator pointing to the first position.
+		do
+			create Result.make (Current)
+			Result.start
+		end
+
+	at_preorder_start: V_PREORDER_ITERATOR [G]
+			-- New preorder iterator pointing to the first position.
+		do
+			create Result.make (Current)
+			Result.start
+		end
+
+	at_postorder_start: V_POSTORDER_ITERATOR [G]
+			-- New postorder iterator pointing to the first position.
 		do
 			create Result.make (Current)
 			Result.start

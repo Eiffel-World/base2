@@ -32,6 +32,24 @@ feature -- Replacement
 		end
 
 feature -- Basic operations
+	sequence_image (s: MML_FINITE_SEQUENCE [K]): MML_FINITE_SEQUENCE [G]
+			-- Sequence of images of `s' elements under `Current'.		
+		local
+			i: INTEGER
+			a: V_ARRAY [G]
+		do
+			create a.make (1, s.count)
+			from
+				i := 1
+			until
+				i > s.count
+			loop
+				a [i] := item (s [i])
+				i := i + 1
+			end
+			create Result.make_from_array (a)
+		end
+
 --	restricted (subdomain: MML_SET [K]): MML_MAP [K, G]
 --			-- This map with all key-value pairs where key is outside `restriction' removed
 --		deferred
