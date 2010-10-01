@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 			-- Create an iterator over `t' pointing to the position with key `k'.
 		do
 			target := t
-			set_iterator := target.set.at ([k, default_item])
+			set_iterator := target.set.at ([k, ({V}).default])
 		ensure
 			target_effect: target = t
 			index_effect_found: target.has_equivalent_key (k) implies target.relation [key_sequence [index], k]
@@ -145,7 +145,7 @@ feature -- Cursor movement
 			-- If `k' does not appear, go after.
 			-- (Use `target.key_equivalence')
 		do
-			set_iterator.search ([k, default_item])
+			set_iterator.search ([k, ({V}).default])
 		end
 
 feature -- Replacement
@@ -207,13 +207,6 @@ feature -- Specification
 				Result := Result.extended (pair_sequence.item (i).value)
 				i := i + 1
 			end
-		end
-
-	default_item: V
-			-- Default value of type `V'.
-		note
-			status: specification
-		do
 		end
 
 invariant
