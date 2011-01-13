@@ -22,8 +22,7 @@ feature {NONE} -- Initialization
 		do
 			key_order := o
 		ensure
-			key_order_relation_effect: executable implies
-				key_order_relation |=| o.order_relation
+			--- key_order_relation_effect: key_order_relation |=| o.order_relation
 		end
 
 feature -- Access
@@ -46,15 +45,11 @@ feature -- Specification
 			Result := key_order.order_relation
 		end
 
-	executable: BOOLEAN = False
-			-- Are model-based contracts for this class executable?		
-
 invariant
 	key_order_exists: key_order /= Void
-	key_order_order_relation_definition: executable implies key_order.order_relation |=| key_order_relation
-	order_relation_definition: executable implies order_relation |=|
-		create {MML_AGENT_ENDORELATION [TUPLE [key: K; value: V]]}.such_that (agent (x, y: TUPLE [key: K; value: V]): BOOLEAN
-		do
-			Result := key_order_relation [x.key, y.key]
-		end)
+	--- key_order_order_relation_definition: key_order.order_relation |=| key_order_relation
+	--- order_relation_definition: order_relation |=| create {MML_AGENT_ENDORELATION [TUPLE [key: K; value: V]]}.such_that (agent (x, y: TUPLE [key: K; value: V]): BOOLEAN
+	---		do
+	---			Result := key_order_relation [x.key, y.key]
+	---		end)
 end

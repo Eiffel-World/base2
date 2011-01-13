@@ -123,7 +123,7 @@ feature {NONE} -- Implementation
 				i > array.upper
 			loop
 				if attached {INTEGER} array.item (i) as n then
-					if int_set.has (n) then
+					if int_set [n] then
 						is_interval_cache := False
 					else
 						int_set := int_set.extended (n)

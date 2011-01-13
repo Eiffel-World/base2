@@ -57,12 +57,14 @@ feature -- Status report
 			old_active: V_BINARY_TREE_CELL [G]
 			old_after: BOOLEAN
 		do
-			old_active := active
-			old_after := after
-			start
-			Result := active = old_active
-			active := old_active
-			after := old_after
+			if not target.is_empty then
+				old_active := active
+				old_after := after
+				start
+				Result := active = old_active
+				active := old_active
+				after := old_after
+			end
 		end
 
 	is_last: BOOLEAN
@@ -71,12 +73,14 @@ feature -- Status report
 			old_active: V_BINARY_TREE_CELL [G]
 			old_after: BOOLEAN
 		do
-			old_active := active
-			old_after := after
-			finish
-			Result := active = old_active
-			active := old_active
-			after := old_after
+			if not target.is_empty then
+				old_active := active
+				old_after := after
+				finish
+				Result := active = old_active and after = old_after
+				active := old_active
+				after := old_after
+			end
 		end
 
 	after: BOOLEAN

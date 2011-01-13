@@ -11,6 +11,8 @@ class
 inherit
 	MML_SEQUENCE [G]
 
+	MML_FINITE
+
 create
 	empty,
 	singleton

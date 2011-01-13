@@ -8,7 +8,7 @@ class
 	MML_FINITE_BAG [G]
 
 inherit
-	MML_MODEL
+	MML_FINITE
 
 create
 	empty
@@ -114,7 +114,7 @@ feature -- Basic operations
 	removed (x: G): MML_FINITE_BAG [G]
 			-- Current bag with one occurrence of `x' removed
 		require
-			has: domain.has (x)
+			has: domain [x]
 		local
 			ks: V_ARRAY [G]
 			vs: V_ARRAY [INTEGER]
@@ -184,7 +184,9 @@ feature -- Basic operations
 				end
 				i := i + 1
 			end
-			create Result.make_from_arrays (ks.subarray (ks.lower, j - 1), vs.subarray (vs.lower, j - 1), n)
+			ks.resize (ks.lower, j - 1)
+			vs.resize (vs.lower, j - 1)
+			create Result.make_from_arrays (ks, vs, n)
 		end
 
 feature {NONE} -- Implementation
@@ -202,19 +204,13 @@ feature {NONE} -- Implementation
 	index_of (x: G): INTEGER
 			-- Index of `x' in `keys' if contained
 			-- otherwise `keys.upper + 1'
-		local
-			found: BOOLEAN
 		do
 			from
 				Result := keys.lower
 			until
-				Result > keys.upper or found
+				Result > keys.upper or else model_equals (keys [Result], x)
 			loop
-				if model_equals (keys [Result], x) then
-					found := True
-				else
-					Result := Result + 1
-				end
+				Result := Result + 1
 			end
 		end
 end

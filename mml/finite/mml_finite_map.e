@@ -10,6 +10,8 @@ class
 inherit
 	MML_MAP [K, G]
 
+	MML_FINITE
+
 create
 	empty,
 	singleton
@@ -56,18 +58,17 @@ feature -- Access
 			mapped_to: "Current[k]"
 		local
 			i: INTEGER
-			found: BOOLEAN
 		do
 			from
 				i := keys.lower
 			until
-				i > keys.upper or found
+				-- Protection against violations in "old" expressions
+				i > keys.upper or else model_equals (keys [i], k)
 			loop
-				if model_equals (keys [i], k) then
-					found := True
-					Result := values [i]
-				end
 				i := i + 1
+			end
+			if i <= keys.upper then
+				Result := values [i]
 			end
 		end
 
@@ -174,7 +175,9 @@ feature --Basic operations
 				end
 				i := i + 1
 			end
-			create Result.make_from_arrays (ks.subarray (ks.lower, j - 1), vs.subarray (vs.lower, j - 1))
+			ks.resize (ks.lower, j - 1)
+			vs.resize (vs.lower, j - 1)
+			create Result.make_from_arrays (ks, vs)
 		end
 
 	override alias "+" (other: MML_FINITE_MAP [K, G]): MML_FINITE_MAP [K, G]
@@ -203,7 +206,9 @@ feature --Basic operations
 				end
 				i := i + 1
 			end
-			create Result.make_from_arrays (ks.subarray (ks.lower, j - 1), vs.subarray (vs.lower, j - 1))
+			ks.resize (ks.lower, j - 1)
+			vs.resize (vs.lower, j - 1)
+			create Result.make_from_arrays (ks, vs)
 		end
 
 	inverse: MML_FINITE_RELATION [G, K]
@@ -218,7 +223,7 @@ feature -- Element change
 		note
 			mapped_to: "Map.extended(Current, k, x)"
 		require
-			fresh_key: not domain.has (k)
+			fresh_key: not domain [k]
 		local
 			ks: V_ARRAY [K]
 			vs: V_ARRAY [G]
@@ -237,7 +242,7 @@ feature -- Element change
 		note
 			mapped_to: "Map.removed(Current, k)"
 		require
-			has_key: domain.has (k)
+			has_key: domain [k]
 		local
 			ks: V_ARRAY [K]
 			vs: V_ARRAY [G]
@@ -266,20 +271,19 @@ feature -- Replacement
 			-- Current map with the value associated with `k' replaced by `x'
 		local
 			i: INTEGER
-			found: BOOLEAN
 			vs: V_ARRAY [G]
 		do
 			vs := values.twin
 			from
 				i := keys.lower
 			until
-				i > keys.upper or found
+				-- Protection against violations in "old" expressions
+				i > keys.upper or else model_equals (keys [i], k)
 			loop
-				if model_equals (keys [i], k) then
-					found := True
-					vs [i] := x
-				end
 				i := i + 1
+			end
+			if i <= keys.upper then
+				vs [i] := x
 			end
 			create Result.make_from_arrays (keys, vs)
 		end

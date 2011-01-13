@@ -32,7 +32,7 @@ feature {NONE} -- Initialization
 			create set.make (create {V_KEY_VALUE_ORDER [K, V]}.make (o))
 		ensure
 			map_effect: map.is_empty
-			order_relation_effect: order_relation |=| o.order_relation
+			--- order_relation_effect: order_relation |=| o.order_relation
 		end
 
 feature -- Initialization
@@ -50,9 +50,9 @@ feature -- Initialization
 			end
 		ensure then
 			map_effect: map |=| other.map
-			order_relation_effect: order_relation |=| other.order_relation
+			--- order_relation_effect: order_relation |=| other.order_relation
 			other_map_effect: other.map |=| old other.map
-			other_order_relation_effect: other.order_relation |=| old other.order_relation
+			--- other_order_relation_effect: other.order_relation |=| old other.order_relation
 		end
 
 feature -- Measurement
@@ -74,6 +74,6 @@ feature -- Specification
 		end
 
 invariant
-	relation_definition: relation |=| (order_relation * order_relation.inverse)
-	key_order_order_definition: key_order.order_relation |=| order_relation
+	--- relation_definition: relation |=| (order_relation * order_relation.inverse)
+	--- key_order_order_definition: key_order.order_relation |=| order_relation
 end

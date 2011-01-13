@@ -122,8 +122,8 @@ feature -- Comparison
 				Result := equivalence ~ other.equivalence and count = other.count and is_subset_of (other)
 			end
 		ensure then
-			definition: Result = (relation |=| other.relation and set.count = other.set.count and
-				set.for_all (agent other.has_equivalent))
+---			definition: Result = (relation |=| other.relation and set.count = other.set.count and
+---				set.for_all (agent other.has_equivalent))
 		end
 
 feature -- Extension
@@ -216,7 +216,7 @@ feature -- Removal
 			set_effect_new: set.for_all (agent (old Current.twin).has_equivalent)
 		end
 
-	difference (other: V_SET [G])
+	sym_subtract (other: V_SET [G])
 			-- Remove elements that are also in `other' and add elements of `other' that are not in `Current'.
 		require
 			other_exists: other /= Void
@@ -305,7 +305,7 @@ feature -- Specification
 
 invariant
 	equivalence_exists: equivalence /= Void
-	equivalence_relation_definition: equivalence.relation |=| relation
+	-- equivalence_relation_definition: equivalence.relation |=| relation
 	bag_domain_definition: bag.domain |=| set
 	bag_definition: bag.is_constant (1)
 end

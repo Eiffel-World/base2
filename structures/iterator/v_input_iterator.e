@@ -12,8 +12,7 @@ inherit
 	V_INPUT_STREAM [G]
 		rename
 			search as search_forth,
-			satisfy as satisfy_forth,
-			sequence as front
+			satisfy as satisfy_forth
 		redefine
 			is_equal,
 			search_forth,
@@ -253,22 +252,10 @@ feature -- Specification
 		deferred
 		end
 
-	front: MML_FINITE_SEQUENCE [G]
-			-- Sequence of elements that are already read.
-		note
-			status: specification
-		do
-			Result := sequence.front (index - 1)
-		end
-
-	executable: BOOLEAN = True
-			-- Are model-based contracts for this class executable?
-
 invariant
 	target_exists: target /= Void
 	item_definition: sequence.domain [index] implies item = sequence [index]
 	off_definition: off = not sequence.domain [index]
-	front_definition: front |=| sequence.front (index - 1)
 	target_bag_domain_constraint: target.bag.domain |=| sequence.range
 	target_bag_constraint: target.bag.domain.for_all (agent (x: G): BOOLEAN
 		do

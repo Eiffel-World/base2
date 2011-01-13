@@ -35,7 +35,7 @@ feature {NONE} -- Initialization
 			create iterator.make (Current, tree)
 		ensure
 			set_effect: set.is_empty
-			order_relation_effect: order_relation |=| o.order_relation
+			--- order_relation_effect: order_relation |=| o.order_relation
 		end
 
 feature -- Initialization
@@ -53,10 +53,10 @@ feature -- Initialization
 				end
 			end
 		ensure then
-			order_effect: order_relation |=| other.order_relation
 			set_effect: set |=| other.set
-			other_order_effect: other.order_relation |=| old other.order_relation
+			--- order_effect: order_relation |=| other.order_relation
 			other_set_effect: other.set |=| old other.set
+			--- other_order_effect: other.order_relation |=| old other.order_relation
 		end
 
 feature -- Measurement
@@ -148,6 +148,6 @@ invariant
 	order_exists: order /= Void
 	tree_exists: tree /= Void
 	iterator_exists: iterator /= Void
-	relation_definition: relation |=| (order_relation * order_relation.inverse)
-	order_order_definition: order.order_relation |=| order_relation
+	--- relation_definition: relation |=| (order_relation * order_relation.inverse)
+	--- order_order_definition: order.order_relation |=| order_relation
 end

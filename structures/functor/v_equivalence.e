@@ -25,14 +25,8 @@ feature -- Specification
 			Result := create {MML_AGENT_ENDORELATION [G]}.such_that (agent equivalent)
 		end
 
-	executable: BOOLEAN
-			-- Are model-based contracts for this class executable?
-		note
-			status: specification
-		deferred
-		end
 invariant
-	relation_reflexive: executable implies relation.reflexive
-	relation_symmetric: executable implies relation.symmetric
-	relation_transitive: executable implies relation.transitive
+	--- relation_reflexive: relation.reflexive
+	--- relation_symmetric: relation.symmetric
+	--- relation_transitive: relation.transitive
 end

@@ -10,10 +10,11 @@ class
 inherit
 	MML_SET [G]
 		redefine
-			is_finite,
-			as_finite,
-			is_empty
+			extended,
+			removed
 		end
+
+	MML_FINITE
 
 create
 	empty,
@@ -25,11 +26,23 @@ create {MML_MODEL}
 convert
 	singleton ({G})
 
+feature {NONE} -- Initialization
+	empty
+			-- Create an empty set.
+		do
+			create array.make (1, 0)
+		end
+
+	singleton (x: G)
+			-- Create a set that contains only `x'.
+		do
+			create array.make (1, 1)
+			array [1] := x
+		end
+
 feature -- Access
 	has alias "[]" (x: G): BOOLEAN
-			-- Is `x' contained in the set?
-		note
-			mapped_to: "Current[x]"
+			-- Is `x' contained?
 		local
 			i: INTEGER
 		do
@@ -45,15 +58,13 @@ feature -- Access
 		end
 
 	count: INTEGER
-			-- Set cardinality
-		note
-			mapped_to: "Set.count(Current)"
+			-- Cardinality.
 		do
 			Result := array.count
 		end
 
 	any_item: G
-			-- Arbitrary item from the set
+			-- Arbitrary element.
 		require
 			not_empty: not is_empty
 		do
@@ -64,9 +75,7 @@ feature -- Access
 		end
 
 	lower: INTEGER
-			-- Minimum
-		note
-			mapped_to: "Set.lower(Current)"
+			-- Minimum item.
 		require
 			is_integer_set: is_integer_set
 			not_empty: not is_empty
@@ -75,9 +84,7 @@ feature -- Access
 		end
 
 	upper: INTEGER
-			-- Maximum
-		note
-			mapped_to: "Set.upper(Current)"
+			-- Maximum item.
 		require
 			is_integer_set: is_integer_set
 			not_empty: not is_empty
@@ -95,31 +102,13 @@ feature -- Comparison
 			end
 		end
 
-feature {NONE} -- Initialization
-	empty
-			-- Create an empty set
-		note
-			mapped_to: "Set.empty"
-		do
-			create array.make (1, 0)
-		end
-
-	singleton (x: G)
-			-- Create a set that contains only `x'
-		do
-			create array.make (1, 1)
-			array [1] := x
-		end
-
 feature -- Element change
 	extended (x: G): MML_FINITE_SET[G]
-			-- Current set extended with `x'
-		note
-			mapped_to: "Set.extended(Current, x)"
+			-- Current set extended with `x' if absent.
 		local
 			a: V_ARRAY [G]
 		do
-			if not has (x) then
+			if not Current [x] then
 				create a.make (1, array.count + 1)
 				a.subcopy (array, array.lower, array.upper, 1)
 				a [a.count] := x
@@ -130,9 +119,7 @@ feature -- Element change
 		end
 
 	removed (x: G): MML_FINITE_SET[G]
-			-- Current set with `x' removed if was present, otherwise current set
-		note
-			mapped_to: "Set.removed(Current, x)"
+			-- Current set with `x' removed if present.
 		local
 			a: V_ARRAY [G]
 			i, j: INTEGER
@@ -144,23 +131,19 @@ feature -- Element change
 			until
 				i > array.upper
 			loop
-				if not model_equals (array[i], x) then
-					a[j] := array[i]
+				if not model_equals (array [i], x) then
+					a [j] := array [i]
 					j := j + 1
 				end
 				i := i + 1
 			end
-			if j = i then
-				create Result.make_from_array (a)
-			else
-				create Result.make_from_array (a.subarray (a.lower, a.upper - 1))
+			if j /= i then
+				a.resize (a.lower, a.upper - 1)
 			end
+			create Result.make_from_array (a)
 		end
 
 feature -- Status report
-	is_finite: BOOLEAN = True
-			-- Is the set finite?
-
 	is_empty: BOOLEAN
 			-- Is the set empty?
 		do
@@ -168,13 +151,13 @@ feature -- Status report
 		end
 
 	is_integer_set: BOOLEAN
-			-- Is Current a set of integers?
+			-- Is current set a set of integers?
 		do
 			Result := attached {MML_FINITE_SET [INTEGER]} Current
 		end
 
 	is_interval: BOOLEAN
-			-- Is Current an integer interval?
+			-- Is current set an integer interval?
 		do
 			if is_integer_set then
 				Result := as_integer_set.is_interval
@@ -182,14 +165,8 @@ feature -- Status report
 		end
 
 feature -- Conversion
-	as_finite: MML_FINITE_SET [G]
-			-- Current set
-		do
-			Result := Current
-		end
-
 	as_integer_set: MML_INTEGER_SET
-			-- Current set if it is integer set
+			-- Current set if `is_integer_set'; Void otherwise.
 		do
 			if integer_set_cache = Void then
 				if attached {MML_FINITE_SET [INTEGER]} Current as int_set then
@@ -200,8 +177,26 @@ feature -- Conversion
 		end
 
 feature -- Basic operations
+	union alias "+" (other: MML_SET [G]): MML_SET [G]
+			-- Set of values contained in either `Current' or `other'.
+		do
+			if attached {MML_FINITE_SET [G]} other as finite then
+				Result := Current |+| finite
+			else
+				Result := other + Current
+			end
+		end
+
+	finite_union alias "|+|" (other: MML_FINITE_SET [G]): MML_FINITE_SET [G]
+			-- Set of values contained in either `Current' or `other'.
+		do
+			Result := Current - other
+			Result.array.resize (Result.array.lower, Result.array.upper + other.array.count)
+			Result.array.subcopy (other.array, other.array.lower, other.array.upper, count - other.count + 1)
+		end
+
 	intersection alias "*" (other: MML_SET [G]): MML_FINITE_SET [G]
-			-- Set that consists of values contained in both `Current' and `other'
+			-- Set of values contained in both `Current' and `other'.
 		local
 			a: V_ARRAY [G]
 			i, j: INTEGER
@@ -213,19 +208,18 @@ feature -- Basic operations
 			until
 				i > array.upper
 			loop
-				if other.has (array [i]) then
+				if other [array [i]] then
 					a [j] := array [i]
 					j := j + 1
 				end
 				i := i + 1
 			end
-			create Result.make_from_array (a.subarray (a.lower, j - 1))
+			a.resize (a.lower, j - 1)
+			create Result.make_from_array (a)
 		end
 
 	difference alias "-" (other: MML_SET [G]): MML_FINITE_SET [G]
-			-- Set that consists of values of `Current' that are not in `other'
-		require
-			other_exists: other /= Void
+			-- Set of values contained in `Current' but not in `other'.
 		local
 			a: V_ARRAY [G]
 			i, j: INTEGER
@@ -237,13 +231,30 @@ feature -- Basic operations
 			until
 				i > array.upper
 			loop
-				if not other.has (array [i]) then
+				if not other [array [i]] then
 					a [j] := array [i]
 					j := j + 1
 				end
 				i := i + 1
 			end
-			create Result.make_from_array (a.subarray (a.lower, j - 1))
+			a.resize (a.lower, j - 1)
+			create Result.make_from_array (a)
+		end
+
+	sym_difference alias "^" (other: MML_SET [G]): MML_SET [G]
+			-- Set of values contained in either `Current' or `other', but not in both.
+		do
+			if attached {MML_FINITE_SET [G]} other as finite then
+				Result := Current |^| finite
+			else
+				Result := other ^ Current
+			end
+		end
+
+	finite_sym_difference alias "|^|" (other: MML_FINITE_SET [G]): MML_FINITE_SET [G]
+			-- Set of values contained in either `Current' or `other', but not in both.
+		do
+			Result := (Current |+| other) - (Current * other)
 		end
 
 feature -- Quantification
@@ -254,32 +265,27 @@ feature -- Quantification
 			test_has_one_arg: test.open_count = 1
 		do
 			Result := array.for_all (test)
-		ensure
-			definition: Result = (intersection (create {MML_AGENT_SET [G]}.such_that (test)).count = count)
 		end
 
 	exists (test: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
-			-- Does `test' hold for all elements?
+			-- Does `test' hold for at least one element?
 		require
 			test_exists: test /= Void
 			test_has_one_arg: test.open_count = 1
 		do
 			Result := array.exists (test)
-		ensure
-			definition: Result = not intersection (create {MML_AGENT_SET [G]}.such_that (test)).is_empty
 		end
 
 feature {MML_MODEL} -- Implementation
 	array: V_ARRAY [G]
+			-- Element storage.
 
 	make_from_array (a: V_ARRAY [G])
-			-- Create with a predefined array
+			-- Create with a predefined array.
 		do
 			array := a
 		end
 
 	integer_set_cache: MML_INTEGER_SET
-
-invariant
-	is_interval implies is_integer_set
+			-- Current set as integer set.
 end

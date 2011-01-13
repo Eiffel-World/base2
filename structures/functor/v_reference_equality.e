@@ -30,6 +30,8 @@ feature -- Specification
 			create Result
 		end
 
-	executable: BOOLEAN = True
-			-- Are model-based contracts for this class executable?
+invariant
+	relation_reflexive: relation.reflexive
+	relation_symmetric: relation.symmetric
+	relation_transitive: relation.transitive
 end

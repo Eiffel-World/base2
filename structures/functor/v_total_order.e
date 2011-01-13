@@ -62,9 +62,9 @@ feature -- Specification
 		end
 
 invariant
-	equivalence_relation_definition: executable implies equivalence_relation |=| (order_relation * order_relation.inverse)
-	order_relation_reflexive: executable implies order_relation.reflexive
-	order_relation_antisymmetric: executable implies order_relation.antisymmetric
-	order_relation_transitive: executable implies order_relation.transitive
-	order_relation_total: executable implies order_relation.total
+	--- equivalence_relation_definition: equivalence_relation |=| (order_relation * order_relation.inverse)
+	--- order_relation_reflexive: order_relation.reflexive
+	--- order_relation_antisymmetric: order_relation.antisymmetric
+	--- order_relation_transitive: order_relation.transitive
+	--- order_relation_total: order_relation.total
 end

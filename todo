@@ -1,6 +1,20 @@
-Clean MML
-New loop syntax?
-Void safety?
+Structures:
+
+- Use agents instead of functor classes
+- Provide nice output for containers
+- RANDOM and STANDARD_INPUT streams
+- Should MAP inherit from CONTAINER? Should there be non-updatable MAP?
+
+MML:
+
+- Replace infinite models with agents
+- Fix INTEGER_SET
+- Efficient implementation
+
+Overall:
+
+- New loop syntax?
+- Void safety?
 
 Known bugs:
 

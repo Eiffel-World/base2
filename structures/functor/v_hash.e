@@ -14,7 +14,6 @@ feature -- Basic operations
 		deferred
 		ensure
 			definition: Result = map [v]
-			non_negative: Result >= 0
 		end
 
 feature -- Specification
@@ -22,6 +21,13 @@ feature -- Specification
 			-- Mathematical map from values to hash codes.
 		note
 			status: specification
-		deferred
+		do
+			Result := create {MML_AGENT_MAP [G, INTEGER]}.from_function (agent item)
 		end
+
+invariant
+---	map_constraint: map.domain.for_all (agent (x: G): BOOLEAN
+---		do
+---			Result := map [x] >= 0
+---		end)
 end

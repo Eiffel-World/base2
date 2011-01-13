@@ -1,5 +1,5 @@
 note
-	description: "Data structures where values are associated with keys. Keys are unique with respect to some equivalence relation."
+	description: "Finite data structures where values are associated with keys. Keys are unique with respect to some equivalence relation."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -27,7 +27,7 @@ feature -- Measurement
 		end
 
 feature -- Specification
-	map: MML_MAP [K, V]
+	map: MML_FINITE_MAP [K, V]
 			-- Corresponding mathematical map.
 		note
 			status: specification
@@ -46,9 +46,9 @@ feature -- Specification
 		note
 			status: specification
 		do
-			Result := not (relation.image_of (k) * map.domain).as_finite.is_empty
+			Result := not (map.domain * relation.image_of (k)).is_empty
 		ensure
-			definition: Result = not (relation.image_of (k) * map.domain).as_finite.is_empty
+			definition: Result = not (map.domain * relation.image_of (k)).is_empty
 		end
 
 	equivalent_key (k: K): K
@@ -58,8 +58,8 @@ feature -- Specification
 		require
 			has_equivalent: has_equivalent_key (k)
 		do
-			Result := (relation.image_of (k) * map.domain).as_finite.any_item
+			Result := (map.domain * relation.image_of (k)).any_item
 		ensure
-			Result = (relation.image_of (k) * map.domain).as_finite.any_item
+			Result = (map.domain * relation.image_of (k)).any_item
 		end
 end

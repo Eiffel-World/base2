@@ -82,21 +82,19 @@ feature -- Search
 		local
 			it: V_INPUT_ITERATOR [G]
 			j: INTEGER
-			found: BOOLEAN
 		do
 			from
 				it := at (i)
 				j := i
 				Result := upper + 1
 			until
-				it.after or found
+				it.after or else it.item = v
 			loop
-				if it.item = v then
-					found := True
-					Result := j
-				end
 				it.forth
 				j := j + 1
+			end
+			if not it.after then
+				Result := j
 			end
 		ensure
 			definition_not_has: not (map | {MML_INTEGER_SET} [[i, map.domain.upper]]).has (v) implies not map.domain [Result]
@@ -129,21 +127,19 @@ feature -- Search
 		local
 			it: V_INPUT_ITERATOR [G]
 			j: INTEGER
-			found: BOOLEAN
 		do
 			from
 				it := at (i)
 				j := i
 				Result := upper + 1
 			until
-				it.after or found
+				it.after or else p.item ([it.item])
 			loop
-				if p.item ([it.item]) then
-					found := True
-					Result := j
-				end
 				it.forth
 				j := j + 1
+			end
+			if not it.after then
+				Result := j
 			end
 		ensure
 			definition_not_has: not (map | {MML_INTEGER_SET} [[i, map.domain.upper]]).range.exists (p) implies not map.domain [Result]
@@ -303,7 +299,7 @@ invariant
 	upper_definition_empty: map.is_empty implies upper = 0
 	first_definition: not map.is_empty implies first = map [lower]
 	last_definition: not map.is_empty implies last = map [upper]
-	relation_definition: relation.is_identity
+--	relation_definition: relation.is_identity
 	bag_domain_definition: bag.domain |=| map.range
 	bag_definition: bag.domain.for_all (agent (x: G): BOOLEAN
 		do

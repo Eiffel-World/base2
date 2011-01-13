@@ -11,14 +11,15 @@ inherit
 	MML_SET [G]
 
 create
-	such_that
+	such_that,
+	universe
 
 convert
 	such_that ({PREDICATE [ANY, TUPLE [G]]})
 
 feature {NONE} -- Initialization
 	such_that (p: PREDICATE [ANY, TUPLE [G]])
-			-- Create a set {x | p(x)}
+			-- Create a set {x | p(x)}.
 		require
 			p_exists: p /= Void
 			p_has_one_arg: p.open_count = 1
@@ -26,36 +27,62 @@ feature {NONE} -- Initialization
 			predicate := p
 		end
 
+	universe
+			-- Create a set of all values of type G.
+		do
+			predicate := agent (x: G): BOOLEAN do Result := True end
+		end
+
 feature -- Access
 	has alias "[]" (x: G): BOOLEAN
-			-- Does set contain `x'?
+			-- Is `x' contained?
 		do
 			Result := predicate.item ([x])
 		end
 
-feature -- Comparison
-	is_model_equal alias "|=|" (other: MML_MODEL): BOOLEAN
-			-- Is this model mathematically equal to `other'?
+feature -- Basic operations
+	union alias "+" (other: MML_SET [G]): MML_SET [G]
+			-- Set of values contained in either `Current' or `other'.
 		do
-			Result := True
+			create {MML_AGENT_SET [G]} Result.such_that (agent (x: G; o: MML_SET [G]): BOOLEAN
+				do
+					Result := Current [x] or o [x]
+				end (?, other))
 		end
 
-feature -- Basic operations
 	intersection alias "*" (other: MML_SET [G]): MML_SET [G]
-			-- Set that consists of values contained in both `Current' and `other'
+			-- Set of values contained in both `Current' and `other'.
 		do
 			if attached {MML_FINITE_SET [G]} other then
-				Result := other.intersection (Current)
+				Result := other * Current
 			else
 				create {MML_AGENT_SET [G]} Result.such_that (agent (x: G; o: MML_SET [G]): BOOLEAN
 					do
-						Result := has (x) and o.has (x)
+						Result := Current [x] and o [x]
 					end (?, other))
 			end
 		end
 
+	difference alias "-" (other: MML_SET [G]): MML_SET [G]
+			-- Set of values contained in `Current' but not in `other'.
+		do
+			create {MML_AGENT_SET [G]} Result.such_that (agent (x: G; o: MML_SET [G]): BOOLEAN
+				do
+					Result := Current [x] and not o [x]
+				end (?, other))
+		end
+
+	sym_difference alias "^" (other: MML_SET [G]): MML_SET [G]
+			-- Set of values contained in either `Current' or `other', but not in both.
+		do
+			create {MML_AGENT_SET [G]} Result.such_that (agent (x: G; o: MML_SET [G]): BOOLEAN
+				do
+					Result := Current [x] xor o [x]
+				end (?, other))
+		end
+
 feature {MML_AGENT_SET} -- Implementation
 	predicate: PREDICATE [ANY, TUPLE [G]]
-			-- Defining predicate of a set
+			-- Characteristic predicate of the set.
 end
 

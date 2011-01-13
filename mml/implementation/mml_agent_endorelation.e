@@ -1,6 +1,6 @@
 note
-	description: "Summary description for {MML_AGENT_ENDORELATION}."
-	author: ""
+	description: "Relations over a set implementaed using agents."
+	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
 
@@ -15,34 +15,4 @@ inherit
 create
 	such_that
 
-feature -- Status report
-	reflexive: BOOLEAN
-			-- Is relation reflexive?
-		do
-		end
-
-	irreflexive: BOOLEAN
-			-- Is relation irreflexive?
-		do
-		end
-
-	symmetric: BOOLEAN
-			-- Is relation symmetric?
-		do
-		end
-
-	antisymmetric: BOOLEAN
-			-- Is relation antisymmetric?
-		do
-		end
-
-	transitive: BOOLEAN
-			-- Is relation transitive?
-		do
-		end
-
-	total: BOOLEAN
-			-- Is relation total?
-		do
-		end
 end

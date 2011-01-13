@@ -153,5 +153,5 @@ invariant
 		do
 			Result := bag [x] = map.inverse.image_of (x).count
 		end)
-	key_equivalence_relation_definition: key_equivalence.relation |=| relation
+	--- key_equivalence_relation_definition: key_equivalence.relation |=| relation
 end

@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 			make (create {V_REFERENCE_EQUALITY [K]}, h)
 		ensure
 			map_effect: map.is_empty
-			relation_effect: relation |=| create {MML_IDENTITY [K]}
-			hash_function_effect: hash_function |=| h.map
+			relation_effect: create {MML_IDENTITY [K]} |=| relation
+			--- hash_function_effect: hash_function |=| h.map
 		end
 
 	make_object_equality (h: V_HASH [K])
@@ -43,8 +43,8 @@ feature {NONE} -- Initialization
 			make (create {V_OBJECT_EQUALITY [K]}, h)
 		ensure
 			map_effect: map.is_empty
-			relation_effect: relation |=| create {MML_AGENT_RELATION [K, K]}.such_that (agent (x, y: K): BOOLEAN do Result := x ~ y end)
-			hash_function_effect: hash_function |=| h.map
+			--- relation_effect: relation |=| create {MML_AGENT_RELATION [K, K]}.such_that (agent (x, y: K): BOOLEAN do Result := x ~ y end)
+			--- hash_function_effect: hash_function |=| h.map
 		end
 
 	make (eq: V_EQUIVALENCE [K]; h: V_HASH [K])
@@ -57,8 +57,8 @@ feature {NONE} -- Initialization
 			create set.make (create {V_KEY_VALUE_EQUIVALENCE [K, V]}.make (eq), create {V_KEY_VALUE_HASH [K, V]}.make (h))
 		ensure
 			map_effect: map.is_empty
-			relation_effect: relation |=| eq.relation
-			hash_function_effect: hash_function |=| h.map
+			--- relation_effect: relation |=| eq.relation
+			--- hash_function_effect: hash_function |=| h.map
 		end
 
 feature -- Initialization
@@ -77,11 +77,11 @@ feature -- Initialization
 			end
 		ensure then
 			map_effect: map |=| other.map
-			relation_effect: relation |=| other.relation
-			hash_function_effect: hash_function |=| other.hash_function
+			--- relation_effect: relation |=| other.relation
+			--- hash_function_effect: hash_function |=| other.hash_function
 			map_effect: other.map |=| old other.map
-			relation_effect: other.relation |=| old other.relation
-			hash_function_effect: other.hash_function |=| old other.hash_function
+			--- relation_effect: other.relation |=| old other.relation
+			--- hash_function_effect: other.hash_function |=| old other.hash_function
 		end
 
 feature -- Measurement
@@ -107,5 +107,5 @@ feature -- Specification
 
 invariant
 	key_hash_exists: key_hash /= Void
-	key_hash_map_definition: key_hash.map |=| hash_function
+	--- key_hash_map_definition: key_hash.map |=| hash_function
 end

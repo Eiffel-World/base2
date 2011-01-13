@@ -106,8 +106,8 @@ feature -- Cursor movement
 		do
 			active := active.left
 		ensure
-			path_effect_not_off: old (map.domain.has (path.extended (False))) implies path |=| old path.extended (False)
-			path_effect_off: not old (map.domain.has (path.extended (False))) implies path.is_empty
+			path_effect_not_off: old (map.domain [path.extended (False)]) implies path |=| old path.extended (False)
+			path_effect_off: not old (map.domain [path.extended (False)]) implies path.is_empty
 		end
 
 	right
@@ -117,8 +117,8 @@ feature -- Cursor movement
 		do
 			active := active.right
 		ensure
-			path_effect_not_off: old (map.domain.has (path.extended (True))) implies path |=| old path.extended (True)
-			path_effect_off: not old (map.domain.has (path.extended (True))) implies path.is_empty
+			path_effect_not_off: old (map.domain [path.extended (True)]) implies path |=| old path.extended (True)
+			path_effect_off: not old (map.domain [path.extended (True)]) implies path.is_empty
 		end
 
 	go_root
@@ -246,11 +246,11 @@ feature -- Specification
 		end
 
 invariant
-	item_definition: target.map.domain.has (path) implies item = target.map [path]
-	off_definition: off = not target.map.domain.has (path)
+	item_definition: target.map.domain [path] implies item = target.map [path]
+	off_definition: off = not target.map.domain [path]
 	is_root_definition: is_root = (path |=| {MML_BIT_VECTOR} [True])
-	is_leaf_definition: target.map.domain.has (path) implies
-		is_leaf = (not target.map.domain.has (path.extended (True)) and not target.map.domain.has (path.extended (False)))
-	has_left_definition: target.map.domain.has (path) implies has_left = target.map.domain.has (path.extended (False))
-	has_right_definition: target.map.domain.has (path) implies has_right = target.map.domain.has (path.extended (True))
+	is_leaf_definition: target.map.domain [path] implies
+		is_leaf = (not target.map.domain [path.extended (True)] and not target.map.domain [path.extended (False)])
+	has_left_definition: target.map.domain [path] implies has_left = target.map.domain [path.extended (False)]
+	has_right_definition: target.map.domain [path] implies has_right = target.map.domain [path.extended (True)]
 end

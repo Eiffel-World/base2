@@ -3,10 +3,13 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: off, item, sequence
+	model: off, item
 
 deferred class
 	V_INPUT_STREAM [G]
+
+inherit
+	MML_SPECIFICATION
 
 feature -- Access
 	item: G
@@ -31,8 +34,6 @@ feature -- Cursor movement
 		ensure
 			item_effect: not off implies relevant (item)
 			off_effect: relevant (off)
-			sequence_effect: executable implies
-				sequence |=| old (sequence.extended (item))
 		end
 
 	search (v: G)
@@ -48,10 +49,6 @@ feature -- Cursor movement
 			end
 		ensure
 			off_item_effect: off or else item = v
-			sequence_effect: executable implies
-				(old sequence).is_prefix_of (sequence)
-			sequence_constraint: executable implies
-				not sequence.tail (old sequence.count + 1).has (v)
 		end
 
 	satisfy (pred: PREDICATE [ANY, TUPLE [G]])
@@ -69,32 +66,5 @@ feature -- Cursor movement
 			end
 		ensure
 			off_item_effect: off or else pred.item ([item])
-			sequence_effect: executable implies
-				(old sequence).is_prefix_of (sequence)
-			sequence_constraint: executable implies
-				not sequence.tail (old sequence.count + 1).range.exists (pred)
-		end
-
-feature -- Specification
-	sequence: MML_FINITE_SEQUENCE [G]
-			-- Sequence of elements that are already read.
-		note
-			status: specification
-		deferred
-		end
-
-	relevant (x: ANY): BOOLEAN
-			-- Always true.
-		note
-			status: specification
-		do
-			Result := True
-		end
-
-	executable: BOOLEAN
-			-- Are model-based contracts for this class executable?
-		note
-			status: specification
-		deferred
 		end
 end

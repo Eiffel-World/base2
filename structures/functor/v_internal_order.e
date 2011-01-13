@@ -17,8 +17,4 @@ feature -- Basic operations
 		do
 			Result := y = Void or else (x /= Void and then x >= y)
 		end
-
-feature -- Specification
-	executable: BOOLEAN = False
-			-- Are model-based contracts for this class executable?	
 end

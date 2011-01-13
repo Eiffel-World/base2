@@ -35,15 +35,4 @@ feature -- Cursor movement
 		ensure then
 			item_effect: item = old item
 		end
-
-feature -- Specification
-	sequence: MML_FINITE_SEQUENCE [G]
-			-- Sequence of elements already read.
-		note
-			status: specification_only
-		do
-		end
-
-	executable: BOOLEAN = False
-			-- Are model-based contracts for this class executable?		
 end

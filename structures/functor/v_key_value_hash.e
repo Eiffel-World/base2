@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 		do
 			key_hash := h
 		ensure
-			key_map_effect: key_map |=| h.map
+			--- key_map_effect: key_map |=| h.map
 		end
 
 feature -- Access
@@ -45,14 +45,11 @@ feature -- Specification
 			Result := key_hash.map
 		end
 
-	map: MML_MAP [TUPLE [key: K; value: V], INTEGER]
-			-- Mathematical map from key-value pairs to hash codes.
-		note
-			status: specification
-		do
-			create {MML_AGENT_MAP [TUPLE [key: K; value: V], INTEGER]} Result.from_function (agent (x: TUPLE [key: K; value: V]): INTEGER
-				do
-					Result := key_map [x.key]
-				end)
-		end
+invariant
+	key_hash_exists: key_hash /= Void
+---	key_hash_map_definition: key_hash.map |=| key_map
+---	map_definition: map |=| create {MML_AGENT_MAP [TUPLE [key: K; value: V], INTEGER]}.from_function (agent (x: TUPLE [key: K; value: V]): INTEGER
+---		do
+---			Result := key_map [x.key]
+---		end)
 end

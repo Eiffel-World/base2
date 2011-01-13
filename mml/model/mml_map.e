@@ -19,7 +19,7 @@ feature -- Access
 	item alias "[]" (k: K): G
 			-- Value associated with `k'
 		require
-			in_domain: domain.has (k)
+			in_domain: domain [k]
 		deferred
 		end
 
@@ -27,7 +27,7 @@ feature -- Replacement
 	replaced_at (k: K; x: G): MML_MAP [K, G]
 			-- Current map with the value associated with `k' replaced by `x'
 		require
-			in_domain: domain.has (k)
+			in_domain: domain [k]
 		deferred
 		end
 

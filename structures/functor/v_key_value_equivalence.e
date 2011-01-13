@@ -22,8 +22,7 @@ feature {NONE} -- Initialization
 		do
 			key_equivalence := eq
 		ensure
-			key_equivalence_relation_effect: executable implies
-				key_equivalence_relation |=| eq.relation
+			--- key_equivalence_relation_effect: key_equivalence_relation |=| eq.relation
 		end
 
 feature -- Access
@@ -46,15 +45,11 @@ feature -- Specification
 			Result := key_equivalence.relation
 		end
 
-	executable: BOOLEAN = False
-			-- Are model-based contracts for this class executable?
-
 invariant
 	key_equivalence_exists: key_equivalence /= Void
-	key_equivalence_relation_definition: executable implies key_equivalence.relation |=| key_equivalence_relation
-	relation_definition: executable implies relation |=|
-		create {MML_AGENT_ENDORELATION [TUPLE [key: K; value: V]]}.such_that (agent (x, y: TUPLE [key: K; value: V]): BOOLEAN
-		do
-			Result := key_equivalence_relation [x.key, y.key]
-		end)
+	--- key_equivalence_relation_definition: key_equivalence.relation |=| key_equivalence_relation
+	--- relation_definition: relation |=| create {MML_AGENT_ENDORELATION [TUPLE [key: K; value: V]]}.such_that (agent (x, y: TUPLE [key: K; value: V]): BOOLEAN
+	---		do
+	---			Result := key_equivalence_relation [x.key, y.key]
+	---		end)
 end

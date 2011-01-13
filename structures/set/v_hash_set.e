@@ -31,8 +31,8 @@ feature {NONE} -- Initialization
 			make (create {V_REFERENCE_EQUALITY [G]}, h)
 		ensure
 			set_effect: set.is_empty
-			relation_effect: relation |=| create {MML_IDENTITY [G]}
-			hash_function_effect: hash_function |=| h.map
+			relation_effect: create {MML_IDENTITY [G]} |=| relation
+			--- hash_function_effect: hash_function |=| h.map
 		end
 
 	make_object_equality (h: V_HASH [G])
@@ -43,8 +43,8 @@ feature {NONE} -- Initialization
 			make (create {V_OBJECT_EQUALITY [G]}, h)
 		ensure
 			set_effect: set.is_empty
-			relation_effect: relation |=| create {MML_AGENT_RELATION [G, G]}.such_that (agent (x, y: G): BOOLEAN do Result := x ~ y end)
-			hash_function_effect: hash_function |=| h.map
+			--- relation_effect: relation |=| create {MML_AGENT_RELATION [G, G]}.such_that (agent (x, y: G): BOOLEAN do Result := x ~ y end)
+			--- hash_function_effect: hash_function |=| h.map
 		end
 
 	make (eq: V_EQUIVALENCE [G]; h: V_HASH [G])
@@ -59,8 +59,8 @@ feature {NONE} -- Initialization
 			create iterator.make (Current)
 		ensure
 			set_effect: set.is_empty
-			relation_effect: relation |=| eq.relation
-			hash_function_effect: hash_function |=| h.map
+			--- relation_effect: relation |=| eq.relation
+			--- hash_function_effect: hash_function |=| h.map
 		end
 
 feature -- Initialization
@@ -86,11 +86,11 @@ feature -- Initialization
 			end
 		ensure then
 			set_effect: set |=| other.set
-			relation_effect: relation |=| other.relation
-			hash_function_effect: hash_function |=| other.hash_function
+			--- relation_effect: relation |=| other.relation
+			--- hash_function_effect: hash_function |=| other.hash_function
 			other_set_effect: other.set |=| old other.set
-			other_relation_effect: other.relation |=| old other.relation
-			other_hash_function_effect: other.hash_function |=| old other.hash_function
+			--- other_relation_effect: other.relation |=| old other.relation
+			--- other_hash_function_effect: other.hash_function |=| old other.hash_function
 		end
 
 feature -- Measurement
@@ -264,7 +264,7 @@ feature -- Specification
 
 invariant
 	hash_exists: hash /= Void
-	hash_map_definition: hash.map |=| hash_function
+	--- hash_map_definition: hash.map |=| hash_function
 	buckets_exists: buckets /= Void
 	iterator_exists: iterator /= Void
 	all_buckets_exist: buckets.for_all (agent (x: V_LINKED_LIST [G]): BOOLEAN do Result := x /= Void end)
