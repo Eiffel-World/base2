@@ -6,7 +6,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: set, relation, hash_function
+	model: set, equivalence, hash
 
 class
 	V_HASH_SET [G]
@@ -18,36 +18,10 @@ inherit
 		end
 
 create
-	make_reference_equality,
-	make_object_equality,
 	make
 
 feature {NONE} -- Initialization
-	make_reference_equality (h: V_HASH [G])
-			-- Create an empty set with reference equality and hash function `h'.
-		require
-			h_exists: h /= Void
-		do
-			make (create {V_REFERENCE_EQUALITY [G]}, h)
-		ensure
-			set_effect: set.is_empty
-			relation_effect: create {MML_IDENTITY [G]} |=| relation
-			--- hash_function_effect: hash_function |=| h.map
-		end
-
-	make_object_equality (h: V_HASH [G])
-			-- Create an empty set with object equality and hash function `h'.
-		require
-			h_exists: h /= Void
-		do
-			make (create {V_OBJECT_EQUALITY [G]}, h)
-		ensure
-			set_effect: set.is_empty
-			--- relation_effect: relation |=| create {MML_AGENT_RELATION [G, G]}.such_that (agent (x, y: G): BOOLEAN do Result := x ~ y end)
-			--- hash_function_effect: hash_function |=| h.map
-		end
-
-	make (eq: V_EQUIVALENCE [G]; h: V_HASH [G])
+	make (eq: PREDICATE [ANY, TUPLE [G, G]]; h: FUNCTION [ANY, TUPLE [G], INTEGER])
 			-- Create an empty set with equivalence relation `eq' and hash function `h'.
 		require
 			eq_exists: eq /= Void
@@ -59,8 +33,8 @@ feature {NONE} -- Initialization
 			create iterator.make (Current)
 		ensure
 			set_effect: set.is_empty
-			--- relation_effect: relation |=| eq.relation
-			--- hash_function_effect: hash_function |=| h.map
+			--- equivalence_effect: equivalence |=| eq
+			--- hash_effect: hash |=| h
 		end
 
 feature -- Initialization
@@ -86,22 +60,23 @@ feature -- Initialization
 			end
 		ensure then
 			set_effect: set |=| other.set
-			--- relation_effect: relation |=| other.relation
-			--- hash_function_effect: hash_function |=| other.hash_function
+			--- equivalence_effect: equivalence |=| other.equivalence
+			--- hash_effect: hash |=| other.hash
 			other_set_effect: other.set |=| old other.set
-			--- other_relation_effect: other.relation |=| old other.relation
-			--- other_hash_function_effect: other.hash_function |=| old other.hash_function
+			--- other_equivalence_effect: other.equivalence |=| old other.equivalence
+			--- other_hash_effect: other.hash |=| old other.hash
 		end
 
 feature -- Measurement
-	equivalence: V_EQUIVALENCE [G]
-			-- Equivalence relation on values.
-
-	hash: V_HASH [G]
-			-- Hash function.
-
 	count: INTEGER
 			-- Number of elements.
+
+feature -- Search
+	equivalence: PREDICATE [ANY, TUPLE [G, G]]
+			-- Equivalence relation on values.
+
+	hash: FUNCTION [ANY, TUPLE [G], INTEGER]
+			-- Hash function.
 
 feature -- Iteration
 	new_iterator: V_HASH_SET_ITERATOR [G]
@@ -125,7 +100,7 @@ feature -- Extension
 			i: INTEGER
 		do
 			i := index (v)
-			if not buckets [i].exists (agent equivalence.equivalent (v, ?)) then
+			if not buckets [i].exists (agent equivalent (v, ?)) then
 				buckets [i].extend_back (v)
 				count := count + 1
 				auto_resize
@@ -197,7 +172,7 @@ feature {NONE} -- Implementation
 		require
 			n_positive: n > 0
 		do
-			Result := hash.item (v) \\ n + 1
+			Result := hash.item ([v]) \\ n + 1
 		ensure
 			result_in_bounds: 1 <= Result and Result <= n
 		end
@@ -253,18 +228,8 @@ feature {NONE} -- Implementation
 			capacity_effect: capacity = c
 		end
 
-feature -- Specification
-	hash_function: MML_MAP [G, INTEGER]
-			-- Mathematical map from values to hash codes.
-		note
-			status: specification
-		do
-			Result := hash.map
-		end
-
 invariant
 	hash_exists: hash /= Void
-	--- hash_map_definition: hash.map |=| hash_function
 	buckets_exists: buckets /= Void
 	iterator_exists: iterator /= Void
 	all_buckets_exist: buckets.for_all (agent (x: V_LINKED_LIST [G]): BOOLEAN do Result := x /= Void end)

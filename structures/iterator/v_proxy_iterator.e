@@ -10,6 +10,9 @@ class
 
 inherit
 	V_INPUT_ITERATOR [G]
+		redefine
+			copy
+		end
 
 create {V_CONTAINER}
 	make
@@ -27,6 +30,20 @@ feature {NONE} -- Initialization
 			target_effect: target = t
 			sequence_effect: sequence |=| it.sequence
 			index_effect: index = it.index
+		end
+
+feature -- Initialization
+	copy (other: like Current)
+			-- Initialize by copying `other'.
+		do
+			if other /= Current then
+				target := other.target
+				iterator := other.iterator.twin
+			end
+		ensure then
+			target_effect: target = other.target
+			sequence_effect: sequence |=| other.sequence
+			index_effect: index = other.index
 		end
 
 feature -- Access
@@ -108,7 +125,7 @@ feature -- Cursor movement
 			iterator.go_after
 		end
 
-feature {NONE} -- Implementation
+feature {V_PROXY_ITERATOR} -- Implementation
 	iterator: V_INPUT_ITERATOR [G]
 			-- Iterator over the storage.
 

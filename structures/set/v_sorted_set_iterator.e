@@ -53,12 +53,8 @@ feature -- Initialization
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
 		do
-			if other /= Current then
-				target := other.target
-				tree := other.tree
-				active := other.active
-				after := other.after
-			end
+			target := other.target
+			Precursor {V_INORDER_ITERATOR} (other)
 		ensure then
 			target_effect: target = other.target
 			index_effect: index = other.index
@@ -78,9 +74,9 @@ feature -- Cursor movement
 			from
 				go_root
 			until
-				active = Void or else target.order.equivalent (v, item)
+				active = Void or else target.equivalent (v, item)
 			loop
-				if target.order.less_than (v, item) then
+				if target.less_than (v, item) then
 					left
 				else
 					right
@@ -96,7 +92,7 @@ feature -- Cursor movement
 			-- If `v' does not occur, move `off'.
 			-- (Use reference equality.)
 		do
-			if before or (active /= Void and then target.order.greater_than (v, item)) then
+			if before or (active /= Void and then target.less_order.item ([item, v])) then
 				search (v)
 			end
 			if active /= Void and then v /= item then
@@ -109,7 +105,7 @@ feature -- Cursor movement
 			-- If `v' does not occur, move `before'.
 			-- (Use reference equality.)
 		do
-			if after or (not off and then target.order.less_than (v, item)) then
+			if after or (not off and then target.less_order.item ([v, item])) then
 				search (v)
 			end
 			if after or (active /= Void and then v /= item) then

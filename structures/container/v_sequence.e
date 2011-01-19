@@ -18,8 +18,11 @@ inherit
 		rename
 			has_key as has_index
 		redefine
+			has_index,
 			map
 		end
+
+	V_EQUALITY [INTEGER]
 
 feature -- Access		
 	first: G
@@ -114,7 +117,7 @@ feature -- Search
 			end
 		ensure
 			definition_not_has: not map.range.exists (p) implies not map.domain [Result]
-			definition_has: map.range.exists (p) implies Result = map.inverse.image ({MML_AGENT_SET [G]} [p]).lower
+			definition_has: map.range.exists (p) implies Result = map.inverse.image (map.range | p).lower
 		end
 
 	index_that_from (p: PREDICATE [ANY, TUPLE [G]]; i: INTEGER): INTEGER
@@ -144,7 +147,15 @@ feature -- Search
 		ensure
 			definition_not_has: not (map | {MML_INTEGER_SET} [[i, map.domain.upper]]).range.exists (p) implies not map.domain [Result]
 			definition_has: (map | {MML_INTEGER_SET} [[i, map.domain.upper]]).range.exists (p) implies
-				Result = (map | {MML_INTEGER_SET} [[i, map.domain.upper]]).inverse.image ({MML_AGENT_SET [G]} [p]).lower
+				Result = (map | {MML_INTEGER_SET} [[i, map.domain.upper]]).inverse.image (map.range | p).lower
+		end
+
+	key_equivalence: PREDICATE [ANY, TUPLE [INTEGER, INTEGER]]
+			-- Index equivalence relation: identity.
+		note
+			status: specification
+		once
+			Result := agent reference_equal
 		end
 
 feature -- Iteration
@@ -283,14 +294,6 @@ feature -- Specification
 			end
 		end
 
-	relation: MML_IDENTITY [INTEGER]
-			-- Index equivalence relation: identity.
-		note
-			status: specification
-		do
-			create Result
-		end
-
 invariant
 	indexes_in_interval: map.domain.is_interval
 	lower_definition_nonempty: not map.is_empty implies lower = map.domain.lower
@@ -299,7 +302,6 @@ invariant
 	upper_definition_empty: map.is_empty implies upper = 0
 	first_definition: not map.is_empty implies first = map [lower]
 	last_definition: not map.is_empty implies last = map [upper]
---	relation_definition: relation.is_identity
 	bag_domain_definition: bag.domain |=| map.range
 	bag_definition: bag.domain.for_all (agent (x: G): BOOLEAN
 		do

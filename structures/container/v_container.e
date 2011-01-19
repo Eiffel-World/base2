@@ -147,6 +147,8 @@ feature -- Specification
 				Result := Result.extended (i.item)
 				i.forth
 			end
+		ensure
+			exists: Result /= Void
 		end
 
 invariant

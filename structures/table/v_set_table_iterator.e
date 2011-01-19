@@ -36,8 +36,8 @@ feature {NONE} -- Initialization
 			set_iterator := target.set.at ([k, ({V}).default])
 		ensure
 			target_effect: target = t
-			index_effect_found: target.has_equivalent_key (k) implies target.relation [key_sequence [index], k]
-			index_effect_not_found: not target.has_equivalent_key (k) implies index = key_sequence.count + 1
+			index_effect_found: target.has_key (k) implies target.equivalent (key_sequence [index], k)
+			index_effect_not_found: not target.has_key (k) implies index = key_sequence.count + 1
 		end
 
 feature -- Initialization
@@ -50,9 +50,11 @@ feature -- Initialization
 			end
 		ensure then
 			target_effect: target = other.target
+			key_sequence_effect: key_sequence |=| other.key_sequence
 			index_effect: index = other.index
 			other_target_effect: other.target = old other.target
 			other_index_effect: other.index = old other.index
+			other_key_sequence_effect: other.key_sequence |=| old other.key_sequence
 		end
 
 feature -- Access

@@ -10,6 +10,9 @@ class
 
 inherit
 	V_SET_ITERATOR [G]
+		redefine
+			copy
+		end
 
 create {V_HASH_SET}
 	make
@@ -25,6 +28,24 @@ feature {NONE} -- Initialization
 		ensure
 			target_effect: target = s
 			index_effect: index = 0
+		end
+
+feature -- Initialization
+	copy (other: like Current)
+			-- Initialize with the same `target' and position as in `other'.
+		do
+			if other /= Current then
+				target := other.target
+				list_iterator := other.list_iterator.twin
+				bucket_index := other.bucket_index
+			end
+		ensure then
+			target_effect: target = other.target
+			sequence_effect: sequence |=| other.sequence
+			index_effect: index = other.index
+			other_target_effect: other.target = old other.target
+			other_sequence_effect: other.sequence |=| old other.sequence
+			other_index_effect: other.index = old other.index
 		end
 
 feature -- Access
@@ -82,7 +103,7 @@ feature -- Cursor movement
 		do
 			bucket_index := target.index (v)
 			list_iterator.make (target.buckets [bucket_index])
-			list_iterator.satisfy_forth (agent equivalent (v, ?))
+			list_iterator.satisfy_forth (agent target.equivalent (v, ?))
 			if list_iterator.after then
 				go_after
 			end
@@ -166,21 +187,14 @@ feature -- Removal
 			to_next_bucket
 		end
 
-feature {V_HASH_SET} -- Implementation
+feature {V_HASH_SET, V_HASH_SET_ITERATOR} -- Implementation
 	list_iterator: V_LINKED_LIST_ITERATOR [G]
 			-- Iterator inside current bucket.
 
-feature {NONE} -- Implementation
 	bucket_index: INTEGER
 			-- Index of current bucket.
 
-	equivalent (x, y: G): BOOLEAN
-			-- Are `v' and `u' equivalent according to `target.equivalence'?
-			-- (Workaround; remove when remote agents are supported)
-		do
-			Result := target.equivalence.equivalent (x, y)
-		end
-
+feature {NONE} -- Implementation
 	count_sum (l, u: INTEGER): INTEGER
 			-- Total number of elements in buckets `l' to `u'.
 		local

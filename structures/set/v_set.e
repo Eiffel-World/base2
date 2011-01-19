@@ -6,7 +6,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: set, relation
+	model: set, equivalence
 
 deferred class
 	V_SET [G]
@@ -21,16 +21,27 @@ inherit
 			is_equal
 		end
 
-feature -- Measurement
-	equivalence: V_EQUIVALENCE [G]
+feature -- Search
+	equivalence: PREDICATE [ANY, TUPLE [G, G]]
 			-- Equivalence relation on values.
 		deferred
 		end
 
-feature -- Search
+	equivalent (x, y: G): BOOLEAN
+			-- Are `x' and `y' equivalent according to `equivalence'?
+		note
+			status: specification
+		do
+			Result := equivalence.item ([x, y])
+		ensure
+			definition: Result = equivalence.item ([x, y])
+		end
+
 	has (v: G): BOOLEAN
 			-- Is `v' contained?
 			-- (Uses `equivalence'.)
+		note
+			status: specification
 		local
 			i: V_SET_ITERATOR [G]
 		do
@@ -38,7 +49,24 @@ feature -- Search
 			i.search (v)
 			Result := not i.after
 		ensure
-			definition: Result = has_equivalent (v)
+			definition: Result = set.exists (agent equivalent (v, ?))
+		end
+
+	equivalent_item (v: G): G
+			-- Element of `set' equivalent to `v' according to `relation'.
+		note
+			status: specification
+		require
+			has: has (v)
+		local
+			i: V_SET_ITERATOR [G]
+		do
+--			i := new_iterator
+--			i.search (v)
+--			Result := i.item
+			Result := (set | agent equivalent (v, ?)).any_item
+		ensure
+			Result = (set | agent equivalent (v, ?)).any_item
 		end
 
 	has_exactly (v: G): BOOLEAN
@@ -72,8 +100,8 @@ feature -- Iteration
 		deferred
 		ensure
 			target_definition: Result.target = Current
-			index_definition_found: has_equivalent (v) implies relation [Result.sequence [Result.index], v]
-			index_definition_not_found: not has_equivalent (v) implies Result.index = Result.sequence.count + 1
+			index_definition_found: has (v) implies equivalent (Result.sequence [Result.index], v)
+			index_definition_not_found: not has (v) implies Result.index = Result.sequence.count + 1
 		end
 
 feature -- Comparison
@@ -85,7 +113,7 @@ feature -- Comparison
 		do
 			Result := for_all (agent other.has)
 		ensure
-			definition: Result = set.for_all (agent other.has_equivalent)
+			definition: Result = set.for_all (agent other.has)
 		end
 
 	is_superset_of (other: V_SET [G]): BOOLEAN
@@ -96,7 +124,7 @@ feature -- Comparison
 		do
 			Result := other.is_subset_of (Current)
 		ensure
-			definition: Result = other.set.for_all (agent has_equivalent)
+			definition: Result = other.set.for_all (agent has)
 		end
 
 	disjoint (other: V_SET [G]): BOOLEAN
@@ -107,23 +135,33 @@ feature -- Comparison
 		do
 			Result := not other.exists (agent has)
 		ensure
-			definition: Result = other.set.for_all (agent (x: G): BOOLEAN
-				do
-					Result := not has_equivalent (x)
-				end)
+			definition: Result = not other.set.exists (agent has)
 		end
 
 	is_equal (other: like Current): BOOLEAN
-			-- Does `other' has the same equivalence relation and equivalent elements?
+			-- Does `other' has equivalent elements (with respect to both `equivalence' and `other.equivalence')?
+		local
+			i, j: V_SET_ITERATOR [G]
 		do
-			if other = Current then
-				Result := True
-			else
-				Result := equivalence ~ other.equivalence and count = other.count and is_subset_of (other)
+			if count = other.count then
+				from
+					Result := True
+					i := new_iterator
+					j := other.new_iterator
+				until
+					i.after or not Result
+				loop
+					j.search (i.item)
+					Result := not j.after and then equivalent (i.item, j.item)
+					i.forth
+				end
 			end
 		ensure then
----			definition: Result = (relation |=| other.relation and set.count = other.set.count and
----				set.for_all (agent other.has_equivalent))
+			definition: Result = (set.count = other.set.count and
+				set.for_all (agent (x: G; o: like Current): BOOLEAN
+					do
+						Result := o.has (x) and then equivalent (x, o.equivalent_item (x))
+					end (?, other)))
 		end
 
 feature -- Extension
@@ -131,8 +169,8 @@ feature -- Extension
 			-- Add `v' to the set.
 		deferred
 		ensure
-			set_effect_not_has: not old has_equivalent (v) implies set |=| old set.extended (v)
-			set_effect_has: old has_equivalent (v) implies set |=| old set
+			set_effect_not_has: not old has (v) implies set |=| old set.extended (v)
+			set_effect_has: old has (v) implies set |=| old set
 		end
 
 	join (other: V_SET [G])
@@ -149,11 +187,11 @@ feature -- Extension
 				other.iterator.forth
 			end
 		ensure
-			set_effect_old: (old set).for_all (agent has_equivalent)
-			set_effect_other: other.set.for_all (agent has_equivalent)
+			set_effect_old: (old set).for_all (agent has)
+			set_effect_other: other.set.for_all (agent has)
 			set_effect_new: set.for_all (agent (x: G; c, o: V_SET [G]): BOOLEAN
 				do
-					Result := c.has_equivalent (x) or o.has_equivalent (x)
+					Result := c.has (x) or o.has (x)
 				end (?, old Current.twin, other))
 		end
 
@@ -167,8 +205,8 @@ feature -- Removal
 				iterator.remove
 			end
 		ensure
-			set_effect_has: old has_equivalent (v) implies set |=| old (set.removed (equivalent (v)))
-			set_effect_not_has: not old has_equivalent (v) implies set |=| old set
+			set_effect_has: old has (v) implies set |=| old (set.removed (equivalent_item (v)))
+			set_effect_not_has: not old has (v) implies set |=| old set
 		end
 
 	meet (other: V_SET [G])
@@ -190,9 +228,9 @@ feature -- Removal
 		ensure
 			set_effect_old: (old set).for_all (agent (x: G; o: V_SET [G]): BOOLEAN
 				do
-					Result := has_equivalent (x) xor not o.has_equivalent (x)
+					Result := has (x) = o.has (x)
 				end (?, other))
-			set_effect_new: set.for_all (agent (old Current.twin).has_equivalent)
+			set_effect_new: set.for_all (agent (old Current.twin).has)
 		end
 
 	subtract (other: V_SET [G])
@@ -211,9 +249,9 @@ feature -- Removal
 		ensure
 			set_effect_old: (old set).for_all (agent (x: G; o: V_SET [G]): BOOLEAN
 				do
-					Result := has_equivalent (x) or o.has_equivalent (x)
+					Result := has (x) or o.has (x)
 				end (?, other))
-			set_effect_new: set.for_all (agent (old Current.twin).has_equivalent)
+			set_effect_new: set.for_all (agent (old Current.twin).has)
 		end
 
 	sym_subtract (other: V_SET [G])
@@ -236,15 +274,15 @@ feature -- Removal
 		ensure
 			set_effect_old: (old set).for_all (agent (x: G; o: V_SET [G]): BOOLEAN
 				do
-					Result := not o.has_equivalent (x) implies has_equivalent (x)
+					Result := not o.has (x) implies has (x)
 				end (?, other))
 			set_effect_other: other.set.for_all (agent (x: G; c: V_SET [G]): BOOLEAN
 				do
-					Result := not c.has_equivalent (x) implies has_equivalent (x)
+					Result := not c.has (x) implies has (x)
 				end (?, old Current.twin))
 			set_effect_new: set.for_all (agent (x: G; c, o: V_SET [G]): BOOLEAN
 				do
-					Result := c.has_equivalent (x) or o.has_equivalent (x)
+					Result := c.has (x) or o.has (x)
 				end (?, old Current.twin, other))
 		end
 
@@ -271,41 +309,12 @@ feature -- Specification
 				Result := Result.extended (i.item)
 				i.forth
 			end
-		end
-
-	relation: MML_RELATION [G, G]
-			-- Element equivalence relation.
-		note
-			status: specification
-		do
-			Result := equivalence.relation
-		end
-
-	has_equivalent (x: G): BOOLEAN
-			-- Does `set' contain an element equivalent to `x' according to `relation'?
-		note
-			status: specification
-		do
-			Result := not (set * relation.image_of (x)).is_empty
 		ensure
-			definition: Result = not (set * relation.image_of (x)).is_empty
-		end
-
-	equivalent (x: G): G
-			-- Element of `set' equivalent to `x' according to `relation'.
-		note
-			status: specification
-		require
-			has_equivalent: has_equivalent (x)
-		do
-			Result := (set * relation.image_of (x)).any_item
-		ensure
-			Result = (set * relation.image_of (x)).any_item
+			exists: Result /= Void
 		end
 
 invariant
 	equivalence_exists: equivalence /= Void
-	-- equivalence_relation_definition: equivalence.relation |=| relation
 	bag_domain_definition: bag.domain |=| set
 	bag_definition: bag.is_constant (1)
 end

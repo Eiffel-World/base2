@@ -3,7 +3,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: map, relation
+	model: map, key_equivalence
 
 deferred class
 	V_MAP [K, V]
@@ -15,15 +15,45 @@ feature -- Access
 			has_key: has_key (k)
 		deferred
 		ensure
-			definition: Result = map [equivalent_key (k)]
+			definition: Result = map [key (k)]
 		end
 
-feature -- Measurement
-	has_key (k: K): BOOLEAN
-			-- Is any value associated with `k'?
+feature -- Search
+	key_equivalence: PREDICATE [ANY, TUPLE [K, K]]
+			-- Key equivalence relation.
 		deferred
+		end
+
+	equivalent (k1, k2: K): BOOLEAN
+			-- Are `k1' and `k2' equivalent according to `key_equivalence'?
+		note
+			status: specification
+		do
+			Result := key_equivalence.item ([k1, k2])
 		ensure
-			definition: Result = has_equivalent_key (k)
+			definition: Result = key_equivalence.item ([k1, k2])
+		end
+
+	has_key (k: K): BOOLEAN
+			-- Does `map' contain a key equivalent to `k' according to `key_equivalence'?
+		note
+			status: specification
+		do
+			Result := map.domain.exists (agent equivalent (k, ?))
+		ensure
+			definition: Result = map.domain.exists (agent equivalent (k, ?))
+		end
+
+	key (k: K): K
+			-- Key in `map' equivalent to `k' according to `relation'.
+		note
+			status: specification
+		require
+			has_key: has_key (k)
+		do
+			Result := (map.domain | agent equivalent (k, ?)).any_item
+		ensure
+			Result = (map.domain | agent equivalent (k, ?)).any_item
 		end
 
 feature -- Specification
@@ -32,34 +62,10 @@ feature -- Specification
 		note
 			status: specification
 		deferred
-		end
-
-	relation: MML_RELATION [K, K]
-			-- Key equivalence relation.
-		note
-			status: specification
-		deferred
-		end
-
-	has_equivalent_key (k: K): BOOLEAN
-			-- Does `map' contain a key equivalent to `k' according to `relation'?
-		note
-			status: specification
-		do
-			Result := not (map.domain * relation.image_of (k)).is_empty
 		ensure
-			definition: Result = not (map.domain * relation.image_of (k)).is_empty
+			exists: Result /= Void
 		end
 
-	equivalent_key (k: K): K
-			-- Key in `map' equivalent to `k' according to `relation'.
-		note
-			status: specification
-		require
-			has_equivalent: has_equivalent_key (k)
-		do
-			Result := (map.domain * relation.image_of (k)).any_item
-		ensure
-			Result = (map.domain * relation.image_of (k)).any_item
-		end
+invariant
+	key_equivalence_exists: key_equivalence /= Void
 end

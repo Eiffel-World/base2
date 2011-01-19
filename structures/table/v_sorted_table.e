@@ -13,8 +13,6 @@ class
 
 inherit
 	V_SET_TABLE [K, V]
-		rename
-			key_equivalence as key_order
 		redefine
 			copy
 		end
@@ -23,16 +21,19 @@ create
 	make
 
 feature {NONE} -- Initialization
-	make (o: V_TOTAL_ORDER [K])
+	make (o: PREDICATE [ANY, TUPLE [K, K]])
 			-- Create an empty table with key order `o'.
 		require
 			o_exists: o /= Void
 		do
-			key_order := o
-			create set.make (create {V_KEY_VALUE_ORDER [K, V]}.make (o))
+			key_less_order := o
+			create set.make (agent (kv1, kv2: TUPLE [key: K; value: V]; key_o: PREDICATE [ANY, TUPLE [K, K]]): BOOLEAN
+					do
+						Result := key_o.item ([kv1.key, kv2.key])
+					end (?, ?, o))
 		ensure
 			map_effect: map.is_empty
-			--- order_relation_effect: order_relation |=| o.order_relation
+			--- key_less_order_effect: key_less_order |=| o
 		end
 
 feature -- Initialization
@@ -40,7 +41,7 @@ feature -- Initialization
 			-- Initialize table by copying `key_order', and key-value pair from `other'.
 		do
 			if other /= Current then
-				key_order := other.key_order
+				key_less_order := other.key_less_order
 				if set = Void then
 					-- Copy used as a creation procedure
 					set := other.set.twin
@@ -50,30 +51,41 @@ feature -- Initialization
 			end
 		ensure then
 			map_effect: map |=| other.map
-			--- order_relation_effect: order_relation |=| other.order_relation
+			--- key_less_order_effect: key_less_order |=| other.key_less_order
 			other_map_effect: other.map |=| old other.map
-			--- other_order_relation_effect: other.order_relation |=| old other.order_relation
+			--- other_key_less_order_effect: other.key_less_order |=| old other.key_less_order
 		end
 
-feature -- Measurement
-	key_order: V_TOTAL_ORDER [K]
-			-- Order relation on keys.
+feature -- Search
+	key_less_order: PREDICATE [ANY, TUPLE [K, K]]
+			-- `<' order relation on keys.
+
+	less_than (k1, k2: K): BOOLEAN
+			-- Is `k1 < k2' according to `key_less_order'?
+		note
+			status: specification
+		do
+			Result := key_less_order.item ([k1, k2])
+		ensure
+			definition: Result = key_less_order.item ([k1, k2])
+		end
+
+	key_equivalence: PREDICATE [ANY, TUPLE [K, K]]
+			-- Key equivalence relation derived from `key_less_order'.	
+		do
+			Result := agent (x, y: K): BOOLEAN
+				do
+					Result := not less_than (x, y) and not less_than (y, x)
+				end
+		ensure then
+			--- definition: Result |=| agent (x, y: K): BOOLEAN -> not less_than (x, y) and not less_than (y, x) 	
+		end
 
 feature {V_SET_TABLE, V_SET_TABLE_ITERATOR} -- Implementation
 	set: V_SORTED_SET [TUPLE [key: K; value: V]]
 			-- Underlying set of key-value pairs.
 			-- Should not be reassigned after creation.
 
-feature -- Specification
-	order_relation: MML_RELATION [K, K]
-			-- Element equivalence relation.
-		note
-			status: specification
-		do
-			Result := key_order.order_relation
-		end
-
 invariant
-	--- relation_definition: relation |=| (order_relation * order_relation.inverse)
-	--- key_order_order_definition: key_order.order_relation |=| order_relation
+	key_less_order_exists: key_less_order /= Void
 end

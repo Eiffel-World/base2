@@ -21,7 +21,7 @@ feature -- Comparison
 				Result := v1 = v2
 			end
 		end
-	
+
 feature -- Framing
 	relevant (x: ANY): BOOLEAN
 			-- Always true.

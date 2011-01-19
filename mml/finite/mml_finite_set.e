@@ -258,6 +258,32 @@ feature -- Basic operations
 		end
 
 feature -- Quantification
+	filtered alias "|" (test: PREDICATE [ANY, TUPLE [G]]): MML_FINITE_SET [G]
+			-- Set of all elements that satisfy `test'.
+		require
+			test_exists: test /= Void
+			test_has_one_arg: test.open_count = 1
+		local
+			a: V_ARRAY [G]
+			i, j: INTEGER
+		do
+			create a.make (array.lower, array.upper)
+			from
+				i := array.lower
+				j := a.lower
+			until
+				i > array.upper
+			loop
+				if test.item ([array [i]]) then
+					a [j] := array [i]
+					j := j + 1
+				end
+				i := i + 1
+			end
+			a.resize (a.lower, j - 1)
+			create Result.make_from_array (a)
+		end
+
 	for_all (test: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 			-- Does `test' hold for all elements?
 		require

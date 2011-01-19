@@ -53,6 +53,8 @@ feature -- Specification
 			status: specification
 		do
 			Result := new_iterator.sequence
+		ensure
+			exists: Result /= Void
 		end
 
 invariant

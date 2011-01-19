@@ -172,6 +172,8 @@ feature -- Specification
 			status: specification
 		do
 			Result := at_start.sequence
+		ensure
+			exists: Result /= Void
 		end
 
 invariant

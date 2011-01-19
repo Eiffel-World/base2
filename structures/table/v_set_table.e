@@ -3,13 +3,16 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: map, relation
+	model: map, key_equivalence
 
 deferred class
 	V_SET_TABLE [K, V]
 
 inherit
 	V_TABLE [K, V]
+		redefine
+			has_key
+		end
 
 feature -- Measurement
 	count: INTEGER

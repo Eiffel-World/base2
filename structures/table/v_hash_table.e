@@ -6,7 +6,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: map, relation, hash_function
+	model: map, key_equivalence, key_hash
 
 class
 	V_HASH_TABLE [K, V]
@@ -18,47 +18,30 @@ inherit
 		end
 
 create
-	make_reference_equality,
-	make_object_equality,
 	make
 
 feature {NONE} -- Initialization
-	make_reference_equality (h: V_HASH [K])
-			-- Create an empty set with reference equality and hash function `h'.
-		require
-			h_exists: h /= Void
-		do
-			make (create {V_REFERENCE_EQUALITY [K]}, h)
-		ensure
-			map_effect: map.is_empty
-			relation_effect: create {MML_IDENTITY [K]} |=| relation
-			--- hash_function_effect: hash_function |=| h.map
-		end
-
-	make_object_equality (h: V_HASH [K])
-			-- Create an empty set with object equality and hash function `h'.
-		require
-			h_exists: h /= Void
-		do
-			make (create {V_OBJECT_EQUALITY [K]}, h)
-		ensure
-			map_effect: map.is_empty
-			--- relation_effect: relation |=| create {MML_AGENT_RELATION [K, K]}.such_that (agent (x, y: K): BOOLEAN do Result := x ~ y end)
-			--- hash_function_effect: hash_function |=| h.map
-		end
-
-	make (eq: V_EQUIVALENCE [K]; h: V_HASH [K])
-			-- Create an empty table with key equivalence `eq'.
+	make (eq: PREDICATE [ANY, TUPLE [K, K]]; h: FUNCTION [ANY, TUPLE [K], INTEGER])
+			-- Create an empty table with key equivalence `eq' and hash function `h'.
 		require
 			eq_exists: eq /= Void
+			h_exists: h /= Void
 		do
 			key_equivalence := eq
 			key_hash := h
-			create set.make (create {V_KEY_VALUE_EQUIVALENCE [K, V]}.make (eq), create {V_KEY_VALUE_HASH [K, V]}.make (h))
+			create set.make (
+				agent (kv1, kv2: TUPLE [key: K; value: V]; key_eq: PREDICATE [ANY, TUPLE [K, K]]): BOOLEAN
+					do
+						Result := key_eq.item ([kv1.key, kv2.key])
+					end (?, ?, eq),
+				agent (kv: TUPLE [key: K; value: V]; key_h: FUNCTION [ANY, TUPLE [K], INTEGER]): INTEGER
+					do
+						Result := key_h.item ([kv.key])
+					end (?, h))
 		ensure
 			map_effect: map.is_empty
-			--- relation_effect: relation |=| eq.relation
-			--- hash_function_effect: hash_function |=| h.map
+			--- key_equivalence_effect: key_equivalence |=| eq
+			--- key_hash_effect: key_hash |=| h
 		end
 
 feature -- Initialization
@@ -77,35 +60,35 @@ feature -- Initialization
 			end
 		ensure then
 			map_effect: map |=| other.map
-			--- relation_effect: relation |=| other.relation
-			--- hash_function_effect: hash_function |=| other.hash_function
-			map_effect: other.map |=| old other.map
-			--- relation_effect: other.relation |=| old other.relation
-			--- hash_function_effect: other.hash_function |=| old other.hash_function
+			--- key_equivalence_effect: key_equivalence |=| other.key_equivalence
+			--- key_hash_effect: key_hash |=| other.key_hash
+			other_map_effect: other.map |=| old other.map
+			--- other_key_equivalence_effect: other.key_equivalence |=| old other.key_equivalence
+			--- other_key_hash_effect: other.key_hash |=| old other.key_hash
 		end
 
-feature -- Measurement
-	key_equivalence: V_EQUIVALENCE [K]
+feature -- Search
+	key_equivalence: PREDICATE [ANY, TUPLE [K, K]]
 			-- Equivalence relation on keys.
 
-	key_hash: V_HASH [K]
+	key_hash: FUNCTION [ANY, TUPLE [K], INTEGER]
 			-- Hash function on keys.
+
+--	hash_code (k: K): INTEGER
+--			-- Hash code of `k' according to `key_hash'.
+--		note
+--			status: specification
+--		do
+--			Result := key_hash.item ([k])
+--		ensure
+--			definition: Result = key_hash.item ([k])
+--		end
 
 feature {V_SET_TABLE, V_SET_TABLE_ITERATOR} -- Implementation
 	set: V_HASH_SET [TUPLE [key: K; value: V]]
 			-- Underlying set of key-value pairs.
 			-- Should not be reassigned after creation.
 
-feature -- Specification
-	hash_function: MML_MAP [K, INTEGER]
-			-- Mathematical map from keys to hash codes.
-		note
-			status: specification
-		do
-			Result := key_hash.map
-		end
-
 invariant
 	key_hash_exists: key_hash /= Void
-	--- key_hash_map_definition: key_hash.map |=| hash_function
 end

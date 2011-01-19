@@ -250,6 +250,8 @@ feature -- Specification
 		note
 			status: specification
 		deferred
+		ensure
+			exists: Result /= Void
 		end
 
 invariant

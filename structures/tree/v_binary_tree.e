@@ -186,6 +186,8 @@ feature -- Specification
 			else
 				Result := at_root.map
 			end
+		ensure
+			exists: Result /= Void
 		end
 
 invariant

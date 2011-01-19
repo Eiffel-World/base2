@@ -11,11 +11,15 @@ class
 inherit
 	V_LIST_ITERATOR [G]
 		undefine
-			go_to,
+			go_to
+		redefine
 			copy
 		end
 
 	V_INDEX_ITERATOR [G]
+		redefine
+			copy
+		end
 
 create {V_ARRAYED_LIST}
 	make
@@ -32,6 +36,19 @@ feature {NONE} -- Initialization
 		ensure
 			target_effect: target = list
 			index_effect: index = i
+		end
+
+feature -- Initialization
+	copy (other: like Current)
+			-- Initialize with the same `target' and position as in `other'.
+		do
+			target := other.target
+			index := other.index
+		ensure then
+			target_effect: target = other.target
+			index_effect: index = other.index
+			other_target_effect: other.target = old other.target
+			other_index_effect: other.index = old other.index
 		end
 
 feature -- Access

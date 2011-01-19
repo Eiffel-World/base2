@@ -1,9 +1,9 @@
 note
-	description: "Finite maps where key-value pairs can be added and removed."
+	description: "Maps where key-value pairs can be added and removed."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: map, relation
+	model: map, key_equivalence
 
 deferred class
 	V_TABLE [K, V]
@@ -29,12 +29,6 @@ feature -- Access
 			Result := i.value
 		end
 
-feature -- Measurement
-	key_equivalence: V_EQUIVALENCE [K]
-			-- Equivalence relation on keys.
-		deferred
-		end
-
 feature -- Iteration
 	new_iterator: V_TABLE_ITERATOR [K, V]
 			-- New iterator pointing to a position in the table, from which it can traverse all elements by going `forth'.
@@ -46,18 +40,18 @@ feature -- Iteration
 		deferred
 		ensure
 			target_definition: Result.target = Current
-			index_definition_found: has_equivalent_key (k) implies relation [Result.key_sequence [Result.index], k]
-			index_definition_not_found: not has_equivalent_key (k) implies Result.index = Result.key_sequence.count + 1
+			index_definition_found: has_key (k) implies equivalent (Result.key_sequence [Result.index], k)
+			index_definition_not_found: not has_key (k) implies Result.index = Result.key_sequence.count + 1
 		end
 
 feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
-			-- Does `other' have the same key equivalence relation,
-			-- contain the same set of keys and associate them with then same values?
+			-- Does `other' have equivalent set of keys (with respect to both `key_equivalence' and `other.key_equivalence'),
+			-- and associate them with then same values?
 		local
 			i, j: V_TABLE_ITERATOR [K, V]
 		do
-			if key_equivalence ~ other.key_equivalence and count = other.count then
+			if count = other.count then
 				from
 					Result := True
 					i := new_iterator
@@ -66,10 +60,16 @@ feature -- Comparison
 					i.after or not Result
 				loop
 					j.search_key (i.key)
-					Result := not j.after and then i.value = j.value
+					Result := not j.after and then (equivalent (i.key, j.key) and i.value = j.value)
 					i.forth
 				end
 			end
+		ensure then
+			definition: Result = (map.count = other.map.count and
+				map.domain.for_all (agent (k: K; o: like Current): BOOLEAN
+					do
+						Result := o.has_key (k) and then (equivalent (k, o.key (k)) and map [k] = o.map [o.key (k)])
+					end (?, other)))
 		end
 
 feature -- Replacement
@@ -105,8 +105,8 @@ feature -- Extension
 				i.put (v)
 			end
 		ensure
-			map_effect_has: old has_equivalent_key (k) implies map |=| old map.replaced_at (equivalent_key (k), v)
-			map_effect_not_has: not old has_equivalent_key (k) implies map |=| old map.extended (k, v)
+			map_effect_has: old has_key (k) implies map |=| old map.replaced_at (key (k), v)
+			map_effect_not_has: not old has_key (k) implies map |=| old map.extended (k, v)
 		end
 
 feature -- Removal
@@ -116,7 +116,7 @@ feature -- Removal
 			has_key: has_key (k)
 		deferred
 		ensure
-			map_effect: map |=| old map.removed (equivalent_key (k))
+			map_effect: map |=| old map.removed (key (k))
 		end
 
 feature -- Specification
@@ -138,20 +138,10 @@ feature -- Specification
 			end
 		end
 
-	relation: MML_RELATION [K, K]
-			-- Key equivalence relation.
-		note
-			status: specification
-		do
-			Result := key_equivalence.relation
-		end
-
 invariant
-	key_equivalence_exists: key_equivalence /= Void
 	bag_domain_definition: bag.domain |=| map.range
 	bag_definition: bag.domain.for_all (agent (x: V): BOOLEAN
 		do
 			Result := bag [x] = map.inverse.image_of (x).count
 		end)
-	--- key_equivalence_relation_definition: key_equivalence.relation |=| relation
 end

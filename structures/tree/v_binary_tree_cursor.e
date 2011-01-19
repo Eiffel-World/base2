@@ -223,6 +223,8 @@ feature -- Specification
 					cell := cell.parent
 				end
 			end
+		ensure
+			exists: Result /= Void
 		end
 
 	map: MML_FINITE_MAP [MML_BIT_VECTOR, G]
@@ -243,9 +245,13 @@ feature -- Specification
 				Result := Result + map
 				up
 			end
+		ensure
+			exists: Result /= Void
+			-- ToDo: add definition			
 		end
 
 invariant
+	target_exists: target /= Void
 	item_definition: target.map.domain [path] implies item = target.map [path]
 	off_definition: off = not target.map.domain [path]
 	is_root_definition: is_root = (path |=| {MML_BIT_VECTOR} [True])

@@ -37,8 +37,8 @@ feature -- Cursor movement
 			-- (Use `target.key_equivalence'.)
 		deferred
 		ensure
-			index_effect_found: target.has_equivalent_key (k) implies target.relation [key_sequence [index], k]
-			index_effect_not_found: not target.has_equivalent_key (k) implies index = key_sequence.count + 1
+			index_effect_found: target.has_key (k) implies target.equivalent (key_sequence [index], k)
+			index_effect_not_found: not target.has_key (k) implies index = key_sequence.count + 1
 		end
 
 feature -- Removal
@@ -59,6 +59,8 @@ feature -- Specification
 		note
 			status: specification
 		deferred
+		ensure
+			exists: Result /= Void
 		end
 
 invariant
