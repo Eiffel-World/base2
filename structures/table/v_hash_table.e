@@ -26,6 +26,8 @@ feature {NONE} -- Initialization
 		require
 			eq_exists: eq /= Void
 			h_exists: h /= Void
+			--- eq_is_equivalence: is_equivalence (eq)
+			--- h_non_negative: forall x: K :: h (x) >= 0
 		do
 			key_equivalence := eq
 			key_hash := h
@@ -91,4 +93,5 @@ feature {V_SET_TABLE, V_SET_TABLE_ITERATOR} -- Implementation
 
 invariant
 	key_hash_exists: key_hash /= Void
+	--- key_hash_non_negative: forall x: K :: key_hash (x) >= 0
 end

@@ -74,7 +74,7 @@ feature -- Search
 				it.forth
 			end
 		ensure
-			definition: Result = (bag.domain * {MML_AGENT_SET [G]} [p]).count
+			definition: Result = (bag.domain | p).count
 		end
 
 	exists (p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
@@ -131,7 +131,7 @@ feature -- Removal
 		end
 
 feature -- Specification
-	bag: MML_FINITE_BAG [G]
+	bag: MML_BAG [G]
 			-- Bag of elements.
 		note
 			status: specification

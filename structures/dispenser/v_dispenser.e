@@ -47,7 +47,7 @@ feature -- Removal
 		end
 
 feature -- Specification
-	sequence: MML_FINITE_SEQUENCE [G]
+	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements in the order of access.
 		note
 			status: specification

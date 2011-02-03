@@ -8,9 +8,6 @@ note
 deferred class
 	V_OUTPUT_STREAM [G]
 
-inherit
-	MML_SPECIFICATION
-
 feature -- Status report
 	off: BOOLEAN
 			-- Is current position off scope?
@@ -65,5 +62,16 @@ feature -- Replacement
 		ensure
 			off_effect: relevant (off)
 			input_off_effect: relevant (input.off)
+		end
+
+feature -- Specification
+	relevant (x: ANY): BOOLEAN
+			-- Always true.
+		note
+			status: specification
+		do
+			Result := True
+		ensure
+			definition: Result
 		end
 end

@@ -151,7 +151,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Specification
-	sequence: MML_FINITE_SEQUENCE [G]
+	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements.
 		note
 			status: specification
@@ -174,7 +174,7 @@ feature -- Specification
 			after := old_after
 		end
 
-	path_sequence: MML_FINITE_SEQUENCE [MML_BIT_VECTOR]
+	path_sequence: MML_SEQUENCE [MML_SEQUENCE [BOOLEAN]]
 			-- Sequence of paths in `target.map' in order of traversal.
 		note
 			status: specification
@@ -184,7 +184,7 @@ feature -- Specification
 			definition: Result |=| subtree_path_sequence (True)
 		end
 
-	subtree_path_sequence (root: MML_BIT_VECTOR): MML_FINITE_SEQUENCE [MML_BIT_VECTOR]
+	subtree_path_sequence (root: MML_SEQUENCE [BOOLEAN]): MML_SEQUENCE [MML_SEQUENCE [BOOLEAN]]
 			-- Sequence of paths in subtree of `target.map' strating from `root' in order of traversal.
 		note
 			status: specification
@@ -195,6 +195,6 @@ feature -- Specification
 
 invariant
 	sequence_definition: sequence |=| target.map.sequence_image (path_sequence)
-	index_definition_not_after: not after implies index = path_sequence.last_index_of (path)
+	index_definition_not_after: not after implies index = path_sequence.inverse.image_of (path).any_item
 	index_definition_after: after implies index = target.map.count + 1
 end

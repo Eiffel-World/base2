@@ -106,7 +106,7 @@ feature -- Replacement
 		end
 
 feature -- Specification
-	sequence: MML_FINITE_SEQUENCE [G]
+	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements.
 		note
 			status: specification
@@ -128,6 +128,6 @@ invariant
 	sequence_domain_definition: sequence.count = target.map.count
 	sequence_definition: sequence.domain.for_all (agent (i: INTEGER): BOOLEAN
 		do
-			Result := sequence [i] = target.map [target.map.domain.lower + i - 1]
+			Result := sequence [i] = target.map [target.lower + i - 1]
 		end)
 end

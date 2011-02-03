@@ -245,7 +245,7 @@ feature -- Cursor movement
 		end
 
 feature -- Specification
-	sequence: MML_FINITE_SEQUENCE [G]
+	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements	in `target'.
 		note
 			status: specification

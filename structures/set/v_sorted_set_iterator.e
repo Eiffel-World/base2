@@ -76,7 +76,7 @@ feature -- Cursor movement
 			until
 				active = Void or else target.equivalent (v, item)
 			loop
-				if target.less_than (v, item) then
+				if target.less_equal (v, item) then
 					left
 				else
 					right
@@ -92,7 +92,7 @@ feature -- Cursor movement
 			-- If `v' does not occur, move `off'.
 			-- (Use reference equality.)
 		do
-			if before or (active /= Void and then target.less_order.item ([item, v])) then
+			if before or (active /= Void and then (target.less_equal (item, v) and not target.less_equal (v, item))) then
 				search (v)
 			end
 			if active /= Void and then v /= item then
@@ -105,7 +105,7 @@ feature -- Cursor movement
 			-- If `v' does not occur, move `before'.
 			-- (Use reference equality.)
 		do
-			if after or (not off and then target.less_order.item ([v, item])) then
+			if after or (not off and then (target.less_equal (v, item) and not target.less_equal (item, v))) then
 				search (v)
 			end
 			if after or (active /= Void and then v /= item) then

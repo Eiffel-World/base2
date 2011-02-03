@@ -8,9 +8,6 @@ note
 deferred class
 	V_INPUT_STREAM [G]
 
-inherit
-	MML_SPECIFICATION
-
 feature -- Access
 	item: G
 			-- Item at current position.
@@ -66,5 +63,16 @@ feature -- Cursor movement
 			end
 		ensure
 			off_item_effect: off or else pred.item ([item])
+		end
+
+feature -- Specification
+	relevant (x: ANY): BOOLEAN
+			-- Always true.
+		note
+			status: specification
+		do
+			Result := True
+		ensure
+			definition: Result
 		end
 end

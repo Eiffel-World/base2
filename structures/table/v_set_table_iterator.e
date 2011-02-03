@@ -156,7 +156,7 @@ feature -- Replacement
 		do
 			set_iterator.item.value := v
 		ensure then
-			target_map_effect: target.map |=| old target.map.replaced_at (key_sequence [index], v)
+			target_map_effect: target.map |=| old target.map.updated (key_sequence [index], v)
 		end
 
 feature -- Removal
@@ -171,12 +171,12 @@ feature {V_SET_TABLE_ITERATOR} -- Implementation
 			-- Iterator over the underlying set.
 
 feature -- Specification
-	key_sequence: MML_FINITE_SEQUENCE [K]
+	key_sequence: MML_SEQUENCE [K]
 			-- Sequence of keys.
 		note
 			status: specification
 		local
-			pair_sequence: MML_FINITE_SEQUENCE [TUPLE [key: K; value: V]]
+			pair_sequence: MML_SEQUENCE [TUPLE [key: K; value: V]]
 			i: INTEGER
 		do
 			create Result.empty
@@ -191,12 +191,12 @@ feature -- Specification
 			end
 		end
 
-	value_sequence: MML_FINITE_SEQUENCE [V]
+	value_sequence: MML_SEQUENCE [V]
 			-- Sequence of values.
 		note
 			status: specification
 		local
-			pair_sequence: MML_FINITE_SEQUENCE [TUPLE [key: K; value: V]]
+			pair_sequence: MML_SEQUENCE [TUPLE [key: K; value: V]]
 			i: INTEGER
 		do
 			create Result.empty

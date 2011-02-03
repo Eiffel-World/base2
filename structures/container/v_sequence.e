@@ -22,7 +22,10 @@ inherit
 			map
 		end
 
+inherit {NONE}
 	V_EQUALITY [INTEGER]
+
+	V_ORDER [INTEGER]
 
 feature -- Access		
 	first: G
@@ -44,11 +47,15 @@ feature -- Access
 feature -- Measurement
 	lower: INTEGER
 			-- Lower bound of index interval.
+		note
+			status: specification
 		deferred
 		end
 
 	upper: INTEGER
 			-- Upper bound of index interval.
+		note
+			status: specification
 		deferred
 		end
 
@@ -74,7 +81,7 @@ feature -- Search
 			end
 		ensure
 			definition_not_has: not map.has (v) implies not map.domain [Result]
-			definition_has: map.has (v) implies Result = map.inverse.image_of (v).lower
+			definition_has: map.has (v) implies Result = map.inverse.image_of (v).extremum (agent less_equal)
 		end
 
 	index_of_from (v: G; i: INTEGER): INTEGER
@@ -100,9 +107,9 @@ feature -- Search
 				Result := j
 			end
 		ensure
-			definition_not_has: not (map | {MML_INTEGER_SET} [[i, map.domain.upper]]).has (v) implies not map.domain [Result]
-			definition_has: (map | {MML_INTEGER_SET} [[i, map.domain.upper]]).has (v) implies
-				Result = (map | {MML_INTEGER_SET} [[i, map.domain.upper]]).inverse.image_of (v).lower
+			definition_not_has: not (map | {MML_INTERVAL} [[i, upper]]).has (v) implies not map.domain [Result]
+			definition_has: (map | {MML_INTERVAL} [[i, upper]]).has (v) implies
+				Result = (map | {MML_INTERVAL} [[i, upper]]).inverse.image_of (v).extremum (agent less_equal)
 		end
 
 	index_that (p: PREDICATE [ANY, TUPLE [G]]): INTEGER
@@ -117,7 +124,7 @@ feature -- Search
 			end
 		ensure
 			definition_not_has: not map.range.exists (p) implies not map.domain [Result]
-			definition_has: map.range.exists (p) implies Result = map.inverse.image (map.range | p).lower
+			definition_has: map.range.exists (p) implies Result = map.inverse.image (map.range | p).extremum (agent less_equal)
 		end
 
 	index_that_from (p: PREDICATE [ANY, TUPLE [G]]; i: INTEGER): INTEGER
@@ -145,9 +152,9 @@ feature -- Search
 				Result := j
 			end
 		ensure
-			definition_not_has: not (map | {MML_INTEGER_SET} [[i, map.domain.upper]]).range.exists (p) implies not map.domain [Result]
-			definition_has: (map | {MML_INTEGER_SET} [[i, map.domain.upper]]).range.exists (p) implies
-				Result = (map | {MML_INTEGER_SET} [[i, map.domain.upper]]).inverse.image (map.range | p).lower
+			definition_not_has: not (map | {MML_INTERVAL} [[i, upper]]).range.exists (p) implies not map.domain [Result]
+			definition_has: (map | {MML_INTERVAL} [[i, upper]]).range.exists (p) implies
+				Result = (map | {MML_INTERVAL} [[i, upper]]).inverse.image (map.range | p).extremum (agent less_equal)
 		end
 
 	key_equivalence: PREDICATE [ANY, TUPLE [INTEGER, INTEGER]]
@@ -164,9 +171,9 @@ feature -- Iteration
 		do
 			Result := at (lower)
 		ensure then
-			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_FINITE_SEQUENCE [G]): BOOLEAN
+			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_SEQUENCE [G]): BOOLEAN
 				do
-					Result := s [j] = map [map.domain.lower + j - 1]
+					Result := s [j] = map [lower + j - 1]
 				end (?, Result.sequence))
 		end
 
@@ -176,10 +183,10 @@ feature -- Iteration
 			Result := at (upper)
 		ensure
 			target_definition: Result.target = Current
-			sequence_domain_definition: Result.sequence.count = bag.count
-			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_FINITE_SEQUENCE [G]): BOOLEAN
+			sequence_domain_definition: Result.sequence.count = map.count
+			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_SEQUENCE [G]): BOOLEAN
 				do
-					Result := s [j] = map [map.domain.lower + j - 1]
+					Result := s [j] = map [lower + j - 1]
 				end (?, Result.sequence))
 			index_definition: Result.index = map.count
 		end
@@ -192,11 +199,11 @@ feature -- Iteration
 		ensure
 			target_definition: Result.target = Current
 			sequence_domain_definition: Result.sequence.count = bag.count
-			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_FINITE_SEQUENCE [G]): BOOLEAN
+			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_SEQUENCE [G]): BOOLEAN
 				do
-					Result := s [j] = map [map.domain.lower + j - 1]
+					Result := s [j] = map [lower + j - 1]
 				end (?, Result.sequence))
-			index_definition_nonempty: not map.is_empty implies Result.index = i - map.domain.lower + 1
+			index_definition_nonempty: not map.is_empty implies Result.index = i - lower + 1
 			index_definition_empty: map.is_empty implies Result.index = i
 		end
 
@@ -223,8 +230,8 @@ feature -- Replacement
 			end
 		ensure
 			map_domain_effect: map.domain |=| old map.domain
-			map_changed_effect: (map | {MML_INTEGER_SET}[[l, u]]).is_constant (v)
-			map_unchanged_effect: (map | (map.domain - {MML_INTEGER_SET}[[l, u]])) |=| old (map | (map.domain - {MML_INTEGER_SET}[[l, u]]))
+			map_changed_effect: (map | {MML_INTERVAL}[[l, u]]).is_constant (v)
+			map_unchanged_effect: (map | (map.domain - {MML_INTERVAL}[[l, u]])) |=| old (map | (map.domain - {MML_INTERVAL}[[l, u]]))
 		end
 
 	clear (l, u: INTEGER)
@@ -237,8 +244,8 @@ feature -- Replacement
 			fill (({G}).default, l, u)
 		ensure
 			map_domain_effect: map.domain |=| old map.domain
-			map_changed_effect: (map | {MML_INTEGER_SET}[[l, u]]).is_constant (({G}).default)
-			map_unchanged_effect: (map | (map.domain - {MML_INTEGER_SET}[[l, u]])) |=| old (map | (map.domain - {MML_INTEGER_SET}[[l, u]]))
+			map_changed_effect: (map | {MML_INTERVAL}[[l, u]]).is_constant (({G}).default)
+			map_unchanged_effect: (map | (map.domain - {MML_INTERVAL}[[l, u]])) |=| old (map | (map.domain - {MML_INTERVAL}[[l, u]]))
 		end
 
 	subcopy (other: V_SEQUENCE [G]; other_first, other_last, index: INTEGER)
@@ -263,17 +270,18 @@ feature -- Replacement
 			end
 		ensure
 			map_domain_effect: map.domain |=| old map.domain
-			map_changed_effect: {MML_INTEGER_SET} [[index, index + other_last - other_first]].for_all (agent (i: INTEGER; other_map: MML_FINITE_MAP [INTEGER, G]; f, of: INTEGER): BOOLEAN
-				do
-					Result := map [i] = other_map [i - f + of]
-				end (?, old other.map, index, other_first))
-			map_unchanged_effect: (map | (map.domain - {MML_INTEGER_SET} [[index, index + other_last - other_first]])) |=|
-				old (map | (map.domain - {MML_INTEGER_SET} [[index, index + other_last - other_first]]))
+			map_changed_effect: {MML_INTERVAL} [[index, index + other_last - other_first]].for_all (
+				agent (i: INTEGER; other_map: MML_MAP [INTEGER, G]; f, of: INTEGER): BOOLEAN
+					do
+						Result := map [i] = other_map [i - f + of]
+					end (?, old other.map, index, other_first))
+			map_unchanged_effect: (map | (map.domain - {MML_INTERVAL} [[index, index + other_last - other_first]])) |=|
+				old (map | (map.domain - {MML_INTERVAL} [[index, index + other_last - other_first]]))
 			other_map_effect: other /= Current implies other.map |=| old other.map
 		end
 
 feature -- Specification
-	map: MML_FINITE_MAP [INTEGER, G]
+	map: MML_MAP [INTEGER, G]
 			-- Map of indexes to values.
 		note
 			status: specification
@@ -288,23 +296,24 @@ feature -- Specification
 			until
 				it.after
 			loop
-				Result := Result.extended (i, it.item)
+				Result := Result.updated (i, it.item)
 				it.forth
 				i := i + 1
 			end
 		end
 
 invariant
-	indexes_in_interval: map.domain.is_interval
-	lower_definition_nonempty: not map.is_empty implies lower = map.domain.lower
+	lower_definition_nonempty: not map.is_empty implies lower = map.domain.extremum (agent less_equal)
 	lower_definition_empty: map.is_empty implies lower = 1
-	upper_definition_nonempty: not map.is_empty implies upper = map.domain.upper
+	upper_definition_nonempty: not map.is_empty implies upper = map.domain.extremum (agent greater_equal)
 	upper_definition_empty: map.is_empty implies upper = 0
 	first_definition: not map.is_empty implies first = map [lower]
 	last_definition: not map.is_empty implies last = map [upper]
+	indexes_in_interval: map.domain |=| {MML_INTERVAL} [[lower, upper]]
 	bag_domain_definition: bag.domain |=| map.range
 	bag_definition: bag.domain.for_all (agent (x: G): BOOLEAN
 		do
 			Result := bag [x] = map.inverse.image_of (x).count
 		end)
+	--- key_equivalence_definition: key_equivalence |=| agent reference_equal
 end

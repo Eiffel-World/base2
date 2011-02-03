@@ -58,8 +58,8 @@ feature -- Search
 			status: specification
 		require
 			has: has (v)
-		local
-			i: V_SET_ITERATOR [G]
+--		local
+--			i: V_SET_ITERATOR [G]
 		do
 --			i := new_iterator
 --			i.search (v)
@@ -293,7 +293,7 @@ feature {V_SET} -- Implementation
 		end
 
 feature -- Specification
-	set: MML_FINITE_SET [G]
+	set: MML_SET [G]
 			-- Set of elements.
 		note
 			status: specification
@@ -313,8 +313,21 @@ feature -- Specification
 			exists: Result /= Void
 		end
 
+---	is_equivalence (r: PREDICATE [ANY, TUPLE [G, G]])
+			-- Is `r' an equivalence relation?
+---		note
+---			status: specification
+---		deferred
+---		ensure
+			--- definition: Result = (
+			---	(forall x: K :: r (x, x)) and
+			--- (forall x, y: K :: r (x, y) = r (y, x)) and
+			--- (forall x, y, z: K :: r (x, y) and r (y, z) implies r (x, z))
+---		end		
+
 invariant
 	equivalence_exists: equivalence /= Void
 	bag_domain_definition: bag.domain |=| set
 	bag_definition: bag.is_constant (1)
+	--- is_equivalence: is_equivalence (equivalence)
 end

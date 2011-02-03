@@ -166,7 +166,7 @@ feature -- Removal
 		end
 
 feature -- Specification
-	sequence: MML_FINITE_SEQUENCE [G]
+	sequence: MML_SEQUENCE [G]
 			-- Sequence of list's elements.
 		note
 			status: specification

@@ -21,7 +21,45 @@ feature -- Basic operations
 			end
 		ensure
 			definition_non_void: x /= Void and y /= Void implies Result = (x < y)
-			definition_x_void: x = Void or y = Void implies Result = (x = Void and y /= Void)
+			definition_void: x = Void or y = Void implies Result = (x = Void and y /= Void)
 		end
 
+	less_equal (x, y: G): BOOLEAN
+			-- Is `x' <= `y'?.
+		do
+			if x /= Void and y /= Void then
+				Result := x <= y
+			else
+				Result := x = Void
+			end
+		ensure
+			definition_non_void: x /= Void and y /= Void implies Result = (x <= y)
+			definition_void: x = Void or y = Void implies Result = (x = Void)
+		end
+
+	greater (x, y: G): BOOLEAN
+			-- Is `x' > `y'?.
+		do
+			if x /= Void and y /= Void then
+				Result := x > y
+			else
+				Result := x /= Void and y = Void
+			end
+		ensure
+			definition_non_void: x /= Void and y /= Void implies Result = (x > y)
+			definition_void: x = Void or y = Void implies Result = (x /= Void and y = Void)
+		end
+
+	greater_equal (x, y: G): BOOLEAN
+			-- Is `x' >= `y'?.
+		do
+			if x /= Void and y /= Void then
+				Result := x >= y
+			else
+				Result := y = Void
+			end
+		ensure
+			definition_non_void: x /= Void and y /= Void implies Result = (x >= y)
+			definition_void: x = Void or y = Void implies Result = (y = Void)
+		end
 end

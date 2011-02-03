@@ -54,7 +54,7 @@ feature -- Removal
 		end
 
 feature -- Specification
-	key_sequence: MML_FINITE_SEQUENCE [K]
+	key_sequence: MML_SEQUENCE [K]
 			-- Sequence of keys.
 		note
 			status: specification

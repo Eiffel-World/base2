@@ -1,20 +1,25 @@
 Structures:
 
-- Use agents instead of functor classes
 - Provide nice output for containers
 - RANDOM and STANDARD_INPUT streams
-- Should MAP inherit from CONTAINER? Should there be non-updatable MAP?
+- Should MAP inherit from CONTAINER?
 
 MML:
 
-- Replace infinite models with agents
-- Fix INTEGER_SET
 - Efficient implementation
 
 Overall:
 
 - New loop syntax?
 - Void safety?
+
+Disadvantages of agents vs. infinite models
+
+- Had to introduce "filtered" instead of "intersection" with infinite set
+(but user interface is better)
+- Cannot express an image of a finite set under infinite map
+(because of generic params)
+- Cannot have "compliment" for sets and relations 
 
 Known bugs:
 

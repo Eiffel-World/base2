@@ -126,7 +126,7 @@ feature -- Cursor movement
 		do
 			active := target.root
 		ensure
-			path_effect_non_empty: not target.map.is_empty implies path |=| {MML_BIT_VECTOR} [True]
+			path_effect_non_empty: not target.map.is_empty implies path |=| {MML_SEQUENCE [BOOLEAN]} [True]
 			path_effect_empty: target.map.is_empty implies path.is_empty
 		end
 
@@ -139,7 +139,7 @@ feature -- Extension
 		do
 			target.extend_left (v, active)
 		ensure
-			target_map_effect: target.map |=| old target.map.extended (path.extended (False), v)
+			target_map_effect: target.map |=| old target.map.updated (path.extended (False), v)
 			path_effect: path |=| old path
 		end
 
@@ -151,7 +151,7 @@ feature -- Extension
 		do
 			target.extend_right (v, active)
 		ensure
-			target_map_effect: target.map |=| old target.map.extended (path.extended (True), v)
+			target_map_effect: target.map |=| old target.map.updated (path.extended (True), v)
 			path_effect: path |=| old path
 		end
 
@@ -165,13 +165,13 @@ feature -- Removal
 			target.remove (active)
 			active := Void
 		ensure
-			target_map_domain_effect: (old target.map.domain).for_all (agent (x, p: MML_BIT_VECTOR): BOOLEAN
+			target_map_domain_effect: (old target.map.domain).for_all (agent (x, p: MML_SEQUENCE [BOOLEAN]): BOOLEAN
 				do
 					Result := (not p.is_prefix_of (x) implies target.map.domain [x]) and
 						((p.is_prefix_of (x) and not (x |=| p)) implies target.map.domain [x.removed_at (p.count + 1)])
 				end (?, old path))
 			target_map_domain_constraint: target.map.count = old target.map.count - 1
-			target_map_effect: (old target.map.domain).for_all (agent (x, p: MML_BIT_VECTOR; m: MML_FINITE_MAP [MML_BIT_VECTOR, G]): BOOLEAN
+			target_map_effect: (old target.map.domain).for_all (agent (x, p: MML_SEQUENCE [BOOLEAN]; m: MML_MAP [MML_SEQUENCE [BOOLEAN], G]): BOOLEAN
 				do
 					Result := (not p.is_prefix_of (x) implies target.map [x] = m [x]) and
 					((p.is_prefix_of (x) and not (x |=| p)) implies target.map [x.removed_at (p.count + 1)] = m [x])
@@ -201,7 +201,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Specification
-	path: MML_BIT_VECTOR
+	path: MML_SEQUENCE [BOOLEAN]
 			-- Path from root to current node.
 		note
 			status: specification
@@ -227,7 +227,7 @@ feature -- Specification
 			exists: Result /= Void
 		end
 
-	map: MML_FINITE_MAP [MML_BIT_VECTOR, G]
+	map: MML_MAP [MML_SEQUENCE [BOOLEAN], G]
 			-- Map of paths to values in the subtree starting from current node.
 		note
 			status: specification
@@ -254,7 +254,7 @@ invariant
 	target_exists: target /= Void
 	item_definition: target.map.domain [path] implies item = target.map [path]
 	off_definition: off = not target.map.domain [path]
-	is_root_definition: is_root = (path |=| {MML_BIT_VECTOR} [True])
+	is_root_definition: is_root = (path |=| {MML_SEQUENCE [BOOLEAN]} [True])
 	is_leaf_definition: target.map.domain [path] implies
 		is_leaf = (not target.map.domain [path.extended (True)] and not target.map.domain [path.extended (False)])
 	has_left_definition: target.map.domain [path] implies has_left = target.map.domain [path.extended (False)]

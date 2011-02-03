@@ -41,7 +41,7 @@ feature {NONE} -- Initialization
 			end
 			create area.make_filled (({G}).default, upper - lower + 1)
 		ensure
-			map_domain_effect: map.domain |=| {MML_INTEGER_SET}[[l, u]]
+			map_domain_effect: map.domain |=| {MML_INTERVAL}[[l, u]]
 			map_effect: map.is_constant (({G}).default)
 		end
 
@@ -59,7 +59,7 @@ feature {NONE} -- Initialization
 			end
 			create area.make_filled (v, u - l + 1)
 		ensure
-			map_domain_effect: map.domain |=| {MML_INTEGER_SET}[[l, u]]
+			map_domain_effect: map.domain |=| {MML_INTERVAL}[[l, u]]
 			map_effect: map.is_constant (v)
 		end
 
@@ -99,7 +99,7 @@ feature -- Access
 			create Result.make (l, u)
 			Result.subcopy (Current, l, u, Result.lower)
 		ensure
-			map_domain_definition: Result.map.domain |=| {MML_INTEGER_SET}[[l, u]]
+			map_domain_definition: Result.map.domain |=| {MML_INTERVAL}[[l, u]]
 			map_definition: Result.map.domain.for_all (agent (i: INTEGER; r: V_ARRAY [G]): BOOLEAN
 				do
 					Result := r.map [i] = map [i]
@@ -202,7 +202,7 @@ feature -- Resizing
 				upper := u
 			end
 		ensure
-			map_domain_effect: map.domain |=| {MML_INTEGER_SET} [[l, u]]
+			map_domain_effect: map.domain |=| {MML_INTERVAL} [[l, u]]
 			map_old_effect: (map | (map.domain * old map.domain)) |=| (old map | (map.domain * old map.domain))
 			map_new_effect: (map | (map.domain - old map.domain)).is_constant (({G}).default)
 		end
@@ -219,7 +219,7 @@ feature -- Resizing
 				resize (lower, i)
 			end
 		ensure
-			map_domain_effect: map.domain |=| {MML_INTEGER_SET} [[i.min (old map.domain.lower), i.max (old map.domain.upper)]]
+			map_domain_effect: map.domain |=| {MML_INTERVAL} [[i.min (old lower), i.max (old upper)]]
 			map_old_effect: (map | (map.domain * old map.domain)) |=| (old map | (map.domain * old map.domain))
 			map_new_effect: (map | (map.domain - old map.domain)).is_constant (({G}).default)
 		end
@@ -231,10 +231,10 @@ feature -- Resizing
 			include (i)
 			put (v, i)
 		ensure
-			map_domain_effect: map.domain |=| {MML_INTEGER_SET} [[i.min (old map.domain.lower), i.max (old map.domain.upper)]]
+			map_domain_effect: map.domain |=| {MML_INTERVAL} [[i.min (old lower), i.max (old upper)]]
 			map_i_effect: map [i] = v
-			map_old_effect: (map | (map.domain * old map.domain - {MML_INTEGER_SET}[i])) |=| (old map | (map.domain * old map.domain - {MML_INTEGER_SET}[i]))
-			map_new_effect: (map | (map.domain - old map.domain - {MML_INTEGER_SET}[i])).is_constant (({G}).default)
+			map_old_effect: (map | (map.domain * old map.domain - {MML_INTERVAL}[i])) |=| (old map | (map.domain * old map.domain - {MML_INTERVAL}[i]))
+			map_new_effect: (map | (map.domain - old map.domain - {MML_INTERVAL}[i])).is_constant (({G}).default)
 		end
 
 	wipe_out

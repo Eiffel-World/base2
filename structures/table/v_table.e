@@ -89,7 +89,7 @@ feature -- Extension
 			fresh_key: not has_key (k)
 		deferred
 		ensure
-			map_effect: map |=| old map.extended (k, v)
+			map_effect: map |=| old map.updated (k, v)
 		end
 
 	force (v: V; k: K)
@@ -105,8 +105,8 @@ feature -- Extension
 				i.put (v)
 			end
 		ensure
-			map_effect_has: old has_key (k) implies map |=| old map.replaced_at (key (k), v)
-			map_effect_not_has: not old has_key (k) implies map |=| old map.extended (k, v)
+			map_effect_has: old has_key (k) implies map |=| old map.updated (key (k), v)
+			map_effect_not_has: not old has_key (k) implies map |=| old map.updated (k, v)
 		end
 
 feature -- Removal
@@ -120,7 +120,7 @@ feature -- Removal
 		end
 
 feature -- Specification
-	map: MML_FINITE_MAP [K, V]
+	map: MML_MAP [K, V]
 			-- Map of keys to values.
 		note
 			status: specification
@@ -133,7 +133,7 @@ feature -- Specification
 			until
 				it.after
 			loop
-				Result := Result.extended (it.key, it.value)
+				Result := Result.updated (it.key, it.value)
 				it.forth
 			end
 		end

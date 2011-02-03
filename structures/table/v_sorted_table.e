@@ -6,7 +6,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: map, order_relation
+	model: map, order
 
 class
 	V_SORTED_TABLE [K, V]
@@ -25,8 +25,9 @@ feature {NONE} -- Initialization
 			-- Create an empty table with key order `o'.
 		require
 			o_exists: o /= Void
+			--- is_total_order: is_total_order (o)
 		do
-			key_less_order := o
+			key_order := o
 			create set.make (agent (kv1, kv2: TUPLE [key: K; value: V]; key_o: PREDICATE [ANY, TUPLE [K, K]]): BOOLEAN
 					do
 						Result := key_o.item ([kv1.key, kv2.key])
@@ -41,7 +42,7 @@ feature -- Initialization
 			-- Initialize table by copying `key_order', and key-value pair from `other'.
 		do
 			if other /= Current then
-				key_less_order := other.key_less_order
+				key_order := other.key_order
 				if set = Void then
 					-- Copy used as a creation procedure
 					set := other.set.twin
@@ -51,23 +52,23 @@ feature -- Initialization
 			end
 		ensure then
 			map_effect: map |=| other.map
-			--- key_less_order_effect: key_less_order |=| other.key_less_order
+			--- key_order_effect: key_order |=| other.key_order
 			other_map_effect: other.map |=| old other.map
-			--- other_key_less_order_effect: other.key_less_order |=| old other.key_less_order
+			--- other_key_order_effect: other.key_order |=| old other.key_order
 		end
 
 feature -- Search
-	key_less_order: PREDICATE [ANY, TUPLE [K, K]]
-			-- `<' order relation on keys.
+	key_order: PREDICATE [ANY, TUPLE [K, K]]
+			-- Order relation on keys.
 
-	less_than (k1, k2: K): BOOLEAN
-			-- Is `k1 < k2' according to `key_less_order'?
+	less_equal (k1, k2: K): BOOLEAN
+			-- Is `k1 <= k2' according to `key_order'?
 		note
 			status: specification
 		do
-			Result := key_less_order.item ([k1, k2])
+			Result := key_order.item ([k1, k2])
 		ensure
-			definition: Result = key_less_order.item ([k1, k2])
+			definition: Result = key_order.item ([k1, k2])
 		end
 
 	key_equivalence: PREDICATE [ANY, TUPLE [K, K]]
@@ -75,10 +76,10 @@ feature -- Search
 		do
 			Result := agent (x, y: K): BOOLEAN
 				do
-					Result := not less_than (x, y) and not less_than (y, x)
+					Result := less_equal (x, y) and less_equal (y, x)
 				end
 		ensure then
-			--- definition: Result |=| agent (x, y: K): BOOLEAN -> not less_than (x, y) and not less_than (y, x) 	
+			--- definition: Result |=| agent (x, y: K): BOOLEAN -> key_order (x, y) and key_order (y, x) 	
 		end
 
 feature {V_SET_TABLE, V_SET_TABLE_ITERATOR} -- Implementation
@@ -86,6 +87,20 @@ feature {V_SET_TABLE, V_SET_TABLE_ITERATOR} -- Implementation
 			-- Underlying set of key-value pairs.
 			-- Should not be reassigned after creation.
 
+feature -- Specification
+---	is_total_order (o: PREDICATE [ANY, TUPLE [K, K]])
+			-- Is `o' a total order relation?
+---		note
+---			status: specification
+---		deferred
+---		ensure
+			--- definition: Result = (
+			--- (forall x: K :: o (x, x)) and
+			--- (forall x, y, z: K :: o (x, y) and o (y, z) implies o (x, z) and
+			--- (forall x, y: K :: o (x, y) or o (y, x)))
+---		end
+
 invariant
-	key_less_order_exists: key_less_order /= Void
+	key_less_order_exists: key_order /= Void
+	--- key_order_is_total_order: is_total_order (key_order)
 end

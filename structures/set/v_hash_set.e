@@ -26,6 +26,8 @@ feature {NONE} -- Initialization
 		require
 			eq_exists: eq /= Void
 			h_exists: h /= Void
+			--- is_equivalence: is_equivalence (eq)
+			--- h_non_negative: forall x: G :: h (x) >= 0
 		do
 			equivalence := eq
 			hash := h
@@ -233,4 +235,5 @@ invariant
 	buckets_exists: buckets /= Void
 	iterator_exists: iterator /= Void
 	all_buckets_exist: buckets.for_all (agent (x: V_LINKED_LIST [G]): BOOLEAN do Result := x /= Void end)
+	--- hash_non_negative: forall x: G :: hash (x) >= 0
 end

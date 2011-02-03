@@ -7,7 +7,7 @@ note
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
-	model: set, less_order
+	model: set, order
 
 class
 	V_SORTED_SET [G]
@@ -27,13 +27,14 @@ feature {NONE} -- Initialization
 			-- Create an empty set with elements order `o'.
 		require
 			o_exists: o /= Void
+			--- is_total_order: is_total_order (o)
 		do
-			less_order := o
+			order := o
 			create tree
 			create iterator.make (Current, tree)
 		ensure
 			set_effect: set.is_empty
-			--- order_relation_effect: order_relation |=| o.order_relation
+			--- order_effect: order |=| o
 		end
 
 feature -- Initialization
@@ -41,7 +42,7 @@ feature -- Initialization
 			-- Copy order relation and values values from `other'.
 		do
 			if other /= Current then
-				less_order := other.less_order
+				order := other.order
 				if tree = Void then
 					-- Copy used as a creation procedure
 					tree := other.tree.twin
@@ -52,9 +53,9 @@ feature -- Initialization
 			end
 		ensure then
 			set_effect: set |=| other.set
-			--- less_order_effect: less_order |=| other.less_order
+			--- order_effect: order |=| other.order
 			other_set_effect: other.set |=| old other.set
-			--- other_less_order_effect: other.less_order |=| old other.less_order
+			--- other_order_effect: other.order |=| old other.order
 		end
 
 feature -- Measurement
@@ -65,12 +66,17 @@ feature -- Measurement
 		end
 
 feature -- Search
-	less_order: PREDICATE [ANY, TUPLE [G, G]]
+	order: PREDICATE [ANY, TUPLE [G, G]]
 			-- Order relation on values.
 
-	less_than (x, y: G): BOOLEAN
+	less_equal (x, y: G): BOOLEAN
+			-- Is `x' <= `y' according to `order'?
+		note
+			status: specification
 		do
-			Result := less_order.item ([x, y])
+			Result := order.item ([x, y])
+		ensure
+			definition: Result = order.item ([x, y])
 		end
 
 	equivalence: PREDICATE [ANY, TUPLE [G, G]]
@@ -78,10 +84,10 @@ feature -- Search
 		do
 			Result := agent (x, y: G): BOOLEAN
 				do
-					Result := not less_than (x, y) and not less_than (y, x)
+					Result := less_equal (x, y) and less_equal (y, x)
 				end
 		ensure then
-			--- definition: Result |=| agent (x, y: G): BOOLEAN -> not less_than (x, y) and not less_than (y, x) 	
+			--- definition: Result |=| agent (x, y: G): BOOLEAN -> order (x, y) and order (y, x) 	
 		end
 
 feature -- Iteration
@@ -115,7 +121,7 @@ feature -- Extension
 				loop
 					if equivalent (v, iterator.item) then
 						done := True
-					elseif less_than (v, iterator.item) then
+					elseif less_equal (v, iterator.item) then
 						if not iterator.has_left then
 							iterator.extend_left (v)
 							done := True
@@ -150,8 +156,22 @@ feature {NONE} -- Implementation
 	iterator: V_SORTED_SET_ITERATOR [G]
 			-- Internal cursor.
 
+feature -- Specification
+---	is_total_order (o: PREDICATE [ANY, TUPLE [G, G]])
+			-- Is `o' a total order relation?
+---		note
+---			status: specification
+---		deferred
+---		ensure
+			--- definition: Result = (
+			--- (forall x: G :: o (x, x)) and
+			--- (forall x, y, z: G :: o (x, y) and o (y, z) implies o (x, z) and
+			--- (forall x, y: G :: o (x, y) or o (y, x)))
+---		end
+
 invariant
-	order_exists: less_order /= Void
+	order_exists: order /= Void
 	tree_exists: tree /= Void
 	iterator_exists: iterator /= Void
+	--- order_is_total_order: is_total_order (order)
 end

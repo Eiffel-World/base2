@@ -57,7 +57,7 @@ feature -- Search
 		end
 
 feature -- Specification
-	map: MML_FINITE_MAP [K, V]
+	map: MML_MAP [K, V]
 			-- Corresponding mathematical map.
 		note
 			status: specification
@@ -66,6 +66,19 @@ feature -- Specification
 			exists: Result /= Void
 		end
 
+---	is_equivalence (r: PREDICATE [ANY, TUPLE [K, K]])
+			-- Is `r' an equivalence relation?
+---		note
+---			status: specification
+---		deferred
+---		ensure
+			--- definition: Result = (
+			---	(forall x: K :: r (x, x)) and
+			--- (forall x, y: K :: r (x, y) = r (y, x)) and
+			--- (forall x, y, z: K :: r (x, y) and r (y, z) implies r (x, z))
+---		end
+
 invariant
 	key_equivalence_exists: key_equivalence /= Void
+	--- is_equivalence: is_equivalence (key_equivalence)
 end

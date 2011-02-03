@@ -27,6 +27,6 @@ feature -- Replacement
 			has_key: has_key (k)
 		deferred
 		ensure
-			map_effect: map |=| old map.replaced_at (key (k), v)
+			map_effect: map |=| old map.updated (key (k), v)
 		end
 end

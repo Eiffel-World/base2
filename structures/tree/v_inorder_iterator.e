@@ -95,7 +95,7 @@ feature -- Cursor movement
 		end
 
 feature -- Specification
-	subtree_path_sequence (root: MML_BIT_VECTOR): MML_FINITE_SEQUENCE [MML_BIT_VECTOR]
+	subtree_path_sequence (root: MML_SEQUENCE [BOOLEAN]): MML_SEQUENCE [MML_SEQUENCE [BOOLEAN]]
 			-- Sequence of paths in subtree of `target.map' strating from `root' by order of traversal.
 		note
 			status: specification

@@ -45,7 +45,7 @@ feature -- Iteration
 			Result.go_root
 		ensure
 			target_definition: Result.target = Current
-			path_definition_non_empty: not map.is_empty implies Result.path |=| {MML_BIT_VECTOR} [True]
+			path_definition_non_empty: not map.is_empty implies Result.path |=| {MML_SEQUENCE [BOOLEAN]} [True]
 			path_definition_empty: map.is_empty implies Result.path.is_empty
 		end
 
@@ -176,7 +176,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Specification
-	map: MML_FINITE_MAP [MML_BIT_VECTOR, G]
+	map: MML_MAP [MML_SEQUENCE [BOOLEAN], G]
 			-- Map of paths to elements.
 		note
 			status: specification
