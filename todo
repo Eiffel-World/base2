@@ -1,8 +1,9 @@
 Structures:
 
 - Provide nice output for containers
-- RANDOM and STANDARD_INPUT streams
-- Should MAP inherit from CONTAINER?
+- RANDOM stream
+- Sorting
+- V_STRING, V_MUTABLE_STRING
 
 MML:
 

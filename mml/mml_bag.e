@@ -251,6 +251,34 @@ feature -- Modification
 			create Result.make_from_arrays (ks, vs, count + other.count)
 		end
 
+	difference alias "-" (other: MML_BAG [G]): MML_BAG[G]
+			-- Current bag with all occurrences of values from `other' removed.
+		local
+			i, j, k, c: INTEGER
+			ks: V_ARRAY [G]
+			vs: V_ARRAY [INTEGER]
+		do
+			create ks.make (1, keys.count)
+			create vs.make (1, values.count)
+			from
+				i := keys.lower
+				j := keys.lower
+			until
+				i > keys.upper
+			loop
+				k := other [keys [i]]
+				if k < values [i] then
+					ks [j] := keys [i]
+					vs [j] := values [i] - k
+					c := c + vs [j]
+					j := j + 1
+				end
+				i := i + 1
+			end
+			ks.resize (ks.lower, j - 1)
+			vs.resize (vs.lower, j - 1)
+			create Result.make_from_arrays (ks, vs, c)
+		end
 feature {MML_MODEL} -- Implementation
 	keys: V_ARRAY [G]
 			-- Element storage.

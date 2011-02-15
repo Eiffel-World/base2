@@ -1,5 +1,5 @@
 note
-	description: "Standard (console) output."
+	description: "Streams that output textual representation of values to the console."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -10,23 +10,39 @@ class
 
 inherit
 	V_OUTPUT_STREAM [ANY]
+		redefine
+			default_create
+		end
 
 create
 	default_create,
 	make_with_separator
 
 feature {NONE} -- Initialization
-	make_with_separator (s: STRING)
-			-- Create a stream and set `separator' to `s'.
+	default_create
+			-- Create a stream with `default_separator'.
 		do
-			separator := s
+			make_with_separator (default_separator)
+		ensure then
+			separator_effect: separator = default_separator
+		end
+
+	make_with_separator (sep: STRING)
+			-- Create a stream and set `separator' to `s'.
+		require
+			sep_exists: sep /= Void
+		do
+			separator := sep
 		ensure
-			separator_effect: separator = s
+			separator_effect: separator = sep
 		end
 
 feature -- Access
 	separator: STRING
 			-- String that is output after every element.
+
+	default_separator: STRING = " "
+			-- Default value of `separator'.			
 
 feature -- Status report
 	off: BOOLEAN = False
@@ -37,8 +53,9 @@ feature -- Replacement
 			-- Put `v' into the stream and move to the next position.
 		do
 			print (v)
-			if separator /= Void then
-				print (separator)
-			end
+			print (separator)
 		end
+
+invariant
+	separator_exists: separator /= Void
 end
