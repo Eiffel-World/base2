@@ -11,12 +11,14 @@ deferred class
 inherit
 	V_UPDATABLE_MAP [K, V]
 		redefine
-			is_equal
+			is_equal,
+			out
 		end
 
 	V_CONTAINER [V]
 		redefine
-			is_equal
+			is_equal,
+			out
 		end
 
 feature -- Access
@@ -117,6 +119,26 @@ feature -- Removal
 		deferred
 		ensure
 			map_effect: map |=| old map.removed (key (k))
+		end
+
+feature -- Output
+	out: STRING
+			-- String representation of the content.
+		local
+			it: V_TABLE_ITERATOR [K, V]
+		do
+			from
+				Result := ""
+				it := new_iterator
+			until
+				it.off
+			loop
+				Result.append ("(" + it.key.out + ", " + it.value.out + ")")
+				if not it.is_last then
+					Result.append (" ")
+				end
+				it.forth
+			end
 		end
 
 feature -- Specification

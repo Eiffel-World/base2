@@ -17,6 +17,8 @@ inherit
 	V_UPDATABLE_MAP [INTEGER, G]
 		rename
 			has_key as has_index
+		undefine
+			out
 		redefine
 			has_index,
 			map
@@ -24,8 +26,14 @@ inherit
 
 inherit {NONE}
 	V_EQUALITY [INTEGER]
+		undefine
+			out
+		end
 
 	V_ORDER [INTEGER]
+		undefine
+			out
+		end
 
 feature -- Access		
 	first: G

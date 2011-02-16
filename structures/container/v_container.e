@@ -8,6 +8,12 @@ note
 deferred class
 	V_CONTAINER [G]
 
+inherit
+	ANY
+		redefine
+			out
+		end
+
 feature -- Measurement
 	count: INTEGER
 			-- Number of elements.
@@ -128,6 +134,18 @@ feature -- Removal
 		deferred
 		ensure
 			bag_effect: bag.is_empty
+		end
+
+feature -- Output
+	out: STRING
+			-- String representation of the content.
+		local
+			stream: V_STRING_OUTPUT
+		do
+			Result := ""
+			create stream.make (Result)
+			stream.pipe (new_iterator)
+			Result.remove_tail (stream.separator.count)
 		end
 
 feature -- Specification

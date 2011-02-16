@@ -14,7 +14,8 @@ inherit
 			new_iterator as at_inorder_start
 		redefine
 			copy,
-			is_equal
+			is_equal,
+			out
 		end
 
 create
@@ -101,6 +102,13 @@ feature -- Removal
 			map_effect: map.is_empty
 		end
 
+feature -- Output
+	out: STRING
+			-- String representation of the content.
+		do
+			Result := subtree_to_string (root, 0)
+		end
+
 feature {V_BINARY_TREE, V_BINARY_TREE_CURSOR} -- Implementation
 	root: V_BINARY_TREE_CELL [G]
 			-- Root node.
@@ -173,6 +181,23 @@ feature {NONE} -- Implementation
 			else
 				Result := (i = Void) and (j = Void)
 			end
+		end
+
+	subtree_to_string (cell: V_BINARY_TREE_CELL [G]; indent: INTEGER): STRING
+			-- String representation of a subtree with root `cell' indented by `indent'.
+		require
+			indent_non_negative: indent >= 0
+		do
+			if cell /= Void then
+				create Result.make_filled (' ', indent)
+				Result.append (cell.item.out + "%N")
+				Result.append (subtree_to_string (cell.left, indent + 1))
+				Result.append (subtree_to_string (cell.right, indent + 1))
+			else
+				Result := ""
+			end
+		ensure
+			result_exists: Result /= Void
 		end
 
 feature -- Specification
