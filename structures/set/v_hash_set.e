@@ -28,6 +28,7 @@ feature {NONE} -- Initialization
 			h_exists: h /= Void
 			--- is_equivalence: is_equivalence (eq)
 			--- h_non_negative: forall x: G :: h (x) >= 0
+			--- h_eq_consistent: forall x, y: G :: eq (x, y) implies h (x) = h(y)
 		do
 			equivalence := eq
 			hash := h

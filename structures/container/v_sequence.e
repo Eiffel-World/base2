@@ -288,6 +288,71 @@ feature -- Replacement
 			other_map_effect: other /= Current implies other.map |=| old other.map
 		end
 
+	sort (order: PREDICATE [ANY, TUPLE [G, G]])
+			-- Sort elements in `order' left to right.
+		require
+			order_exists: order /= Void
+			order_has_two_args: order.open_count = 2
+			--- is_total_order: is_total_order (order)
+		do
+			quick_sort (lower, upper, order)
+		ensure
+			map_effect_short: map.count < 2 implies map |=| old map
+			map_effect_long: map.count >= 2 implies
+				map.domain.removed (map.domain.extremum (agent greater_equal)).for_all (
+					agent (i: INTEGER; o: PREDICATE [ANY, TUPLE [G, G]]): BOOLEAN
+						do
+							Result := o.item ([map [i], map [i + 1]])
+						end (?, order))
+		end
+
+feature {NONE} -- Implementation
+	quick_sort (left, right: INTEGER; order: PREDICATE [ANY, TUPLE [G, G]])
+			-- Sort element in index range [`left', `right'] in `order' left to right.
+		require
+			in_range: right > left implies has_index (left) and has_index (right)
+			order_exists: order /= Void
+			order_has_two_args: order.open_count = 2
+			--- is_total_order: is_total_order (order)
+		local
+			pivot, l, r: INTEGER
+		do
+			if right > left then
+				from
+					l := left
+					r := right
+					pivot := (left + right) // 2
+				until
+					l > pivot or r < pivot
+				loop
+					from
+					until
+						order.item ([item (pivot), item (l)]) or l > pivot
+					loop
+						l := l + 1
+					end
+					from
+					until
+						order.item ([item (r), item (pivot)]) or r < pivot
+					loop
+						r := r - 1
+					end
+					swap (l, r)
+					l := l + 1
+					r := r - 1
+					if l - 1 = pivot then
+						r := r + 1
+						pivot := r
+					elseif r + 1 = pivot then
+						l := l - 1
+						pivot := l
+					end
+				end
+				quick_sort (left, pivot - 1, order)
+				quick_sort (pivot + 1, right, order)
+			end
+		end
+
 feature -- Specification
 	map: MML_MAP [INTEGER, G]
 			-- Map of indexes to values.
@@ -309,6 +374,18 @@ feature -- Specification
 				i := i + 1
 			end
 		end
+
+---	is_total_order (o: PREDICATE [ANY, TUPLE [G, G]])
+			-- Is `o' a total order relation?
+---		note
+---			status: specification
+---		deferred
+---		ensure
+			--- definition: Result = (
+			--- (forall x: G :: o (x, x)) and
+			--- (forall x, y, z: G :: o (x, y) and o (y, z) implies o (x, z) and
+			--- (forall x, y: G :: o (x, y) or o (y, x)))
+---		end		
 
 invariant
 	lower_definition_nonempty: not map.is_empty implies lower = map.domain.extremum (agent less_equal)

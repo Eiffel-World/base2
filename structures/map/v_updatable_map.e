@@ -29,4 +29,19 @@ feature -- Replacement
 		ensure
 			map_effect: map |=| old map.updated (key (k), v)
 		end
+
+	swap (k1, k2: K)
+			-- Swap values associated with `k1' and `k2'.
+		require
+			has_key_one: has_key (k1)
+			has_key_two: has_key (k2)
+		local
+			v: V
+		do
+			v := item (k1)
+			put (item (k2), k1)
+			put (v, k2)
+		ensure
+			map_effect: map |=| old map.updated (key (k1), map [key (k2)]).updated (key (k2), map [key (k1)])
+		end
 end

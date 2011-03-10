@@ -58,12 +58,7 @@ feature -- Search
 			status: specification
 		require
 			has: has (v)
---		local
---			i: V_SET_ITERATOR [G]
 		do
---			i := new_iterator
---			i.search (v)
---			Result := i.item
 			Result := (set | agent equivalent (v, ?)).any_item
 		ensure
 			Result = (set | agent equivalent (v, ?)).any_item

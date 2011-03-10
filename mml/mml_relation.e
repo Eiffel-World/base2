@@ -69,8 +69,6 @@ feature -- Sets
 
 	image_of (x: G): MML_SET [H]
 			-- Set of values related to `x'.
-		local
-			i: INTEGER
 		do
 			Result := image (create {MML_SET [G]}.singleton (x))
 		end
@@ -189,16 +187,12 @@ feature -- Modification
 			-- Relation that consists of pairs contained in either `Current' or `other'.
 		require
 			other_exists: other /= Void
-		local
-			ls: V_ARRAY [G]
-			rs: V_ARRAY [H]
-			i, j: INTEGER
 		do
 			Result := Current - other
-			Result.lefts.resize (ls.lower, j - 1 + other.lefts.count)
-			Result.rights.resize (rs.lower, j - 1 + other.rights.count)
-			Result.lefts.subcopy (other.lefts, other.lefts.lower, other.lefts.upper, j + other.lefts.count)
-			Result.rights.subcopy (other.rights, other.rights.lower, other.rights.upper, j + other.rights.count)
+			Result.lefts.resize (Result.lefts.lower, Result.lefts.upper + other.lefts.count)
+			Result.rights.resize (Result.rights.lower, Result.rights.upper + other.rights.count)
+			Result.lefts.subcopy (other.lefts, other.lefts.lower, other.lefts.upper, Result.count - other.count + 1)
+			Result.rights.subcopy (other.rights, other.rights.lower, other.rights.upper, Result.count - other.count + 1)
 		end
 
 	intersection alias "*" (other: MML_RELATION [G, H]): MML_RELATION [G, H]

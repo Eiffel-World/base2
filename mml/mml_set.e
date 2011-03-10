@@ -210,7 +210,7 @@ feature -- Modification
 		do
 			Result := Current - other
 			Result.array.resize (Result.array.lower, Result.array.upper + other.array.count)
-			Result.array.subcopy (other.array, other.array.lower, other.array.upper, count - other.count + 1)
+			Result.array.subcopy (other.array, other.array.lower, other.array.upper, Result.count - other.count + 1)
 		end
 
 	intersection alias "*" (other: MML_SET [G]): MML_SET [G]

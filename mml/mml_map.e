@@ -49,8 +49,6 @@ feature -- Properties
 
 	is_constant (c: V): BOOLEAN
 			-- Are all values equal to `c'?
-		local
-			i: INTEGER
 		do
 			Result := values.for_all (agent meq_value (c, ?))
 		end
