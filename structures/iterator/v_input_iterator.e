@@ -1,5 +1,8 @@
 note
-	description: "Iterators to read from a container in linear order."
+	description: "[
+		Iterators to read from a container in linear order.
+		Indexing starts from 1.
+	]"
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
