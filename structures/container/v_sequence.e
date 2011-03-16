@@ -26,11 +26,15 @@ inherit
 
 inherit {NONE}
 	V_EQUALITY [INTEGER]
+		export {NONE}
+			all
 		undefine
 			out
 		end
 
 	V_ORDER [INTEGER]
+		export {NONE}
+			all
 		undefine
 			out
 		end

@@ -138,7 +138,7 @@ feature -- Decomposition
 		require
 			non_empty: not is_empty
 		do
-			Result := array [array.upper]
+			Result := item (count)
 		end
 
 	but_first: MML_SEQUENCE [G]
@@ -229,7 +229,7 @@ feature -- Modification
 			a: V_ARRAY [G]
 		do
 			a := array.twin
-			a [i] := x
+			a [array.lower + i - 1] := x
 			create Result.make_from_array (a)
 		end
 
@@ -239,8 +239,8 @@ feature -- Modification
 			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count - 1)
-			a.subcopy (array, 1, i - 1, 1)
-			a.subcopy (array, i + 1, array.count, i)
+			a.subcopy (array, array.lower, array.lower + i - 2, 1)
+			a.subcopy (array, array.lower + i, array.upper, i)
 			create Result.make_from_array (a)
 		end
 

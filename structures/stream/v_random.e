@@ -150,7 +150,7 @@ feature {NONE} -- Implementation
 			"[
 				struct timeb t;
 				ftime(&t);
-				return (long long int)time(NULL) * 1000 + t.millitm;
+				return (unsigned long long int)time(NULL) * 1000 + t.millitm;
 			]"
 		end
 

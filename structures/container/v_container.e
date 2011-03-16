@@ -142,7 +142,7 @@ feature -- Output
 		local
 			stream: V_STRING_OUTPUT
 		do
-			Result := ""
+			create Result.make_empty
 			create stream.make (Result)
 			stream.pipe (new_iterator)
 			Result.remove_tail (stream.separator.count)

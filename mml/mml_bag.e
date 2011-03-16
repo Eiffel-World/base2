@@ -10,7 +10,11 @@ class
 inherit
 	MML_MODEL
 
+inherit {NONE}
 	V_EQUALITY [INTEGER]
+		export {NONE}
+			all
+		end
 
 create
 	empty,
