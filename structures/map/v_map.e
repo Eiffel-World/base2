@@ -1,5 +1,9 @@
 note
-	description: "Finite data structures where values are associated with keys. Keys are unique with respect to some equivalence relation."
+	description: "[
+		Finite data structures where values are associated with keys. 
+		Keys are unique with respect to some equivalence relation.
+		The class can be used as an immutable interface to a concrete map.
+		]"
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
