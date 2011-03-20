@@ -22,7 +22,7 @@ inherit
 		end
 
 feature -- Access
-	item alias "[]" (k: K): V assign put
+	item alias "[]" (k: K): V assign force
 			-- Value associated with `k'.
 		local
 			i: V_TABLE_ITERATOR [K, V]

@@ -39,7 +39,12 @@ inherit {NONE}
 			out
 		end
 
-feature -- Access		
+feature -- Access
+	item alias "[]" (i: INTEGER): G assign put
+			-- Value at position `i'.
+		deferred
+		end
+
 	first: G
 			-- First element.
 		require

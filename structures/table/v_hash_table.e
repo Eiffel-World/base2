@@ -1,7 +1,7 @@
 note
 	description: "[
-			Hash tables with chaining.
-			Search, extension and removal are amortized constant time.
+			Hash tables with hash function provided by HASHABLE
+			and with reference or object equality as equivalence relation on keys.
 		]"
 	author: "Nadia Polikarpova"
 	date: "$Date$"
@@ -9,90 +9,50 @@ note
 	model: map, key_equivalence, key_hash
 
 class
-	V_HASH_TABLE [K, V]
+	V_HASH_TABLE [K -> HASHABLE, v]
 
 inherit
-	V_SET_TABLE [K, V]
+	V_GENERAL_HASH_TABLE [K, V]
 		redefine
-			copy
+			default_create
+		end
+
+inherit {NONE}
+	V_EQUALITY [K]
+		export {NONE}
+			all
+		undefine
+			default_create,
+			out,
+			copy,
+			is_equal
+		end
+
+	V_HASH [K]
+		export {NONE}
+			all
+		undefine
+			default_create,
+			out,
+			copy,
+			is_equal
 		end
 
 create
-	make
+	default_create,
+	with_object_equality
 
 feature {NONE} -- Initialization
-	make (eq: PREDICATE [ANY, TUPLE [K, K]]; h: FUNCTION [ANY, TUPLE [K], INTEGER])
-			-- Create an empty table with key equivalence `eq' and hash function `h'.
-		require
-			eq_exists: eq /= Void
-			h_exists: h /= Void
-			--- eq_is_equivalence: is_equivalence (eq)
-			--- h_non_negative: forall x: K :: h (x) >= 0
-			--- h_eq_consistent: forall x, y: K :: eq (x, y) implies h (x) = h(y)			
+	default_create
+			-- Create an empty table with reference equality as equivalence relation on keys.
 		do
-			key_equivalence := eq
-			key_hash := h
-			create set.make (
-				agent (kv1, kv2: TUPLE [key: K; value: V]; key_eq: PREDICATE [ANY, TUPLE [K, K]]): BOOLEAN
-					do
-						Result := key_eq.item ([kv1.key, kv2.key])
-					end (?, ?, eq),
-				agent (kv: TUPLE [key: K; value: V]; key_h: FUNCTION [ANY, TUPLE [K], INTEGER]): INTEGER
-					do
-						Result := key_h.item ([kv.key])
-					end (?, h))
-		ensure
-			map_effect: map.is_empty
-			--- key_equivalence_effect: key_equivalence |=| eq
-			--- key_hash_effect: key_hash |=| h
+			make (agent reference_equal, agent hash_code)
 		end
 
-feature -- Initialization
-	copy (other: like Current)
-			-- Initialize table by copying `key_order', and key-value pair from `other'.
+	with_object_equality
+			-- Create an empty table with object equality as equivalence relation on keys.
 		do
-			if other /= Current then
-				key_equivalence := other.key_equivalence
-				key_hash := other.key_hash
-				if set = Void then
-					-- Copy used as a creation procedure
-					set := other.set.twin
-				else
-					set.copy (other.set)
-				end
-			end
-		ensure then
-			map_effect: map |=| other.map
-			--- key_equivalence_effect: key_equivalence |=| other.key_equivalence
-			--- key_hash_effect: key_hash |=| other.key_hash
-			other_map_effect: other.map |=| old other.map
-			--- other_key_equivalence_effect: other.key_equivalence |=| old other.key_equivalence
-			--- other_key_hash_effect: other.key_hash |=| old other.key_hash
+			make (agent object_equal, agent hash_code)
 		end
 
-feature -- Search
-	key_equivalence: PREDICATE [ANY, TUPLE [K, K]]
-			-- Equivalence relation on keys.
-
-	key_hash: FUNCTION [ANY, TUPLE [K], INTEGER]
-			-- Hash function on keys.
-
---	hash_code (k: K): INTEGER
---			-- Hash code of `k' according to `key_hash'.
---		note
---			status: specification
---		do
---			Result := key_hash.item ([k])
---		ensure
---			definition: Result = key_hash.item ([k])
---		end
-
-feature {V_SET_TABLE, V_SET_TABLE_ITERATOR} -- Implementation
-	set: V_HASH_SET [TUPLE [key: K; value: V]]
-			-- Underlying set of key-value pairs.
-			-- Should not be reassigned after creation.
-
-invariant
-	key_hash_exists: key_hash /= Void
-	--- key_hash_non_negative: forall x: K :: key_hash (x) >= 0
 end

@@ -15,7 +15,7 @@ inherit
 		end
 
 feature -- Access
-	item alias "[]" (k: K): V assign put
+	item alias "[]" (k: K): V
 			-- Value associated with `k'.
 		deferred
 		end

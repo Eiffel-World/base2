@@ -24,7 +24,7 @@ inherit {NONE}
 			target as tree,
 			make as make_with_tree,
 			remove as tree_remove
-		export {V_SORTED_SET, V_SORTED_SET_ITERATOR}
+		export {V_GENERAL_SORTED_SET, V_SORTED_SET_ITERATOR}
 			all
 		redefine
 			copy,
@@ -32,11 +32,11 @@ inherit {NONE}
 			search_back
 		end
 
-create {V_SORTED_SET}
+create {V_GENERAL_SORTED_SET}
 	make
 
 feature {NONE} -- Initialization
-	make (s: V_SORTED_SET [G]; t: V_BINARY_TREE [G])
+	make (s: V_GENERAL_SORTED_SET [G]; t: V_BINARY_TREE [G])
 			-- Create an iterator over `s'.
 			-- (Passing `t' is needed to avoid violating invariant `iterator /= Void' when calling `s.tree')
 		require
@@ -63,7 +63,7 @@ feature -- Initialization
 		end
 
 feature -- Access
-	target: V_SORTED_SET [G]
+	target: V_GENERAL_SORTED_SET [G]
 			-- Set to iterate over.
 
 feature -- Cursor movement

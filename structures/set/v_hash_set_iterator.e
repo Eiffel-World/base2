@@ -14,11 +14,11 @@ inherit
 			copy
 		end
 
-create {V_HASH_SET}
+create {V_GENERAL_HASH_SET}
 	make
 
 feature {NONE} -- Initialization
-	make (s: V_HASH_SET [G])
+	make (s: V_GENERAL_HASH_SET [G])
 			-- Create an iterator over `s'.
 		require
 			s_exists: s /= Void
@@ -49,7 +49,7 @@ feature -- Initialization
 		end
 
 feature -- Access
-	target: V_HASH_SET [G]
+	target: V_GENERAL_HASH_SET [G]
 			-- Set to iterate over.
 
 	item: G
@@ -187,7 +187,7 @@ feature -- Removal
 			to_next_bucket
 		end
 
-feature {V_HASH_SET, V_HASH_SET_ITERATOR} -- Implementation
+feature {V_GENERAL_HASH_SET, V_HASH_SET_ITERATOR} -- Implementation
 	list_iterator: V_LINKED_LIST_ITERATOR [G]
 			-- Iterator inside current bucket.
 
