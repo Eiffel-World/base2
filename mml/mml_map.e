@@ -100,6 +100,7 @@ feature -- Sets
 
 	sequence_image (s: MML_SEQUENCE [K]): MML_SEQUENCE [V]
 			-- Sequence of images of `s' elements under `Current'.
+			-- (Skip elements of `s' that are not in domain of `Current').
 		require
 			sequence_exists: s /= Void
 		local
@@ -112,8 +113,10 @@ feature -- Sets
 			until
 				i > s.count
 			loop
-				a [i] := item (s [i])
-				i := i + 1
+				if domain [s [i]] then
+					a [i] := item (s [i])
+					i := i + 1
+				end
 			end
 			create Result.make_from_array (a)
 		end
@@ -192,7 +195,7 @@ feature -- Modification
 		end
 
 	restricted alias "|" (subdomain: MML_SET [K]): MML_MAP [K, V]
-			-- This map with all key-value pairs where key is outside `restriction' removed.
+			-- Map that consists of all key-value pairs in `Current' whose key is in `subdomain'.
 		require
 			subdomain_exists: subdomain /= Void
 		local
@@ -239,7 +242,7 @@ feature -- Modification
 			until
 				i > keys.upper
 			loop
-				if not other.keys.has (keys [i]) then
+				if not other.domain [keys [i]] then
 					ks [j] := keys [i]
 					vs [j] := values [i]
 					j := j + 1
@@ -266,6 +269,10 @@ feature {MML_MODEL} -- Implementation
 
 	make_from_arrays (ks: V_ARRAY [K]; vs: V_ARRAY [V])
 			-- Create with predefined arrays.
+		require
+			ks_exists: ks /= Void
+			vs_exists: vs /= Void
+			ks_has_no_duplicates: ks.bag.is_constant (1)
 		do
 			keys := ks
 			values := vs
@@ -286,4 +293,8 @@ feature {MML_MODEL} -- Implementation
 		do
 			Result := model_equals (v1, v2)
 		end
+
+invariant
+	keys_exists: keys /= Void
+	values_exists: values /= Void
 end

@@ -235,6 +235,8 @@ feature -- Modification
 
 	removed_at (i: INTEGER): MML_SEQUENCE [G]
 			-- Current sequence with element at position `i' removed.
+		require
+			in_domain: domain [i]
 		local
 			a: V_ARRAY [G]
 		do
@@ -247,7 +249,7 @@ feature -- Modification
 	inverse: MML_RELATION [G, INTEGER]
 			-- Relation of values in current sequence to their indexes.
 		do
-			create Result.make_from_arrays (array, ({MML_INTERVAL} [[1, count]]).array)
+			create Result.make_from_arrays (array, domain.array)
 		end
 
 feature {MML_MODEL} -- Implementation
@@ -256,6 +258,8 @@ feature {MML_MODEL} -- Implementation
 
 	make_from_array (a: V_ARRAY [G])
 			-- Create with a predefined array.
+		require
+			a_exists: a /= Void
 		do
 			array := a
 		end
@@ -267,5 +271,8 @@ feature {MML_MODEL} -- Implementation
 		do
 			Result := model_equals (v1, v2)
 		end
+
+invariant
+	array_exists: array /= Void
 end
 

@@ -81,6 +81,8 @@ feature -- Elements
 			-- Least element with respect to `order'.
 		require
 			not_empty: not is_empty
+			order_exists: order /= Void
+			order_has_one_arg: order.open_count = 2
 			--- transitive: forall x, y, z: G :: order (x, y) and order (y, z) implies order (x, z)
 			--- total: forall x, y: G :: order (x, y) or order (y, x)
 		local
@@ -277,6 +279,9 @@ feature {MML_MODEL} -- Implementation
 
 	make_from_array (a: V_ARRAY [G])
 			-- Create with a predefined array.
+		require
+			a_exists: a /= Void
+			no_duplicates: a.bag.is_constant (1)
 		do
 			array := a
 		end
@@ -288,4 +293,7 @@ feature {MML_MODEL} -- Implementation
 		do
 			Result := model_equals (v1, v2)
 		end
+
+invariant
+	array_exists: array /= Void
 end

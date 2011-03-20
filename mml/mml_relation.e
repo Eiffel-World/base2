@@ -51,8 +51,8 @@ feature -- Properties
 		end
 
 feature -- Sets
-	range: MML_SET [H]
-			-- The set of values related to any value.
+	domain: MML_SET [G]
+			-- The set of left components.
 		local
 			i: INTEGER
 		do
@@ -61,6 +61,22 @@ feature -- Sets
 				i := lefts.lower
 			until
 				i > lefts.upper
+			loop
+				Result := Result.extended (lefts [i])
+				i := i + 1
+			end
+		end
+
+	range: MML_SET [H]
+			-- The set of right components.
+		local
+			i: INTEGER
+		do
+			create Result.empty
+			from
+				i := rights.lower
+			until
+				i > rights.upper
 			loop
 				Result := Result.extended (rights [i])
 				i := i + 1
@@ -271,6 +287,9 @@ feature {MML_MODEL} -- Implementation
 
 	make_from_arrays (ls: V_ARRAY [G]; rs: V_ARRAY [H])
 			-- Create with predefined arrays.
+		require
+			ls_exists: ls /= Void
+			rs_exists: rs /= Void
 		do
 			lefts := ls
 			rights := rs
@@ -291,4 +310,8 @@ feature {MML_MODEL} -- Implementation
 		do
 			Result := model_equals (v1, v2)
 		end
+
+invariant
+	lefts_exists: lefts /= Void
+	rights_exists: rights /= Void
 end

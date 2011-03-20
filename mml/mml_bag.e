@@ -18,7 +18,8 @@ inherit {NONE}
 
 create
 	empty,
-	singleton
+	singleton,
+	multiple
 
 create {MML_MODEL}
 	make_from_arrays
@@ -39,12 +40,18 @@ feature {NONE} -- Initialization
 
 	multiple (x: G; n: INTEGER)
 			-- Create a bag that contains `n' occurrences of `x'.
+		require
+			n_positive: n >= 0
 		do
-			create keys.make (1, 1)
-			keys [1] := x
-			create values.make (1, 1)
-			values [1] := n
-			count := n
+			if n = 0 then
+				empty
+			else
+				create keys.make (1, 1)
+				keys [1] := x
+				create values.make (1, 1)
+				values [1] := n
+				count := n
+			end
 		end
 
 feature -- Properties
@@ -94,14 +101,14 @@ feature -- Comparison
 		local
 			i: INTEGER
 		do
-			if attached {MML_BAG [G]} other as bag and then domain |=| bag.domain then
+			if attached {MML_BAG [G]} other as bag and then count = bag.count then
 				from
 					Result := True
 					i := keys.lower
 				until
 					i > keys.upper or not Result
 				loop
-					Result := model_equals (values [i], bag [keys [i]])
+					Result := bag [keys [i]] = values [i]
 					i := i + 1
 				end
 			end
@@ -116,84 +123,74 @@ feature -- Modification
 
 	extended_multiple (x: G; n: INTEGER): MML_BAG [G]
 			-- Current bag extended with `n' occurrences of `x'.
-		local
-			ks: V_ARRAY [G]
-			vs: V_ARRAY [INTEGER]
-			i: INTEGER
-		do
-			i := keys.index_that (agent meq (x, ?))
-			if keys.has_index (i) then
-				ks := keys
-				vs := values.twin
-				vs [i] := vs [i] + n
-			else
-				create ks.make (keys.lower, keys.upper + 1)
-				ks.subcopy (keys, keys.lower, keys.upper, keys.lower)
-				ks [ks.upper] := x
-				create vs.make (values.lower, values.upper + 1)
-				vs [vs.upper] := n
-				vs.subcopy (values, values.lower, values.upper, values.lower)
-			end
-			create Result.make_from_arrays (ks, vs, count + n)
-		end
-
-	removed (x: G): MML_BAG [G]
-			-- Current bag with one occurrence of `x' removed.
 		require
-			has: domain [x]
-		do
-			Result := removed_multiple (x, 1)
-		end
-
-	removed_multiple (x: G; n: INTEGER): MML_BAG [G]
-			-- Current bag with `n' occurrences of `x' removed.
-		require
-			has_n: occurrences (x) >= n
+			n_non_negative: n >= 0
 		local
 			ks: V_ARRAY [G]
 			vs: V_ARRAY [INTEGER]
 			i: INTEGER
 		do
-			i := keys.index_that (agent meq (x, ?))
-			if values [i] = n then
-				create ks.make (keys.lower, keys.upper - 1)
-				ks.subcopy (keys, keys.lower, i - 1, keys.lower)
-				ks.subcopy (keys, i + 1, keys.upper, i)
-				create vs.make (values.lower, values.upper - 1)
-				vs.subcopy (values, values.lower, i - 1, values.lower)
-				vs.subcopy (values, i + 1, values.upper, i)
-			else
-				ks := keys
-				vs := values.twin
-				vs [i] := vs [i] - n
-			end
-			create Result.make_from_arrays (ks, vs, count - n)
-		end
-
-	removed_all (x: G): MML_BAG [G]
-			-- Current bag with all occurrences of `x' removed, if contained.
-			-- Otherwise current bag.
-		local
-			ks: V_ARRAY [G]
-			vs: V_ARRAY [INTEGER]
-			i: INTEGER
-		do
-			i := keys.index_that (agent meq (x, ?))
-			if keys.has_index (i) then
-				create ks.make (keys.lower, keys.upper - 1)
-				ks.subcopy (keys, keys.lower, i - 1, keys.lower)
-				ks.subcopy (keys, i + 1, keys.upper, i)
-				create vs.make (values.lower, values.upper - 1)
-				vs.subcopy (values, values.lower, i - 1, values.lower)
-				vs.subcopy (values, i + 1, values.upper, i)
-				create Result.make_from_arrays (ks, vs, count - values [i])
+			if n > 0 then
+				i := keys.index_that (agent meq (x, ?))
+				if keys.has_index (i) then
+					ks := keys
+					vs := values.twin
+					vs [i] := vs [i] + n
+				else
+					create ks.make (keys.lower, keys.upper + 1)
+					ks.subcopy (keys, keys.lower, keys.upper, keys.lower)
+					ks [ks.upper] := x
+					create vs.make (values.lower, values.upper + 1)
+					vs [vs.upper] := n
+					vs.subcopy (values, values.lower, values.upper, values.lower)
+				end
+				create Result.make_from_arrays (ks, vs, count + n)
 			else
 				Result := Current
 			end
 		end
 
+	removed (x: G): MML_BAG [G]
+			-- Current bag with one occurrence of `x' removed if present.
+		do
+			Result := removed_multiple (x, 1)
+		end
+
+	removed_multiple (x: G; n: INTEGER): MML_BAG [G]
+			-- Current bag with at most `n' occurrences of `x' removed if present.
+		require
+			n_non_negative: n >= 0
+		local
+			ks: V_ARRAY [G]
+			vs: V_ARRAY [INTEGER]
+			i: INTEGER
+		do
+			i := keys.index_that (agent meq (x, ?))
+			if n = 0 or not keys.has_index (i) then
+				Result := Current
+			elseif values [i] <= n then
+				create ks.make (keys.lower, keys.upper - 1)
+				ks.subcopy (keys, keys.lower, i - 1, keys.lower)
+				ks.subcopy (keys, i + 1, keys.upper, i)
+				create vs.make (values.lower, values.upper - 1)
+				vs.subcopy (values, values.lower, i - 1, values.lower)
+				vs.subcopy (values, i + 1, values.upper, i)
+				create Result.make_from_arrays (ks, vs, count - n)
+			else
+				vs := values.twin
+				vs [i] := vs [i] - n
+				create Result.make_from_arrays (keys, vs, count - n)
+			end
+		end
+
+	removed_all (x: G): MML_BAG [G]
+			-- Current bag with all occurrences of `x' removed.
+		do
+			Result := removed_multiple (x, occurrences (x))
+		end
+
 	restricted alias "|" (subdomain: MML_SET [G]): MML_BAG [G]
-			-- This bag with all elements outside `restriction' removed.
+			-- Bag that consists of all elements of `Current' that are in `subdomain'.
 		require
 			subdomain_exists: subdomain /= Void
 		local
@@ -225,6 +222,8 @@ feature -- Modification
 
 	union alias "+" (other: MML_BAG [G]): MML_BAG [G]
 			-- Bag that contains all elements from `other' and `Current'.
+		require
+			other_exists: other /= Void
 		local
 			i, j, k: INTEGER
 			ks: V_ARRAY [G]
@@ -257,6 +256,8 @@ feature -- Modification
 
 	difference alias "-" (other: MML_BAG [G]): MML_BAG[G]
 			-- Current bag with all occurrences of values from `other' removed.
+		require
+			other_exists: other /= Void
 		local
 			i, j, k, c: INTEGER
 			ks: V_ARRAY [G]
@@ -283,6 +284,7 @@ feature -- Modification
 			vs.resize (vs.lower, j - 1)
 			create Result.make_from_arrays (ks, vs, c)
 		end
+
 feature {MML_MODEL} -- Implementation
 	keys: V_ARRAY [G]
 			-- Element storage.
@@ -292,6 +294,12 @@ feature {MML_MODEL} -- Implementation
 
 	make_from_arrays (ks: V_ARRAY [G]; vs: V_ARRAY [INTEGER]; n: INTEGER)
 			-- Create with predefined arrays and count.
+		require
+			ks_exists: ks /= Void
+			vs_exists: vs /= Void
+			ks_has_no_duplicates: ks.bag.is_constant (1)
+			vs_positive: vs.for_all (agent (x: INTEGER): BOOLEAN do Result := x > 0 end)
+			--- n_valid: n = sum i: INTEGER :: vs.lower <= i and i <= vs.upper ==> vs [i]
 		do
 			keys := ks
 			values := vs
@@ -305,4 +313,8 @@ feature {MML_MODEL} -- Implementation
 		do
 			Result := model_equals (v1, v2)
 		end
+
+invariant
+	keys_exists: keys /= Void
+	values_exists: values /= Void
 end
