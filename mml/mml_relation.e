@@ -40,7 +40,7 @@ feature -- Properties
 		local
 			i: INTEGER
 		do
-			i := lefts.index_that (agent meq_left (x, ?))
+			i := lefts.index_satisfying (agent meq_left (x, ?))
 			Result := lefts.has_index (i) and then model_equals (rights [i], y)
 		end
 
@@ -132,10 +132,10 @@ feature -- Modification
 		do
 			if not Current [x, y] then
 				create ls.make (1, lefts.count + 1)
-				ls.subcopy (lefts, lefts.lower, lefts.upper, 1)
+				ls.copy_range (lefts, lefts.lower, lefts.upper, 1)
 				ls [ls.count] := x
 				create rs.make (1, rights.count + 1)
-				rs.subcopy (rights, rights.lower, rights.upper, 1)
+				rs.copy_range (rights, rights.lower, rights.upper, 1)
 				rs [rs.count] := y
 				create Result.make_from_arrays (ls, rs)
 			else
@@ -150,14 +150,14 @@ feature -- Modification
 			rs: V_ARRAY [H]
 			i: INTEGER
 		do
-			i := lefts.index_that (agent meq_left (x, ?))
+			i := lefts.index_satisfying (agent meq_left (x, ?))
 			if lefts.has_index (i) and then model_equals (y, rights [i]) then
 				create ls.make (lefts.lower, lefts.upper - 1)
-				ls.subcopy (lefts, lefts.lower, i - 1, ls.lower)
-				ls.subcopy (lefts, i + 1, lefts.upper, i)
+				ls.copy_range (lefts, lefts.lower, i - 1, ls.lower)
+				ls.copy_range (lefts, i + 1, lefts.upper, i)
 				create rs.make (rights.lower, rights.upper - 1)
-				rs.subcopy (rights, rights.lower, i - 1, rs.lower)
-				rs.subcopy (rights, i + 1, rights.upper, i)
+				rs.copy_range (rights, rights.lower, i - 1, rs.lower)
+				rs.copy_range (rights, i + 1, rights.upper, i)
 				create Result.make_from_arrays (ls, rs)
 			else
 				Result := Current
@@ -207,8 +207,8 @@ feature -- Modification
 			Result := Current - other
 			Result.lefts.resize (Result.lefts.lower, Result.lefts.upper + other.lefts.count)
 			Result.rights.resize (Result.rights.lower, Result.rights.upper + other.rights.count)
-			Result.lefts.subcopy (other.lefts, other.lefts.lower, other.lefts.upper, Result.count - other.count + 1)
-			Result.rights.subcopy (other.rights, other.rights.lower, other.rights.upper, Result.count - other.count + 1)
+			Result.lefts.copy_range (other.lefts, other.lefts.lower, other.lefts.upper, Result.count - other.count + 1)
+			Result.rights.copy_range (other.rights, other.rights.lower, other.rights.upper, Result.count - other.count + 1)
 		end
 
 	intersection alias "*" (other: MML_RELATION [G, H]): MML_RELATION [G, H]

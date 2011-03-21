@@ -18,7 +18,6 @@ inherit
 		redefine
 			default_create,
 			copy,
-			append,
 			prepend
 		end
 
@@ -106,12 +105,6 @@ feature -- Extension
 				circular_copy (i, i + 1, count - i)
 				array [array_index (i)] := v
 			end
-		end
-
-	append (input: V_INPUT_ITERATOR [G])
-			-- Append sequence of values, over which `input' iterates.
-		do
-			Precursor (input)
 		end
 
 	prepend (input: V_INPUT_ITERATOR [G])
@@ -214,16 +207,25 @@ feature {NONE} -- Implementation
 			dest_non_negative: dest >= 0
 		local
 			i: INTEGER
-			a: V_ARRAY [G]
 		do
-			a := array.twin
-			from
-				i := 1
-			until
-				i > n
-			loop
-				array [array_index (dest + i - 1)] := a [array_index (src + i - 1)]
-				i := i + 1
+			if src < dest then
+				from
+					i := n
+				until
+					i < 1
+				loop
+					array [array_index (dest + i - 1)] := array [array_index (src + i - 1)]
+					i := i - 1
+				end
+			elseif src > dest then
+				from
+					i := 1
+				until
+					i > n
+				loop
+					array [array_index (dest + i - 1)] := array [array_index (src + i - 1)]
+					i := i + 1
+				end
 			end
 		end
 
@@ -238,7 +240,7 @@ feature {NONE} -- Implementation
 				new_size := n.max (capacity * growth_rate)
 				array.resize (0, new_size - 1)
 				if first_index > 0 then
-					array.subcopy (array, first_index, old_size - 1, new_size - old_size + first_index)
+					array.copy_range (array, first_index, old_size - 1, new_size - old_size + first_index)
 					array.clear (first_index, (old_size - 1).min (new_size - old_size + first_index - 1))
 					first_index := new_size - old_size + first_index
 				end

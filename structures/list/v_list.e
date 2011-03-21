@@ -45,8 +45,8 @@ feature -- Comparison
 			elseif count = other.count then
 				from
 					Result := True
-					i := at_start
-					j := other.at_start
+					i := at_first
+					j := other.at_first
 				until
 					i.after or not Result
 				loop
@@ -171,7 +171,7 @@ feature -- Specification
 		note
 			status: specification
 		do
-			Result := at_start.sequence
+			Result := at_first.sequence
 		ensure
 			exists: Result /= Void
 		end

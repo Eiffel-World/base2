@@ -86,7 +86,7 @@ feature -- Measurement
 		local
 			i: INTEGER
 		do
-			i := keys.index_that (agent meq (x, ?))
+			i := keys.index_satisfying (agent meq (x, ?))
 			if keys.has_index (i) then
 				Result := values [i]
 			end
@@ -131,18 +131,18 @@ feature -- Modification
 			i: INTEGER
 		do
 			if n > 0 then
-				i := keys.index_that (agent meq (x, ?))
+				i := keys.index_satisfying (agent meq (x, ?))
 				if keys.has_index (i) then
 					ks := keys
 					vs := values.twin
 					vs [i] := vs [i] + n
 				else
 					create ks.make (keys.lower, keys.upper + 1)
-					ks.subcopy (keys, keys.lower, keys.upper, keys.lower)
+					ks.copy_range (keys, keys.lower, keys.upper, keys.lower)
 					ks [ks.upper] := x
 					create vs.make (values.lower, values.upper + 1)
 					vs [vs.upper] := n
-					vs.subcopy (values, values.lower, values.upper, values.lower)
+					vs.copy_range (values, values.lower, values.upper, values.lower)
 				end
 				create Result.make_from_arrays (ks, vs, count + n)
 			else
@@ -165,16 +165,16 @@ feature -- Modification
 			vs: V_ARRAY [INTEGER]
 			i: INTEGER
 		do
-			i := keys.index_that (agent meq (x, ?))
+			i := keys.index_satisfying (agent meq (x, ?))
 			if n = 0 or not keys.has_index (i) then
 				Result := Current
 			elseif values [i] <= n then
 				create ks.make (keys.lower, keys.upper - 1)
-				ks.subcopy (keys, keys.lower, i - 1, keys.lower)
-				ks.subcopy (keys, i + 1, keys.upper, i)
+				ks.copy_range (keys, keys.lower, i - 1, keys.lower)
+				ks.copy_range (keys, i + 1, keys.upper, i)
 				create vs.make (values.lower, values.upper - 1)
-				vs.subcopy (values, values.lower, i - 1, values.lower)
-				vs.subcopy (values, i + 1, values.upper, i)
+				vs.copy_range (values, values.lower, i - 1, values.lower)
+				vs.copy_range (values, i + 1, values.upper, i)
 				create Result.make_from_arrays (ks, vs, count - n)
 			else
 				vs := values.twin
@@ -231,15 +231,15 @@ feature -- Modification
 		do
 			create ks.make (1, keys.count + other.keys.count)
 			create vs.make (1, values.count + other.values.count)
-			ks.subcopy (keys, keys.lower, keys.upper, 1)
-			vs.subcopy (values, values.lower, values.upper, 1)
+			ks.copy_range (keys, keys.lower, keys.upper, 1)
+			vs.copy_range (values, values.lower, values.upper, 1)
 			from
 				i := other.keys.lower
 				j := keys.count + 1
 			until
 				i > other.keys.upper
 			loop
-				k := keys.index_that (agent meq (other.keys [i], ?))
+				k := keys.index_satisfying (agent meq (other.keys [i], ?))
 				if keys.has_index (k) then
 					vs [k] := vs [k] + other.values [i]
 				else

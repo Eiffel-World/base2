@@ -19,7 +19,7 @@ inherit
 			is_equal,
 			fill,
 			clear,
-			subcopy
+			copy_range
 		end
 
 create
@@ -97,7 +97,7 @@ feature -- Access
 			l_not_too_large: l <= u + 1
 		do
 			create Result.make (l, u)
-			Result.subcopy (Current, l, u, Result.lower)
+			Result.copy_range (Current, l, u, Result.lower)
 		ensure
 			map_domain_definition: Result.map.domain |=| {MML_INTERVAL}[[l, u]]
 			map_definition: Result.map.domain.for_all (agent (i: INTEGER; r: V_ARRAY [G]): BOOLEAN
@@ -154,7 +154,7 @@ feature -- Replacement
 			area.fill_with_default (l - lower, u - lower)
 		end
 
-	subcopy (other: V_SEQUENCE [G]; other_first, other_last, index: INTEGER)
+	copy_range (other: V_SEQUENCE [G]; other_first, other_last, index: INTEGER)
 			-- Copy items of `other' within bounds [`other_first', `other_last'] to current array starting at index `i'.
 		do
 			if attached {V_ARRAY [G]} other as a then

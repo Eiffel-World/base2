@@ -61,7 +61,7 @@ feature -- Elements
 		local
 			i: INTEGER
 		do
-			i := keys.index_that (agent meq_key (k, ?))
+			i := keys.index_satisfying (agent meq_key (k, ?))
 			if keys.has_index (i) then
 				Result := values [i]
 			end
@@ -156,17 +156,17 @@ feature -- Modification
 			ks: V_ARRAY [K]
 			vs: V_ARRAY [V]
 		do
-			i := keys.index_that (agent meq_key (k, ?))
+			i := keys.index_satisfying (agent meq_key (k, ?))
 			if keys.has_index (i) then
 				vs := values.twin
 				vs [i] := x
 				create Result.make_from_arrays (keys, vs)
 			else
 				create ks.make (keys.lower, keys.upper + 1)
-				ks.subcopy (keys, keys.lower, keys.upper, keys.lower)
+				ks.copy_range (keys, keys.lower, keys.upper, keys.lower)
 				ks [ks.upper] := k
 				create vs.make (values.lower, values.upper + 1)
-				vs.subcopy (values, values.lower, values.upper, values.lower)
+				vs.copy_range (values, values.lower, values.upper, values.lower)
 				vs [vs.upper] := x
 				create Result.make_from_arrays (ks, vs)
 			end
@@ -180,14 +180,14 @@ feature -- Modification
 			vs: V_ARRAY [V]
 			i: INTEGER
 		do
-			i := keys.index_that (agent meq_key (k, ?))
+			i := keys.index_satisfying (agent meq_key (k, ?))
 			if keys.has_index (i) then
 				create ks.make (keys.lower, keys.upper - 1)
 				create vs.make (values.lower, values.upper - 1)
-				ks.subcopy (keys, keys.lower, i - 1, ks.lower)
-				ks.subcopy (keys, i + 1, keys.upper, i)
-				vs.subcopy (values, values.lower, i - 1, vs.lower)
-				vs.subcopy (values, i + 1, values.upper, i)
+				ks.copy_range (keys, keys.lower, i - 1, ks.lower)
+				ks.copy_range (keys, i + 1, keys.upper, i)
+				vs.copy_range (values, values.lower, i - 1, vs.lower)
+				vs.copy_range (values, i + 1, values.upper, i)
 				create Result.make_from_arrays (ks, vs)
 			else
 				Result := Current
@@ -234,8 +234,8 @@ feature -- Modification
 		do
 			create ks.make (1, keys.count + other.keys.count)
 			create vs.make (1, values.count + other.values.count)
-			ks.subcopy (other.keys, other.keys.lower, other.keys.upper, 1)
-			vs.subcopy (other.values, other.values.lower, other.values.upper, 1)
+			ks.copy_range (other.keys, other.keys.lower, other.keys.upper, 1)
+			vs.copy_range (other.values, other.values.lower, other.values.upper, 1)
 			from
 				i := keys.lower
 				j := other.keys.upper + 1

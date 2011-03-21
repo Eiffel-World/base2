@@ -180,7 +180,7 @@ feature -- Modification
 		do
 			if not Current [x] then
 				create a.make (1, array.count + 1)
-				a.subcopy (array, array.lower, array.upper, 1)
+				a.copy_range (array, array.lower, array.upper, 1)
 				a [a.count] := x
 				create Result.make_from_array (a)
 			else
@@ -194,11 +194,11 @@ feature -- Modification
 			a: V_ARRAY [G]
 			i: INTEGER
 		do
-			i := array.index_that (agent meq (x, ?))
+			i := array.index_satisfying (agent meq (x, ?))
 			if array.has_index (i) then
 				create a.make (array.lower, array.upper - 1)
-				a.subcopy (array, array.lower, i - 1, a.lower)
-				a.subcopy (array, i + 1, array.upper, i)
+				a.copy_range (array, array.lower, i - 1, a.lower)
+				a.copy_range (array, i + 1, array.upper, i)
 				create Result.make_from_array (a)
 			else
 				Result := Current
@@ -212,7 +212,7 @@ feature -- Modification
 		do
 			Result := Current - other
 			Result.array.resize (Result.array.lower, Result.array.upper + other.array.count)
-			Result.array.subcopy (other.array, other.array.lower, other.array.upper, Result.count - other.count + 1)
+			Result.array.copy_range (other.array, other.array.lower, other.array.upper, Result.count - other.count + 1)
 		end
 
 	intersection alias "*" (other: MML_SET [G]): MML_SET [G]

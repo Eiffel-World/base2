@@ -11,7 +11,7 @@ class
 inherit
 	V_CONTAINER [G]
 		rename
-			new_iterator as at_inorder_start
+			new_iterator as inorder
 		redefine
 			copy,
 			is_equal,
@@ -50,21 +50,21 @@ feature -- Iteration
 			path_definition_empty: map.is_empty implies Result.path.is_empty
 		end
 
-	at_inorder_start: V_INORDER_ITERATOR [G]
+	inorder: V_INORDER_ITERATOR [G]
 			-- New inorder iterator pointing to the first position.
 		do
 			create Result.make (Current)
 			Result.start
 		end
 
-	at_preorder_start: V_PREORDER_ITERATOR [G]
+	preorder: V_PREORDER_ITERATOR [G]
 			-- New preorder iterator pointing to the first position.
 		do
 			create Result.make (Current)
 			Result.start
 		end
 
-	at_postorder_start: V_POSTORDER_ITERATOR [G]
+	postorder: V_POSTORDER_ITERATOR [G]
 			-- New postorder iterator pointing to the first position.
 		do
 			create Result.make (Current)

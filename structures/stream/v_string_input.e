@@ -98,7 +98,7 @@ feature -- Cursor movement
 				index := source.count + 1
 			end
 		ensure then
-			index_effect: index = index_that_from (source, agent non_separator, 1)
+			index_effect: index = index_satisfying_from (source, agent non_separator, 1)
 			source_effect: source ~ old source.twin
 		end
 
@@ -112,7 +112,7 @@ feature -- Cursor movement
 				index := source.count + 1
 			end
 		ensure then
-			index_effect: index = index_that_from (source, agent non_separator, index_that_from (source, is_separator, old index))
+			index_effect: index = index_satisfying_from (source, agent non_separator, index_satisfying_from (source, is_separator, old index))
 			source_effect: source ~ old source.twin
 		end
 
@@ -156,7 +156,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Specification
-	index_that_from (s: STRING; p: PREDICATE [ANY, TUPLE [CHARACTER]]; i: INTEGER): INTEGER
+	index_satisfying_from (s: STRING; p: PREDICATE [ANY, TUPLE [CHARACTER]]; i: INTEGER): INTEGER
 			-- Index of the first character of `s' that satisfies `p' starting from position `i';
 			-- out of range, if `p' is never satisfied.	
 		do
@@ -178,7 +178,7 @@ feature -- Specification
 		end
 
 invariant
-	item_definition: not off implies (item ~ from_string.item ([source.substring (index, index_that_from (source, is_separator, index))]))
+	item_definition: not off implies (item ~ from_string.item ([source.substring (index, index_satisfying_from (source, is_separator, index))]))
 	off_definition: off = not source.valid_index (index)
 	--- is_separator_is_total: is_separator.precondition |=| True
 end

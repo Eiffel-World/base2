@@ -59,7 +59,7 @@ feature -- Iteration
 	new_iterator: V_INPUT_ITERATOR [G]
 			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'.
 		do
-			create {V_PROXY_ITERATOR [G]} Result.make (Current, list.at_start)
+			create {V_PROXY_ITERATOR [G]} Result.make (Current, list.at_first)
 		end
 
 feature -- Extension

@@ -11,7 +11,7 @@ deferred class
 inherit
 	V_CONTAINER [G]
 		rename
-			new_iterator as at_start
+			new_iterator as at_first
 		end
 
 	V_UPDATABLE_MAP [INTEGER, G]
@@ -129,7 +129,7 @@ feature -- Search
 				Result = (map | {MML_INTERVAL} [[i, upper]]).inverse.image_of (v).extremum (agent less_equal)
 		end
 
-	index_that (pred: PREDICATE [ANY, TUPLE [G]]): INTEGER
+	index_satisfying (pred: PREDICATE [ANY, TUPLE [G]]): INTEGER
 			-- Index of the first value that satisfies `pred';
 			-- out of range, if `pred' is never satisfied.
 		require
@@ -138,14 +138,14 @@ feature -- Search
 			precondition_satisfied: precondition_satisfied (pred)
 		do
 			if not is_empty then
-				Result := index_that_from (pred, lower)
+				Result := index_satisfying_from (pred, lower)
 			end
 		ensure
 			definition_not_has: not map.range.exists (pred) implies not map.domain [Result]
 			definition_has: map.range.exists (pred) implies Result = map.inverse.image (map.range | pred).extremum (agent less_equal)
 		end
 
-	index_that_from (pred: PREDICATE [ANY, TUPLE [G]]; i: INTEGER): INTEGER
+	index_satisfying_from (pred: PREDICATE [ANY, TUPLE [G]]; i: INTEGER): INTEGER
 			-- Index of the first value that satisfies `pred' starting from position `i';
 			-- out of range, if `pred' is never satisfied.
 		require
@@ -185,7 +185,7 @@ feature -- Search
 		end
 
 feature -- Iteration
-	at_start: like at
+	at_first: like at
 			-- New iterator pointing to the first position.
 		do
 			Result := at (lower)
@@ -196,7 +196,7 @@ feature -- Iteration
 				end (?, Result.sequence))
 		end
 
-	at_finish: like at
+	at_last: like at
 			-- New iterator pointing to the last position.
 		do
 			Result := at (upper)
@@ -267,7 +267,7 @@ feature -- Replacement
 			map_unchanged_effect: (map | (map.domain - {MML_INTERVAL}[[l, u]])) |=| old (map | (map.domain - {MML_INTERVAL}[[l, u]]))
 		end
 
-	subcopy (other: V_SEQUENCE [G]; other_first, other_last, index: INTEGER)
+	copy_range (other: V_SEQUENCE [G]; other_first, other_last, index: INTEGER)
 			-- Copy items of `other' within bounds [`other_first', `other_last'] to current sequence starting at index `index'.
 		require
 			other_exists: other /= Void
@@ -377,7 +377,7 @@ feature -- Specification
 			create Result.empty
 			from
 				i := lower
-				it := at_start
+				it := at_first
 			until
 				it.after
 			loop

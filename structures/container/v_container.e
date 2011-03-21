@@ -61,7 +61,7 @@ feature -- Search
 			definition: Result = bag [v]
 		end
 
-	count_if (pred: PREDICATE [ANY, TUPLE [G]]): INTEGER
+	count_satisfying (pred: PREDICATE [ANY, TUPLE [G]]): INTEGER
 			-- How many elements satisfy `pred'?
 		require
 			pred_exists: pred /= Void

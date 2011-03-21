@@ -95,7 +95,7 @@ feature -- Measurement
 	occurrences (x: G): INTEGER
 			-- How many times does `x' occur?
 		do
-			Result := array.count_if (agent meq (x, ?))
+			Result := array.count_satisfying (agent meq (x, ?))
 		end
 
 feature -- Comparison
@@ -186,7 +186,7 @@ feature -- Modification
 			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count + 1)
-			a.subcopy (array, array.lower, array.upper, 1)
+			a.copy_range (array, array.lower, array.upper, 1)
 			a [a.count] := x
 			create Result.make_from_array (a)
 		end
@@ -197,7 +197,7 @@ feature -- Modification
 			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count + 1)
-			a.subcopy (array, array.lower, array.upper, 2)
+			a.copy_range (array, array.lower, array.upper, 2)
 			a [1] := x
 			create Result.make_from_array (a)
 		end
@@ -215,8 +215,8 @@ feature -- Modification
 				Result := Current
 			else
 				create a.make (1, count + other.count)
-				a.subcopy(array, array.lower, array.upper, 1)
-				a.subcopy(other.array, other.array.lower, other.array.upper, count + 1)
+				a.copy_range(array, array.lower, array.upper, 1)
+				a.copy_range(other.array, other.array.lower, other.array.upper, count + 1)
 				create Result.make_from_array (a)
 			end
 		end
@@ -241,8 +241,8 @@ feature -- Modification
 			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count - 1)
-			a.subcopy (array, array.lower, array.lower + i - 2, 1)
-			a.subcopy (array, array.lower + i, array.upper, i)
+			a.copy_range (array, array.lower, array.lower + i - 2, 1)
+			a.copy_range (array, array.lower + i, array.upper, i)
 			create Result.make_from_array (a)
 		end
 

@@ -39,7 +39,7 @@ feature -- Initialization
 				if iterator = Void then
 					create iterator.make (Current)
 				end
-				append (other.at_start)
+				append (other.at_first)
 			end
 		ensure then
 			sequence_effect: sequence |=| other.sequence
