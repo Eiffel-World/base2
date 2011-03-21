@@ -41,6 +41,7 @@ feature {NONE} -- Initialization
 			fs_one_argument: fs.open_count = 1
 			is_sep_exists: is_sep /= Void
 			is_sep_one_argument: is_sep.open_count = 1
+			--- is_sep_is_total: is_sep.precondition |=| True
 		do
 			source := src.twin
 			from_string := fs
@@ -179,4 +180,5 @@ feature -- Specification
 invariant
 	item_definition: not off implies (item ~ from_string.item ([source.substring (index, index_that_from (source, is_separator, index))]))
 	off_definition: off = not source.valid_index (index)
+	--- is_separator_is_total: is_separator.precondition |=| True
 end

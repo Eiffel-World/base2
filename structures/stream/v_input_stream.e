@@ -54,6 +54,7 @@ feature -- Cursor movement
 		require
 			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
+			--- pred_is_total: pred.precondition |=| True
 		do
 			from
 			until

@@ -27,7 +27,9 @@ feature {NONE} -- Initialization
 		require
 			eq_exists: eq /= Void
 			h_exists: h /= Void
+			--- eq_is_total: eq.precondition |=| True
 			--- eq_is_equivalence: is_equivalence (eq)
+			--- h_is_total: h.precondition |=| True
 			--- h_non_negative: forall x: K :: h (x) >= 0
 			--- h_eq_consistent: forall x, y: K :: eq (x, y) implies h (x) = h(y)			
 		do

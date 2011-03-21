@@ -26,7 +26,8 @@ feature {NONE} -- Initialization
 			-- Create an empty table with key order `o'.
 		require
 			o_exists: o /= Void
-			--- is_total_order: is_total_order (o)
+			--- o_is_total: o.precondition |=| True
+			--- o_is_total_order: is_total_order (o)
 		do
 			key_order := o
 			create set.make (agent (kv1, kv2: TUPLE [key: K; value: V]; key_o: PREDICATE [ANY, TUPLE [K, K]]): BOOLEAN

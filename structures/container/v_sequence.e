@@ -129,27 +129,29 @@ feature -- Search
 				Result = (map | {MML_INTERVAL} [[i, upper]]).inverse.image_of (v).extremum (agent less_equal)
 		end
 
-	index_that (p: PREDICATE [ANY, TUPLE [G]]): INTEGER
-			-- Index of the first value that satisfies `p';
-			-- out of range, if `p' is never satisfied.
+	index_that (pred: PREDICATE [ANY, TUPLE [G]]): INTEGER
+			-- Index of the first value that satisfies `pred';
+			-- out of range, if `pred' is never satisfied.
 		require
-			p_exists: p /= Void
-			p_has_one_arg: p.open_count = 1
+			pred_exists: pred /= Void
+			pred_has_one_arg: pred.open_count = 1
+			precondition_satisfied: precondition_satisfied (pred)
 		do
 			if not is_empty then
-				Result := index_that_from (p, lower)
+				Result := index_that_from (pred, lower)
 			end
 		ensure
-			definition_not_has: not map.range.exists (p) implies not map.domain [Result]
-			definition_has: map.range.exists (p) implies Result = map.inverse.image (map.range | p).extremum (agent less_equal)
+			definition_not_has: not map.range.exists (pred) implies not map.domain [Result]
+			definition_has: map.range.exists (pred) implies Result = map.inverse.image (map.range | pred).extremum (agent less_equal)
 		end
 
-	index_that_from (p: PREDICATE [ANY, TUPLE [G]]; i: INTEGER): INTEGER
-			-- Index of the first value that satisfies `p' starting from position `i';
-			-- out of range, if `p' is never satisfied.
+	index_that_from (pred: PREDICATE [ANY, TUPLE [G]]; i: INTEGER): INTEGER
+			-- Index of the first value that satisfies `pred' starting from position `i';
+			-- out of range, if `pred' is never satisfied.
 		require
-			p_exists: p /= Void
-			p_has_one_arg: p.open_count = 1
+			pred_exists: pred /= Void
+			pred_has_one_arg: pred.open_count = 1
+			precondition_satisfied: precondition_satisfied (pred)
 			has_index: has_index (i)
 		local
 			it: V_INPUT_ITERATOR [G]
@@ -160,7 +162,7 @@ feature -- Search
 				j := i
 				Result := upper + 1
 			until
-				it.after or else p.item ([it.item])
+				it.after or else pred.item ([it.item])
 			loop
 				it.forth
 				j := j + 1
@@ -169,9 +171,9 @@ feature -- Search
 				Result := j
 			end
 		ensure
-			definition_not_has: not (map | {MML_INTERVAL} [[i, upper]]).range.exists (p) implies not map.domain [Result]
-			definition_has: (map | {MML_INTERVAL} [[i, upper]]).range.exists (p) implies
-				Result = (map | {MML_INTERVAL} [[i, upper]]).inverse.image (map.range | p).extremum (agent less_equal)
+			definition_not_has: not (map | {MML_INTERVAL} [[i, upper]]).range.exists (pred) implies not map.domain [Result]
+			definition_has: (map | {MML_INTERVAL} [[i, upper]]).range.exists (pred) implies
+				Result = (map | {MML_INTERVAL} [[i, upper]]).inverse.image (map.range | pred).extremum (agent less_equal)
 		end
 
 	key_equivalence: PREDICATE [ANY, TUPLE [INTEGER, INTEGER]]
@@ -302,7 +304,8 @@ feature -- Replacement
 		require
 			order_exists: order /= Void
 			order_has_two_args: order.open_count = 2
-			--- is_total_order: is_total_order (order)
+			--- order_is_total: order.precondition |=| True
+			--- order_is_total_order: is_total_order (order)
 		do
 			quick_sort (lower, upper, order)
 		ensure

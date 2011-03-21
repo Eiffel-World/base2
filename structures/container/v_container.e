@@ -61,11 +61,12 @@ feature -- Search
 			definition: Result = bag [v]
 		end
 
-	count_if (p: PREDICATE [ANY, TUPLE [G]]): INTEGER
-			-- How many elements satisfy `p'?
+	count_if (pred: PREDICATE [ANY, TUPLE [G]]): INTEGER
+			-- How many elements satisfy `pred'?
 		require
-			p_exists: p /= Void
-			p_has_one_arg: p.open_count = 1
+			pred_exists: pred /= Void
+			pred_has_one_arg: pred.open_count = 1
+			precondition_satisfied: precondition_satisfied (pred)
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
@@ -74,35 +75,37 @@ feature -- Search
 			until
 				it.after
 			loop
-				if p.item ([it.item]) then
+				if pred.item ([it.item]) then
 					Result := Result + 1
 				end
 				it.forth
 			end
 		ensure
-			definition: Result = (bag.domain | p).count
+			definition: Result = (bag.domain | pred).count
 		end
 
-	exists (p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
-			-- Is there an element that satisfies `p'?
+	exists (pred: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+			-- Is there an element that satisfies `pred'?
 		require
-			p_exists: p /= Void
-			p_has_one_arg: p.open_count = 1
+			pred_exists: pred /= Void
+			pred_has_one_arg: pred.open_count = 1
+			precondition_satisfied: precondition_satisfied (pred)
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
 			it := new_iterator
-			it.satisfy_forth (p)
+			it.satisfy_forth (pred)
 			Result := not it.after
 		ensure
-			definition: Result = bag.domain.exists (p)
+			definition: Result = bag.domain.exists (pred)
 		end
 
-	for_all (p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
-			-- Do all elements satisfy `p'?
+	for_all (pred: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+			-- Do all elements satisfy `pred'?
 		require
-			p_exists: p /= Void
-			p_has_one_arg: p.open_count = 1
+			pred_exists: pred /= Void
+			pred_has_one_arg: pred.open_count = 1
+			precondition_satisfied: precondition_satisfied (pred)
 		local
 			it: V_INPUT_ITERATOR [G]
 		do
@@ -112,11 +115,11 @@ feature -- Search
 			until
 				it.after or not Result
 			loop
-				Result := p.item ([it.item])
+				Result := pred.item ([it.item])
 				it.forth
 			end
 		ensure
-			definition: Result = bag.domain.for_all (p)
+			definition: Result = bag.domain.for_all (pred)
 		end
 
 feature -- Iteration
@@ -167,6 +170,22 @@ feature -- Specification
 			end
 		ensure
 			exists: Result /= Void
+		end
+
+	precondition_satisfied (pred: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+			-- Does the precondition of `pred' hold for all elements of `Current'?
+		note
+			status: specification
+		do
+			Result := for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+				do
+					Result := p.precondition ([x])
+				end (?, pred))
+		ensure
+			definition: Result = bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+				do
+					Result := p.precondition ([x])
+				end (?, pred))
 		end
 
 invariant

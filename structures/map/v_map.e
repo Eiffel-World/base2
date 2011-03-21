@@ -84,5 +84,6 @@ feature -- Specification
 
 invariant
 	key_equivalence_exists: key_equivalence /= Void
-	--- is_equivalence: is_equivalence (key_equivalence)
+	--- equivalence_is_total: equivalence.precondition |=| True
+	--- equivalence_is_equivalence: is_equivalence (key_equivalence)
 end

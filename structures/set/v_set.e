@@ -315,14 +315,15 @@ feature -- Specification
 ---		deferred
 ---		ensure
 			--- definition: Result = (
-			---	(forall x: K :: r (x, x)) and
-			--- (forall x, y: K :: r (x, y) = r (y, x)) and
-			--- (forall x, y, z: K :: r (x, y) and r (y, z) implies r (x, z))
+			---	(forall x: G :: r (x, x)) and
+			--- (forall x, y: G :: r (x, y) = r (y, x)) and
+			--- (forall x, y, z: G :: r (x, y) and r (y, z) implies r (x, z))
 ---		end		
 
 invariant
 	equivalence_exists: equivalence /= Void
 	bag_domain_definition: bag.domain |=| set
 	bag_definition: bag.is_constant (1)
-	--- is_equivalence: is_equivalence (equivalence)
+	--- equivalence_is_total: equivalence.precondition |=| True
+	--- equivalence_is_equivalence: is_equivalence (equivalence)
 end

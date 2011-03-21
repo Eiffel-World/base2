@@ -28,7 +28,8 @@ feature {NONE} -- Initialization
 			-- Create an empty set with elements order `o'.
 		require
 			o_exists: o /= Void
-			--- is_total_order: is_total_order (o)
+			--- o_is_total: o.precondition |=| True
+			--- o_is_total_order: is_total_order (o)
 		do
 			order := o
 			create tree
@@ -174,5 +175,6 @@ invariant
 	order_exists: order /= Void
 	tree_exists: tree /= Void
 	iterator_exists: iterator /= Void
+	--- order_is_total: order.precondition |=| True
 	--- order_is_total_order: is_total_order (order)
 end

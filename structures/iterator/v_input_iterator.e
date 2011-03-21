@@ -184,8 +184,10 @@ feature -- Cursor movement
 		end
 
 	satisfy_forth (pred: PREDICATE [ANY, TUPLE [G]])
-			-- Move to the first position at or after current where `p' holds.
+			-- Move to the first position at or after current where `pred' holds.
 			-- If `pred' never holds, move `after'.
+		require else
+			precondition_satisfied: target.precondition_satisfied (pred)
 		do
 			if before then
 				start
@@ -230,6 +232,7 @@ feature -- Cursor movement
 		require
 			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
+			precondition_satisfied: target.precondition_satisfied (pred)
 		do
 			if after then
 				finish
