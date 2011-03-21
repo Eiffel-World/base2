@@ -26,8 +26,7 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create an empty list with default `capacity' and `growth_rate'.
 		do
-			create array.make (1, default_capacity)
-			first_index := 1
+			create array.make (0, default_capacity - 1)
 		ensure then
 			sequence_effect: sequence.is_empty
 		end
@@ -77,8 +76,8 @@ feature -- Extension
 		do
 			reserve (count + 1)
 			if is_empty then
-				array [1] := v
-				first_index := 1
+				array [0] := v
+				first_index := 0
 			else
 				first_index := mod_capacity (first_index - 1)
 				array [first_index] := v
@@ -89,9 +88,9 @@ feature -- Extension
 	extend_back (v: G)
 			-- Insert `v' at the back.
 		do
-			reserve (count + 1)
-			array [array_index (count + 1)] := v
 			count := count + 1
+			reserve (count)
+			array [array_index (count)] := v
 		end
 
 	extend_at (v: G; i: INTEGER)
@@ -102,10 +101,10 @@ feature -- Extension
 			elseif i = count + 1 then
 				extend_back (v)
 			else
-				reserve (count + 1)
-				circular_copy (i, i + 1, count - i + 1)
-				array [array_index (i)] := v
 				count := count + 1
+				reserve (count)
+				circular_copy (i, i + 1, count - i)
+				array [array_index (i)] := v
 			end
 		end
 
@@ -141,6 +140,7 @@ feature -- Removal
 	remove_front
 			-- Remove first element.
 		do
+			array [array_index (1)] := ({G}).default
 			first_index := mod_capacity (first_index + 1)
 			count := count - 1
 		end
@@ -148,12 +148,14 @@ feature -- Removal
 	remove_back
 			-- Remove last element.
 		do
+			array [array_index (count)] := ({G}).default
 			count := count - 1
 		end
 
 	remove_at (i: INTEGER)
 			-- Remove element at position `i'.
 		do
+			array [array_index (i)] := ({G}).default
 			circular_copy (i + 1, i, count - i)
 			count := count - 1
 		end
@@ -161,6 +163,7 @@ feature -- Removal
 	wipe_out
 			-- Remove all elements.
 		do
+			array.clear (0, capacity - 1)
 			count := 0
 		end
 
@@ -172,41 +175,43 @@ feature {V_ARRAYED_LIST} -- Implementation
 			-- Index of the first list element in `array'.
 
 feature {NONE} -- Implementation
-	capacity: INTEGER
+	frozen capacity: INTEGER
 			-- Size of the underlying array.
 		do
 			Result := array.count
 		end
 
-	default_capacity: INTEGER = 10
+	default_capacity: INTEGER = 8
 			-- Default value for `capacity'.
 
-	growth_rate: INTEGER = 150
-			-- Minimum percentage by which underlying array grows when resized.
-			-- Higher values improve runtime efficiency at the cost of higher memory consumption.
-			-- Minimum value is 100%: only resize the array so that all list elements fit.						
+	growth_rate: INTEGER = 2
+			-- Minimum number by which underlying array grows when resized.
 
-	mod_capacity (i: INTEGER): INTEGER
-			-- `i' modulo `capacity' in range [`1', `capacity'].
+	frozen mod_capacity (i: INTEGER): INTEGER
+			-- `i' modulo `capacity' in range [`0', `capacity' - 1].
+		require
+			i_large_enough: i >= -capacity
 		do
-			Result := (i - 1) \\ capacity + 1
-			if i <= 0 then
-				Result := Result + capacity
-			end
+			Result := (i + capacity) \\ capacity
 		ensure
-			in_bounds: 1 <= Result and Result <= capacity
+			in_bounds: 0 <= Result and Result < capacity
 		end
 
-	array_index (i: INTEGER): INTEGER
+	frozen array_index (i: INTEGER): INTEGER
 			-- Position in `array' of `i'th list element.
+		require
+			i_non_negative: i >= 0
 		do
-			Result := mod_capacity (i + first_index - 1)
+			Result := mod_capacity (i - 1 + first_index)
 		ensure
-			in_bounds: 1 <= Result and Result <= capacity
+			in_bounds: 0 <= Result and Result < capacity
 		end
 
 	circular_copy (src, dest, n: INTEGER)
 			-- Copy `n' elements from position `src' to position `dest'.
+		require
+			src_non_negative: src >= 0
+			dest_non_negative: dest >= 0
 		local
 			i: INTEGER
 			a: V_ARRAY [G]
@@ -230,22 +235,19 @@ feature {NONE} -- Implementation
 		do
 			if capacity < n then
 				old_size := capacity
-				new_size := n.max (capacity * growth_rate // 100)
-				array.resize (1, new_size)
-				if first_index > 1 then
-					array.subcopy (array, first_index, old_size, new_size - old_size + first_index)
-					array.clear (first_index, old_size.min (new_size - old_size + first_index - 1))
+				new_size := n.max (capacity * growth_rate)
+				array.resize (0, new_size - 1)
+				if first_index > 0 then
+					array.subcopy (array, first_index, old_size - 1, new_size - old_size + first_index)
+					array.clear (first_index, (old_size - 1).min (new_size - old_size + first_index - 1))
 					first_index := new_size - old_size + first_index
 				end
 			end
-		ensure
-			capacity_effect_unchanged: n <= old capacity implies capacity = old capacity
-			capacity_effect_changed: n > old capacity implies capacity = n.max (old capacity * growth_rate // 100)
 		end
 
 invariant
 	array_exists: array /= Void
-	array_starts_from_one: array.lower = 1
-	first_index_in_bounds: capacity > 0 implies 1 <= first_index and first_index <= capacity
-	first_index_one_in_empty: capacity = 0 implies first_index = 1
+	array_non_empty: capacity > 0
+	array_starts_from_zero: array.lower = 0
+	first_index_in_bounds: 0 <= first_index and first_index < capacity
 end

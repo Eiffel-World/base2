@@ -138,7 +138,9 @@ feature -- Comparison
 		local
 			i, j: V_SET_ITERATOR [G]
 		do
-			if count = other.count then
+			if other = Current then
+				Result := True
+			elseif count = other.count then
 				from
 					Result := True
 					i := new_iterator
