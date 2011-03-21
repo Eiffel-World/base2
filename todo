@@ -1,5 +1,6 @@
 Structures:
 
+- Filter and map streams, folding?
 - V_STRING, V_MUTABLE_STRING
 
 MML:
