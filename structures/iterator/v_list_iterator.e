@@ -22,7 +22,8 @@ feature -- Access
 
 feature -- Extension
 	extend_left (v: G)
-			-- Insert `v' to the left of current position. Do not move cursor.
+			-- Insert `v' to the left of current position.
+			-- Do not move cursor.
 		require
 			not_off: not off
 		deferred
@@ -32,7 +33,8 @@ feature -- Extension
 		end
 
 	extend_right (v: G)
-			-- Insert `v' to the right of current position. Do not move cursor.
+			-- Insert `v' to the right of current position.
+			-- Do not move cursor.
 		require
 			not_off: not off
 		deferred
@@ -42,7 +44,8 @@ feature -- Extension
 		end
 
 	insert_left (other: V_INPUT_ITERATOR [G])
-			-- Append sequence of values, over which `input' iterates to the left of current position. Do not move cursor.
+			-- Append, to the left of current position, sequence of values produced by `other'.
+			-- Do not move cursor.
 		require
 			not_off: not off
 			other_exists: other /= Void
@@ -57,7 +60,8 @@ feature -- Extension
 		end
 
 	insert_right (other: V_INPUT_ITERATOR [G])
-			-- Append sequence of values, over which `input' iterates to the right of current position. Move cursor to the last element of inserted sequence.
+			-- Append, to the right of current position, sequence of values produced by `other'.
+			-- Move cursor to the last element of inserted sequence.
 		require
 			not_off: not off
 			other_exists: other /= Void

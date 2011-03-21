@@ -207,7 +207,7 @@ feature -- Removal
 		end
 
 	meet (other: V_SET [G])
-			-- Remove elements that are not in `other'.
+			-- Keep only elements that are also in `other'.
 		require
 			other_exists: other /= Void
 		do
@@ -251,8 +251,8 @@ feature -- Removal
 			set_effect_new: set.for_all (agent (old Current.twin).has)
 		end
 
-	sym_subtract (other: V_SET [G])
-			-- Remove elements that are also in `other' and add elements of `other' that are not in `Current'.
+	symmetric_subtract (other: V_SET [G])
+			-- Keep elements that are only in `Current' or only in `other'.
 		require
 			other_exists: other /= Void
 		do

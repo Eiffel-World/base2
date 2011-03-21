@@ -84,7 +84,7 @@ feature -- Extension
 		end
 
 	append (input: V_INPUT_ITERATOR [G])
-			-- Append sequence of values, over which `input' iterates.
+			-- Append sequence of values produced by `input'.
 		require
 			input_exists: input /= Void
 			different_target: input.target /= Current
@@ -104,7 +104,7 @@ feature -- Extension
 		end
 
 	prepend (input: V_INPUT_ITERATOR [G])
-			-- Prepend sequence of values, over which `input' iterates.
+			-- Prepend sequence of values produced by `input'.
 		require
 			input_exists: input /= Void
 			different_target: input.target /= Current
@@ -117,7 +117,7 @@ feature -- Extension
 		end
 
 	insert_at (input: V_INPUT_ITERATOR [G]; i: INTEGER)
-			-- Insert sequence of values, over which `input' iterates, starting at position `i'.
+			-- Insert starting at position `i' sequence of values produced by `input'.
 		require
 			valid_index: has_index (i) or i = count + 1
 			input_exists: input /= Void
