@@ -10,6 +10,10 @@ class
 
 inherit
 	V_INPUT_STREAM [G]
+		redefine
+			copy,
+			is_equal
+		end
 
 create
 	make,
@@ -27,7 +31,7 @@ feature {NONE} -- Initialization
 			make_with_separators (src, fs, agent default_is_separator)
 		ensure
 			source_effect: source ~ src
-			index_effect: index = 0
+			index_effect: index = index_satisfying_from (source, agent non_separator, 1)
 			--- from_string_effect: from_string = fs
 			--- is_separator_effect: is_separator = agent default_is_separator
 		end
@@ -46,11 +50,29 @@ feature {NONE} -- Initialization
 			source := src.twin
 			from_string := fs
 			is_separator := is_sep
+			start
 		ensure
 			source_effect: source ~ src
-			index_effect: index = 0
+			index_effect: index = index_satisfying_from (source, agent non_separator, 1)
 			--- from_string_effect: from_string = fs
 			--- is_separator_effect: is_separator = is_sep			
+		end
+
+feature -- Initialization
+	copy (other: like Current)
+			-- Initialize with the same `source' and position as in `other'.
+		do
+			source := other.source.twin
+			from_string := other.from_string
+			is_separator := other.is_separator
+			index := other.index
+			item := other.item
+			next := other.next
+		ensure then
+			source_effect: source ~ other.source
+			index_effect: index = other.index
+			--- from_string_effect: from_string = other.from_string
+			--- is_separator_effect: is_separator = other.is_separator
 		end
 
 feature -- Access
@@ -73,9 +95,9 @@ feature -- Access
 	default_is_separator (c: CHARACTER): BOOLEAN
 			-- Is `c' space or punctuation character?
 		do
-			Result := c.is_space or c.is_punctuation
+			Result := c.is_space
 		ensure
-			definition: Result = (c.is_space or c.is_punctuation)
+			definition: Result = c.is_space
 		end
 
 feature -- Status report
@@ -83,6 +105,18 @@ feature -- Status report
 			-- Is current position off scope?
 		do
 			Result := not source.valid_index (index)
+		end
+
+feature -- Comparison
+	is_equal (other: like Current): BOOLEAN
+			-- Does `other' read from an equal string at the same position?
+		do
+			if other = Current then
+				Result := True
+			else
+				Result := source ~ other.source and index = other.index
+				-- ToDo: compare is_separator and from_string
+			end
 		end
 
 feature -- Cursor movement
@@ -116,10 +150,11 @@ feature -- Cursor movement
 			source_effect: source ~ old source.twin
 		end
 
-feature {NONE} -- Implementation
+feature {V_STRING_INPUT} -- Implementation
 	next: INTEGER
 			-- Position of the first character of next token in `source'.
 
+feature {NONE} -- Implementation
 	skip_separators
 			-- Move to the next character not in `separators'.
 		do
@@ -178,7 +213,8 @@ feature -- Specification
 		end
 
 invariant
-	item_definition: not off implies (item ~ from_string.item ([source.substring (index, index_satisfying_from (source, is_separator, index))]))
+	item_definition: not off implies
+		(item ~ from_string.item ([source.substring (index, index_satisfying_from (source, is_separator, index) - 1)]))
 	off_definition: off = not source.valid_index (index)
 	--- is_separator_is_total: is_separator.precondition |=| True
 end

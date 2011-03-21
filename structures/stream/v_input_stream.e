@@ -49,7 +49,7 @@ feature -- Cursor movement
 		end
 
 	satisfy (pred: PREDICATE [ANY, TUPLE [G]])
-			-- Move to the first position at or after current where `p' holds.
+			-- Move to the first position at or after current where `pred' holds.
 			-- If `pred' never holds, move `after'.
 		require
 			pred_exists: pred /= Void
