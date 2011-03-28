@@ -159,13 +159,13 @@ feature -- Specification
 		local
 			i: INTEGER
 		do
-			create Result.empty
+			create Result
 			from
 				i := 0
 			until
 				i >= Random_bit_count
 			loop
-				Result := Result.extended ((value |>> i) & {NATURAL_64} 1 = 1)
+				Result := Result & ((value |>> i) & {NATURAL_64} 1 = 1)
 				i := i + 1
 			end
 			from
@@ -173,7 +173,7 @@ feature -- Specification
 			until
 				i >= Random_bit_count
 			loop
-				Result := Result.extended ((next_value |>> i) & {NATURAL_64} 1 = 1)
+				Result := Result & ((value |>> i) & {NATURAL_64} 1 = 1)
 				i := i + 1
 			end
 		end

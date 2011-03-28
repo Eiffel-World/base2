@@ -179,14 +179,14 @@ feature -- Specification
 			pair_sequence: MML_SEQUENCE [TUPLE [key: K; value: V]]
 			i: INTEGER
 		do
-			create Result.empty
+			create Result
 			pair_sequence := set_iterator.sequence
 			from
 				i := 1
 			until
 				i > pair_sequence.count
 			loop
-				Result := Result.extended (pair_sequence.item (i).key)
+				Result := Result & pair_sequence.item (i).key
 				i := i + 1
 			end
 		end
@@ -199,14 +199,14 @@ feature -- Specification
 			pair_sequence: MML_SEQUENCE [TUPLE [key: K; value: V]]
 			i: INTEGER
 		do
-			create Result.empty
+			create Result
 			pair_sequence := set_iterator.sequence
 			from
 				i := 1
 			until
 				i > pair_sequence.count
 			loop
-				Result := Result.extended (pair_sequence.item (i).value)
+				Result := Result & pair_sequence.item (i).value
 				i := i + 1
 			end
 		end

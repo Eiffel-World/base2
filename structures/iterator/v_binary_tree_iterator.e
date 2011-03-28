@@ -161,13 +161,13 @@ feature -- Specification
 		do
 			old_active := active
 			old_after := after
-			create Result.empty
+			create Result
 			from
 				start
 			until
 				after
 			loop
-				Result := Result.extended (item)
+				Result := Result & item
 				forth
 			end
 			active := old_active

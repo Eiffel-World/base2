@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="ISO-8859-1"?>
-<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-5-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-5-0 http://www.eiffel.com/developers/xml/configuration-1-5-0.xsd" name="base2" uuid="DE0E6D7C-E956-44D1-A1A8-DD05B18B8084" library_target="base2">
+<system xmlns="http://www.eiffel.com/developers/xml/configuration-1-7-0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.eiffel.com/developers/xml/configuration-1-7-0 http://www.eiffel.com/developers/xml/configuration-1-7-0.xsd" name="base2" uuid="DE0E6D7C-E956-44D1-A1A8-DD05B18B8084" library_target="base2">
 	<target name="base2">
 		<root all_classes="true"/>
 		<option warning="true">
 			<assertions precondition="true" postcondition="true" check="true" invariant="true" loop="true" supplier_precondition="true"/>
 		</option>
-		<library name="base" location="$ISE_LIBRARY/library/base/base.ecf"/>
-		<cluster name="structures" location=".\structures" recursive="true">
+		<library name="base" location="$ISE_LIBRARY\library\base\base.ecf"/>
+		<cluster name="mml" location=".\mml\" recursive="true">
 			<file_rule>
 				<exclude>.svn</exclude>
 			</file_rule>
 		</cluster>
-		<cluster name="mml" location=".\mml" recursive="true">
+		<cluster name="structures" location=".\structures\" recursive="true">
 			<file_rule>
 				<exclude>.svn</exclude>
-			</file_rule>		
+			</file_rule>
 		</cluster>
 	</target>
 </system>

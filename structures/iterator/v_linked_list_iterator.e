@@ -291,13 +291,13 @@ feature -- Specification
 		local
 			c: V_LINKABLE [G]
 		do
-			create Result.empty
+			create Result
 			from
 				c := target.first_cell
 			until
 				c = Void
 			loop
-				Result := Result.extended (c.item)
+				Result := Result & c.item
 				c := c.right
 			end
 		end

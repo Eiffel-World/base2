@@ -28,7 +28,7 @@ feature -- Extension
 			not_off: not off
 		deferred
 		ensure
-			target_sequence_effect: target.sequence |=| old (target.sequence.front (index - 1).extended (v) + target.sequence.tail (index))
+			target_sequence_effect: target.sequence |=| old (target.sequence.front (index - 1) & v + target.sequence.tail (index))
 			index_effect: index = old index + 1
 		end
 
@@ -39,7 +39,7 @@ feature -- Extension
 			not_off: not off
 		deferred
 		ensure
-			target_sequence_effect: target.sequence |=| old (target.sequence.front (index).extended (v) + target.sequence.tail (index + 1))
+			target_sequence_effect: target.sequence |=| old (target.sequence.front (index) & v + target.sequence.tail (index + 1))
 			index_effect: index = old index
 		end
 

@@ -9,9 +9,12 @@ class
 
 inherit
 	MML_MODEL
+		redefine
+			default_create
+		end
 
 create
-	empty,
+	default_create,
 	singleton
 
 create {MML_MODEL}
@@ -21,7 +24,7 @@ convert
 	singleton ({G})
 
 feature {NONE} -- Initialization
-	empty
+	default_create
 			-- Create an empty sequence.
 		do
 			create array.make (1, 0)
@@ -74,19 +77,19 @@ feature -- Sets
 		local
 			i: INTEGER
 		do
-			create Result.empty
+			create Result
 			from
 				i := array.lower
 			until
 				i > array.upper
 			loop
-				Result := Result.extended (array [i])
+				Result := Result & array [i]
 				i := i + 1
 			end
 		end
 
 feature -- Measurement
-	count: INTEGER
+	count alias "#": INTEGER
 			-- Number of elements.
 		do
 			Result := array.count
@@ -103,10 +106,10 @@ feature -- Comparison
 			-- Does this sequence contain the same elements in the same order as `other'?		
 		do
 			Result := attached {MML_SEQUENCE [G]} other as sequence and then
-				(count = sequence.count and is_prefix_of (sequence))
+				(count = sequence.count and Current <= sequence)
 		end
 
-	is_prefix_of (other: MML_SEQUENCE [G]): BOOLEAN
+	is_prefix_of alias "<=" (other: MML_SEQUENCE [G]): BOOLEAN
 			-- Is this sequence a prefix of `other'?
 		require
 			other_exists: other /= Void
@@ -180,7 +183,7 @@ feature -- Decomposition
 		end
 
 feature -- Modification
-	extended (x: G): MML_SEQUENCE [G]
+	extended alias "&" (x: G): MML_SEQUENCE [G]
 			-- Current sequence extended with `x' at the end.
 		local
 			a: V_ARRAY [G]

@@ -207,7 +207,7 @@ feature -- Specification
 			status: specification
 		do
 			if is_empty then
-				create Result.empty
+				create Result
 			else
 				Result := at_root.map
 			end

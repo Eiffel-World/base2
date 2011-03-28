@@ -71,7 +71,7 @@ feature -- Extension
 			-- Insert `v' at the back.
 		deferred
 		ensure
-			sequence_effect: sequence |=| old sequence.extended (v)
+			sequence_effect: sequence |=| old (sequence & v)
 		end
 
 	extend_at (v: G; i: INTEGER)
@@ -80,7 +80,7 @@ feature -- Extension
 			valid_index: has_index (i) or i = count + 1
 		deferred
 		ensure
-			sequence_effect: sequence |=| old (sequence.front (i - 1).extended (v) + sequence.tail (i))
+			sequence_effect: sequence |=| old (sequence.front (i - 1) & v + sequence.tail (i))
 		end
 
 	append (input: V_INPUT_ITERATOR [G])

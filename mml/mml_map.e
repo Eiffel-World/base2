@@ -9,16 +9,19 @@ class
 
 inherit
 	MML_MODEL
+		redefine
+			default_create
+		end
 
 create
-	empty,
+	default_create,
 	singleton
 
 create {MML_MODEL}
 	make_from_arrays
 
 feature {NONE} -- Initialization
-	empty
+	default_create
 			-- Create an empty map.
 		do
 			create keys.make (1, 0)
@@ -79,13 +82,13 @@ feature -- Sets
 		local
 			i: INTEGER
 		do
-			create Result.empty
+			create Result
 			from
 				i := values.lower
 			until
 				i > values.upper
 			loop
-				Result := Result.extended (values [i])
+				Result := Result & values [i]
 				i := i + 1
 			end
 		end

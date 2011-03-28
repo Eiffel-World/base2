@@ -151,7 +151,7 @@ feature -- Specification
 		local
 			it: V_TABLE_ITERATOR [K, V]
 		do
-			create Result.empty
+			create Result
 			from
 				it := new_iterator
 			until

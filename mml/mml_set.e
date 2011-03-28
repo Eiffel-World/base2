@@ -9,9 +9,12 @@ class
 
 inherit
 	MML_MODEL
+		redefine
+			default_create
+		end
 
 create
-	empty,
+	default_create,
 	singleton
 
 create {MML_MODEL}
@@ -21,7 +24,7 @@ convert
 	singleton ({G})
 
 feature {NONE} -- Initialization
-	empty
+	default_create
 			-- Create an empty set.
 		do
 			create array.make (1, 0)
@@ -134,7 +137,7 @@ feature -- Subsets
 		end
 
 feature -- Measurement
-	count: INTEGER
+	count alias "#": INTEGER
 			-- Cardinality.
 		do
 			Result := array.count
@@ -145,10 +148,10 @@ feature -- Comparison
 			-- Does this set contain same elements as `other'?
 		do
 			Result := attached {MML_SET[G]} other as set and then
-				(count = set.count and is_subset_of (set))
+				(count = set.count and Current <= set)
 		end
 
-	is_subset_of (other: MML_SET [G]): BOOLEAN
+	is_subset_of alias "<=" (other: MML_SET [G]): BOOLEAN
 			-- Does `other' have all elements of `Current'?
 		require
 			other_exists: other /= Void
@@ -156,12 +159,12 @@ feature -- Comparison
 			Result := for_all (agent other.has)
 		end
 
-	is_superset_of (other: MML_SET [G]): BOOLEAN
+	is_superset_of alias ">=" (other: MML_SET [G]): BOOLEAN
 			-- Does `Current' have all elements of `other'?
 		require
 			other_exists: other /= Void
 		do
-			Result := other.is_subset_of (Current)
+			Result := other <= Current
 		end
 
 	disjoint (other: MML_SET [G]): BOOLEAN
@@ -173,7 +176,7 @@ feature -- Comparison
 		end
 
 feature -- Modification
-	extended (x: G): MML_SET [G]
+	extended alias "&" (x: G): MML_SET [G]
 			-- Current set extended with `x' if absent.
 		local
 			a: V_ARRAY [G]
@@ -188,7 +191,7 @@ feature -- Modification
 			end
 		end
 
-	removed (x: G): MML_SET [G]
+	removed alias "/" (x: G): MML_SET [G]
 			-- Current set with `x' removed if present.
 		local
 			a: V_ARRAY [G]

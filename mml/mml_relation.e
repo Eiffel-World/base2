@@ -9,16 +9,19 @@ class
 
 inherit
 	MML_MODEL
+		redefine
+			default_create
+		end
 
 create
-	empty,
+	default_create,
 	singleton
 
 create {MML_MODEL}
 	make_from_arrays
 
 feature {NONE} -- Initialization
-	empty
+	default_create
 			-- Create an empty relation.
 		do
 			create lefts.make (1, 0)
@@ -56,13 +59,13 @@ feature -- Sets
 		local
 			i: INTEGER
 		do
-			create Result.empty
+			create Result
 			from
 				i := lefts.lower
 			until
 				i > lefts.upper
 			loop
-				Result := Result.extended (lefts [i])
+				Result := Result & lefts [i]
 				i := i + 1
 			end
 		end
@@ -72,13 +75,13 @@ feature -- Sets
 		local
 			i: INTEGER
 		do
-			create Result.empty
+			create Result
 			from
 				i := rights.lower
 			until
 				i > rights.upper
 			loop
-				Result := Result.extended (rights [i])
+				Result := Result & rights [i]
 				i := i + 1
 			end
 		end

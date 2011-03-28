@@ -238,7 +238,7 @@ feature -- Specification
 		do
 			from
 				i := 1
-				create Result.empty
+				create Result
 			until
 				i > target.capacity
 			loop

@@ -33,7 +33,7 @@ feature -- Extension
 			-- Add `v' to the dispenser.
 		deferred
 		ensure
-			sequence_effect: bag |=| old bag.extended (v)
+			sequence_effect: bag |=| old (bag & v)
 		end
 
 feature -- Removal

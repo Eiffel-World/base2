@@ -9,15 +9,20 @@ class
 
 inherit
 	MML_MODEL
+		redefine
+			default_create
+		end
 
 inherit {NONE}
 	V_EQUALITY [INTEGER]
 		export {NONE}
 			all
+		redefine
+			default_create
 		end
 
 create
-	empty,
+	default_create,
 	singleton,
 	multiple
 
@@ -25,7 +30,7 @@ create {MML_MODEL}
 	make_from_arrays
 
 feature {NONE} -- Initialization
-	empty
+	default_create
 			-- Create an empty bag.
 		do
 			create keys.make (1, 0)
@@ -44,7 +49,7 @@ feature {NONE} -- Initialization
 			n_positive: n >= 0
 		do
 			if n = 0 then
-				empty
+				default_create
 			else
 				create keys.make (1, 1)
 				keys [1] := x
@@ -92,7 +97,7 @@ feature -- Measurement
 			end
 		end
 
-	count: INTEGER
+	count alias "#": INTEGER
 			-- Total number of elements.
 
 feature -- Comparison
@@ -115,7 +120,7 @@ feature -- Comparison
 		end
 
 feature -- Modification
-	extended (x: G): MML_BAG [G]
+	extended alias "&" (x: G): MML_BAG [G]
 			-- Current bag extended with one occurrence of `x'.
 		do
 			Result := extended_multiple (x, 1)
@@ -150,7 +155,7 @@ feature -- Modification
 			end
 		end
 
-	removed (x: G): MML_BAG [G]
+	removed alias "/" (x: G): MML_BAG [G]
 			-- Current bag with one occurrence of `x' removed if present.
 		do
 			Result := removed_multiple (x, 1)

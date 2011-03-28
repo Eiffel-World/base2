@@ -113,13 +113,13 @@ feature -- Specification
 		local
 			i: INTEGER
 		do
-			create Result.empty
+			create Result
 			from
 				i := target.lower
 			until
 				i > target.upper
 			loop
-				Result := Result.extended (target [i])
+				Result := Result & target [i]
 				i := i + 1
 			end
 		end

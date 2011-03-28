@@ -166,7 +166,7 @@ feature -- Extension
 			-- Add `v' to the set.
 		deferred
 		ensure
-			set_effect_not_has: not old has (v) implies set |=| old set.extended (v)
+			set_effect_not_has: not old has (v) implies set |=| (old set & v)
 			set_effect_has: old has (v) implies set |=| old set
 		end
 
@@ -202,7 +202,7 @@ feature -- Removal
 				iterator.remove
 			end
 		ensure
-			set_effect_has: old has (v) implies set |=| old (set.removed (equivalent_item (v)))
+			set_effect_has: old has (v) implies set |=| old (set / equivalent_item (v))
 			set_effect_not_has: not old has (v) implies set |=| old set
 		end
 
@@ -297,13 +297,13 @@ feature -- Specification
 		local
 			i: V_INPUT_ITERATOR [G]
 		do
-			create Result.empty
+			create Result
 			from
 				i := new_iterator
 			until
 				i.after
 			loop
-				Result := Result.extended (i.item)
+				Result := Result & i.item
 				i.forth
 			end
 		ensure

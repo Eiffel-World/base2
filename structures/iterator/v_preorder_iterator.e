@@ -92,13 +92,13 @@ feature -- Specification
 			status: specification
 		do
 			if not target.map.domain [root] then
-				create Result.empty
+				create Result
 			else
-				Result := subtree_path_sequence (root.extended (False)).prepended (root) + subtree_path_sequence (root.extended (True))
+				Result := subtree_path_sequence (root & False).prepended (root) + subtree_path_sequence (root & True)
 			end
 		ensure then
 			definition_base: not target.map.domain [root] implies Result.is_empty
 			definition_step: target.map.domain [root] implies
-				Result |=| (subtree_path_sequence (root.extended (False)).prepended (root) + subtree_path_sequence (root.extended (True)))
+				Result |=| (subtree_path_sequence (root & False).prepended (root) + subtree_path_sequence (root & True))
 		end
 end

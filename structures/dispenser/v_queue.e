@@ -46,6 +46,6 @@ feature -- Extension
 			-- Enqueue `v'.
 		deferred
 		ensure then
-			sequence_effect: sequence |=| old sequence.extended (v)
+			sequence_effect: sequence |=| old (sequence & v)
 		end
 end

@@ -311,7 +311,8 @@ feature -- Replacement
 		ensure
 			map_effect_short: map.count < 2 implies map |=| old map
 			map_effect_long: map.count >= 2 implies
-				map.domain.removed (map.domain.extremum (agent greater_equal)).for_all (
+				bag |=| old bag and
+				(map.domain / map.domain.extremum (agent greater_equal)).for_all (
 					agent (i: INTEGER; o: PREDICATE [ANY, TUPLE [G, G]]): BOOLEAN
 						do
 							Result := o.item ([map [i], map [i + 1]])
@@ -374,7 +375,7 @@ feature -- Specification
 			it: V_INPUT_ITERATOR [G]
 			i: INTEGER
 		do
-			create Result.empty
+			create Result
 			from
 				i := lower
 				it := at_first

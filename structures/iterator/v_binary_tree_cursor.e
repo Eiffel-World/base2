@@ -106,8 +106,8 @@ feature -- Cursor movement
 		do
 			active := active.left
 		ensure
-			path_effect_not_off: old (map.domain [path.extended (False)]) implies path |=| old path.extended (False)
-			path_effect_off: not old (map.domain [path.extended (False)]) implies path.is_empty
+			path_effect_not_off: old (map.domain [path & False]) implies path |=| old (path & False)
+			path_effect_off: not old (map.domain [path & False]) implies path.is_empty
 		end
 
 	right
@@ -117,8 +117,8 @@ feature -- Cursor movement
 		do
 			active := active.right
 		ensure
-			path_effect_not_off: old (map.domain [path.extended (True)]) implies path |=| old path.extended (True)
-			path_effect_off: not old (map.domain [path.extended (True)]) implies path.is_empty
+			path_effect_not_off: old (map.domain [path & True]) implies path |=| old (path & True)
+			path_effect_off: not old (map.domain [path & True]) implies path.is_empty
 		end
 
 	go_root
@@ -139,7 +139,7 @@ feature -- Extension
 		do
 			target.extend_left (v, active)
 		ensure
-			target_map_effect: target.map |=| old target.map.updated (path.extended (False), v)
+			target_map_effect: target.map |=| old target.map.updated (path & False, v)
 			path_effect: path |=| old path
 		end
 
@@ -151,7 +151,7 @@ feature -- Extension
 		do
 			target.extend_right (v, active)
 		ensure
-			target_map_effect: target.map |=| old target.map.updated (path.extended (True), v)
+			target_map_effect: target.map |=| old target.map.updated (path & True, v)
 			path_effect: path |=| old path
 		end
 
@@ -167,14 +167,14 @@ feature -- Removal
 		ensure
 			target_map_domain_effect: (old target.map.domain).for_all (agent (x, p: MML_SEQUENCE [BOOLEAN]): BOOLEAN
 				do
-					Result := (not p.is_prefix_of (x) implies target.map.domain [x]) and
-						((p.is_prefix_of (x) and not (x |=| p)) implies target.map.domain [x.removed_at (p.count + 1)])
+					Result := (not (p <= x) implies target.map.domain [x]) and
+						((p <= x and x |/=| p) implies target.map.domain [x.removed_at (p.count + 1)])
 				end (?, old path))
 			target_map_domain_constraint: target.map.count = old target.map.count - 1
 			target_map_effect: (old target.map.domain).for_all (agent (x, p: MML_SEQUENCE [BOOLEAN]; m: MML_MAP [MML_SEQUENCE [BOOLEAN], G]): BOOLEAN
 				do
-					Result := (not p.is_prefix_of (x) implies target.map [x] = m [x]) and
-					((p.is_prefix_of (x) and not (x |=| p)) implies target.map [x.removed_at (p.count + 1)] = m [x])
+					Result := (not (p <= x) implies target.map [x] = m [x]) and
+					((p <= x and x |/=| p) implies target.map [x.removed_at (p.count + 1)] = m [x])
 				end (?, old path, old target.map))
 			path_effect: path.is_empty
 		end
@@ -208,7 +208,7 @@ feature -- Specification
 		local
 			cell: V_BINARY_TREE_CELL [G]
 		do
-			create Result.empty
+			create Result
 			if not off then
 				from
 					cell := active
@@ -256,7 +256,7 @@ invariant
 	off_definition: off = not target.map.domain [path]
 	is_root_definition: is_root = (path |=| {MML_SEQUENCE [BOOLEAN]} [True])
 	is_leaf_definition: target.map.domain [path] implies
-		is_leaf = (not target.map.domain [path.extended (True)] and not target.map.domain [path.extended (False)])
-	has_left_definition: target.map.domain [path] implies has_left = target.map.domain [path.extended (False)]
-	has_right_definition: target.map.domain [path] implies has_right = target.map.domain [path.extended (True)]
+		is_leaf = (not target.map.domain [path & True] and not target.map.domain [path & False])
+	has_left_definition: target.map.domain [path] implies has_left = target.map.domain [path & False]
+	has_right_definition: target.map.domain [path] implies has_right = target.map.domain [path & True]
 end

@@ -11,7 +11,7 @@ inherit
 	MML_SET [INTEGER]
 
 create
-	empty,
+	default_create,
 	singleton,
 	from_range,
 	from_tuple

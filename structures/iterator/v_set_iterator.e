@@ -35,7 +35,7 @@ feature -- Removal
 			not_off: not off
 		deferred
 		ensure
-			target_set_effect: target.set |=| old (target.set.removed (sequence [index]))
+			target_set_effect: target.set |=| old (target.set / sequence [index])
 			sequence_effect: sequence |=| old (sequence.front (index - 1) + sequence.tail (index + 1))
 			index_effect: index = old index
 		end
