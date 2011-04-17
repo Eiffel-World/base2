@@ -1,10 +1,12 @@
 Structures:
 
+- Immutable interfaces
 - Filter and map streams, folding?
 - V_STRING, V_MUTABLE_STRING
 
 MML:
 
+- Add contracts to model classes
 - Carlo's convention for sequence indexing?
 - Efficient implementation
 

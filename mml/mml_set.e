@@ -28,6 +28,8 @@ feature {NONE} -- Initialization
 			-- Create an empty set.
 		do
 			create array.make (1, 0)
+		ensure then
+			empty: is_empty
 		end
 
 	singleton (x: G)
@@ -35,6 +37,9 @@ feature {NONE} -- Initialization
 		do
 			create array.make (1, 1)
 			array [1] := x
+		ensure
+			one_element: count = 1
+			has_x: has (x)
 		end
 
 feature -- Properties
@@ -48,6 +53,8 @@ feature -- Properties
 			-- Is the set empty?
 		do
 			Result := array.is_empty
+		ensure
+			count_zero: Result = (count = 0)
 		end
 
 	for_all (test: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
@@ -78,6 +85,8 @@ feature -- Elements
 				-- Workaround for semistrict postconditions
 				Result := array [array.lower]
 			end
+		ensure
+			element: has (Result)
 		end
 
 	extremum (order: PREDICATE [ANY, TUPLE [G, G]]): G
@@ -103,7 +112,8 @@ feature -- Elements
 				i := i + 1
 			end
 		ensure
-			definition: has (Result) and for_all (agent (x, y: G; o: PREDICATE [ANY, TUPLE [G, G]]): BOOLEAN
+			element: has (Result)
+			extremum: for_all (agent (x, y: G; o: PREDICATE [ANY, TUPLE [G, G]]): BOOLEAN
 				do
 					Result := o.item ([x, y])
 				end (Result, ?, order))
@@ -134,6 +144,10 @@ feature -- Subsets
 			end
 			a.resize (a.lower, j - 1)
 			create Result.make_from_array (a)
+		ensure
+			subset: Result <= Current
+			satisfies_test: Result.for_all (test)
+			maximum: not (Current - Result).exists (test)
 		end
 
 feature -- Measurement
@@ -157,6 +171,8 @@ feature -- Comparison
 			other_exists: other /= Void
 		do
 			Result := for_all (agent other.has)
+		ensure
+			other_has_all: Result = for_all (agent other.has)
 		end
 
 	is_superset_of alias ">=" (other: MML_SET [G]): BOOLEAN
@@ -165,6 +181,8 @@ feature -- Comparison
 			other_exists: other /= Void
 		do
 			Result := other <= Current
+		ensure
+			other_is_subset: Result = (other <= Current)
 		end
 
 	disjoint (other: MML_SET [G]): BOOLEAN
@@ -173,6 +191,8 @@ feature -- Comparison
 			other_exists: other /= Void
 		do
 			Result := not other.exists (agent has)
+		ensure
+			no_common_elements: Result = not other.exists (agent has)
 		end
 
 feature -- Modification
@@ -189,6 +209,8 @@ feature -- Modification
 			else
 				Result := Current
 			end
+		ensure
+			singleton_union: Result |=| (Current + create {MML_SET [G]}.singleton (x))
 		end
 
 	removed alias "/" (x: G): MML_SET [G]
@@ -206,6 +228,8 @@ feature -- Modification
 			else
 				Result := Current
 			end
+		ensure
+			singleton_difference: Result |=| (Current - create {MML_SET [G]}.singleton (x))
 		end
 
 	union alias "+" (other: MML_SET [G]): MML_SET [G]
@@ -216,6 +240,13 @@ feature -- Modification
 			Result := Current - other
 			Result.array.resize (Result.array.lower, Result.array.upper + other.array.count)
 			Result.array.copy_range (other.array, other.array.lower, other.array.upper, Result.count - other.count + 1)
+		ensure
+			contains_current: Current <= Result
+			contains_other: other <= Result
+			minimal: Result.for_all (agent (y: G; other_: MML_SET [G]): BOOLEAN
+				do
+					Result := Current [y] or other_ [y]
+				end (? , other))
 		end
 
 	intersection alias "*" (other: MML_SET [G]): MML_SET [G]
@@ -241,6 +272,13 @@ feature -- Modification
 			end
 			a.resize (a.lower, j - 1)
 			create Result.make_from_array (a)
+		ensure
+			contained_in_current: Result <= Current
+			contained_in_other: Result <= other
+			maximal: for_all (agent (y: G; other_, result_: MML_SET [G]): BOOLEAN
+				do
+					Result := other_ [y] implies result_ [y]
+				end (?, other, Result))
 		end
 
 	difference alias "-" (other: MML_SET [G]): MML_SET [G]
@@ -266,6 +304,13 @@ feature -- Modification
 			end
 			a.resize (a.lower, j - 1)
 			create Result.make_from_array (a)
+		ensure
+			contained_in_current: Result <= Current
+			disjoint_from_other: Result.disjoint (other)
+			maximal: for_all (agent (y: G; other_, result_: MML_SET [G]): BOOLEAN
+				do
+					Result := not other_ [y] implies result_ [y]
+				end (?, other, Result))
 		end
 
 	sym_difference alias "^" (other: MML_SET [G]): MML_SET [G]
@@ -274,6 +319,8 @@ feature -- Modification
 			other_exists: other /= Void
 		do
 			Result := (Current + other) - (Current * other)
+		ensure
+			definition: Result |=| ((Current + other) - (Current * other))
 		end
 
 feature {MML_MODEL} -- Implementation

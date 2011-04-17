@@ -9,7 +9,7 @@ note
 	model: map, key_equivalence, key_hash
 
 class
-	V_HASH_TABLE [K -> HASHABLE, v]
+	V_HASH_TABLE [K -> HASHABLE, V]
 
 inherit
 	V_GENERAL_HASH_TABLE [K, V]
