@@ -150,9 +150,15 @@ feature -- Removal
 	remove_at (i: INTEGER)
 			-- Remove element at position `i'.
 		do
-			array [array_index (i)] := ({G}).default
-			circular_copy (i + 1, i, count - i)
-			count := count - 1
+			if i = 1 then
+				remove_front
+			elseif i = count then
+				remove_back
+			else
+				circular_copy (i + 1, i, count - i)
+				array [array_index (count)] := ({G}).default
+				count := count - 1
+			end
 		end
 
 	wipe_out

@@ -15,6 +15,8 @@ inherit
 	V_MAP [INTEGER, G]
 		rename
 			has_key as has_index,
+			exists_key as exists_index,
+			for_all_keys as for_all_indexes,
 			new_iterator as at_first,
 			at_key as at
 		redefine
