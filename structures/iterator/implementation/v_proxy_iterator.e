@@ -9,7 +9,7 @@ class
 	V_PROXY_ITERATOR [G]
 
 inherit
-	V_INPUT_ITERATOR [G]
+	V_ITERATOR [G]
 		redefine
 			copy
 		end
@@ -18,7 +18,7 @@ create {V_CONTAINER}
 	make
 
 feature {NONE} -- Initialization
-	make (t: V_CONTAINER [G]; it: V_INPUT_ITERATOR [G])
+	make (t: V_CONTAINER [G]; it: V_ITERATOR [G])
 			-- Create a proxy for `it' with target `t'.
 		require
 			t_exists: t /= Void
@@ -126,7 +126,7 @@ feature -- Cursor movement
 		end
 
 feature {V_PROXY_ITERATOR} -- Implementation
-	iterator: V_INPUT_ITERATOR [G]
+	iterator: V_ITERATOR [G]
 			-- Iterator over the storage.
 
 feature -- Specification

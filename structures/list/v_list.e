@@ -1,5 +1,8 @@
 note
-	description: "Indexable containers, where elements can be inserted and removed at any position. Indexing starts from 1."
+	description: "[
+		Indexable containers, where elements can be inserted and removed at any position. 
+		Indexing starts from 1.
+		]"
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,7 +12,7 @@ deferred class
 	V_LIST [G]
 
 inherit
-	V_SEQUENCE [G]
+	V_MUTABLE_SEQUENCE [G]
 		undefine
 			count
 		redefine
@@ -38,7 +41,7 @@ feature -- Comparison
 			-- Is list made of the same values in the same order as `other'?
 			-- (Use reference comparison.)
 		local
-			i, j: V_INPUT_ITERATOR [G]
+			i, j: V_ITERATOR [G]
 		do
 			if other = Current then
 				Result := True
@@ -83,7 +86,7 @@ feature -- Extension
 			sequence_effect: sequence |=| old (sequence.front (i - 1) & v + sequence.tail (i))
 		end
 
-	append (input: V_INPUT_ITERATOR [G])
+	append (input: V_ITERATOR [G])
 			-- Append sequence of values produced by `input'.
 		require
 			input_exists: input /= Void
@@ -103,7 +106,7 @@ feature -- Extension
 			input_sequence_effect: input.sequence |=| old input.sequence
 		end
 
-	prepend (input: V_INPUT_ITERATOR [G])
+	prepend (input: V_ITERATOR [G])
 			-- Prepend sequence of values produced by `input'.
 		require
 			input_exists: input /= Void
@@ -116,7 +119,7 @@ feature -- Extension
 			input_sequence_effect: input.sequence |=| old input.sequence
 		end
 
-	insert_at (input: V_INPUT_ITERATOR [G]; i: INTEGER)
+	insert_at (input: V_ITERATOR [G]; i: INTEGER)
 			-- Insert starting at position `i' sequence of values produced by `input'.
 		require
 			valid_index: has_index (i) or i = count + 1

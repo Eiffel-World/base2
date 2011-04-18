@@ -239,7 +239,7 @@ feature -- Modification
 		do
 			Result := Current - other
 			Result.array.resize (Result.array.lower, Result.array.upper + other.array.count)
-			Result.array.copy_range (other.array, other.array.lower, other.array.upper, Result.count - other.count + 1)
+			Result.array.copy_range (other.array, other.array.lower, other.array.upper, Result.array.upper - other.count + 1)
 		ensure
 			contains_current: Current <= Result
 			contains_other: other <= Result

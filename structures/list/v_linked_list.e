@@ -18,6 +18,7 @@ inherit
 		redefine
 			default_create,
 			copy,
+			put,
 			prepend
 		end
 
@@ -44,13 +45,6 @@ feature -- Initialization
 		ensure then
 			sequence_effect: sequence |=| other.sequence
 			other_sequence_effect: other.sequence |=| old other.sequence
-		end
-
-feature -- Access
-	item alias "[]" (i: INTEGER): G assign put
-			-- Value associated with `i'.
-		do
-			Result := at (i).item
 		end
 
 feature -- Measurement		
@@ -117,7 +111,7 @@ feature -- Extension
 			end
 		end
 
-	prepend (input: V_INPUT_ITERATOR [G])
+	prepend (input: V_ITERATOR [G])
 			-- Prepend sequence of values, over which `input' iterates.
 		do
 			if not input.after then
@@ -135,7 +129,7 @@ feature -- Extension
 			end
 		end
 
-	insert_at (input: V_INPUT_ITERATOR [G]; i: INTEGER)
+	insert_at (input: V_ITERATOR [G]; i: INTEGER)
 			-- Insert sequence of values, over which `input' iterates, starting at position `i'.
 		do
 			if i = 1 then

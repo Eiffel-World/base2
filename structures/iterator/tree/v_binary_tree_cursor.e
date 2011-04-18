@@ -179,7 +179,7 @@ feature -- Removal
 			path_effect: path.is_empty
 		end
 
-feature {V_CELL_CURSOR, V_INPUT_ITERATOR} -- Implementation
+feature {V_CELL_CURSOR, V_ITERATOR} -- Implementation
 	active: V_BINARY_TREE_CELL [G]
 			-- Cell at current position.
 

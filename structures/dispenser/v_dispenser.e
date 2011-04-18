@@ -20,7 +20,7 @@ feature -- Access
 		end
 
 feature -- Iteration
-	new_iterator: V_INPUT_ITERATOR [G]
+	new_iterator: V_ITERATOR [G]
 			-- New iterator pointing to the accessible element.
 			-- (Traversal in the order of accessibility.)
 		deferred
@@ -44,6 +44,13 @@ feature -- Removal
 		deferred
 		ensure
 			sequence_effect: sequence |=| old sequence.but_first
+		end
+
+	wipe_out
+			-- Remove all elements.
+		deferred
+		ensure
+			sequence_effect: sequence.is_empty
 		end
 
 feature -- Specification

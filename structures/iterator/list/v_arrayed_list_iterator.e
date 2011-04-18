@@ -55,6 +55,13 @@ feature -- Access
 	target: V_ARRAYED_LIST [G]
 			-- Container to iterate over.
 
+feature -- Replacement
+	put (v: G)
+			-- Replace item at current position with `v'.
+		do
+			target.put (v, target.lower + index - 1)
+		end
+
 feature -- Extension
 	extend_left (v: G)
 			-- Insert `v' to the left of current position. Do not move cursor.
@@ -69,7 +76,7 @@ feature -- Extension
 			target.extend_at (v, index + 1)
 		end
 
-	insert_left (other: V_INPUT_ITERATOR [G])
+	insert_left (other: V_ITERATOR [G])
 			-- Append sequence of values, over which `input' iterates to the left of current position. Do not move cursor.
 		local
 			old_other_count: INTEGER
@@ -79,7 +86,7 @@ feature -- Extension
 			index := index + old_other_count
 		end
 
-	insert_right (other: V_INPUT_ITERATOR [G])
+	insert_right (other: V_ITERATOR [G])
 			-- Append sequence of values, over which `input' iterates to the right of current position. Move cursor to the last element of inserted sequence.
 		local
 			old_other_count: INTEGER

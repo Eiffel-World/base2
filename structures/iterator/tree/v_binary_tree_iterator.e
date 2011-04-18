@@ -9,7 +9,7 @@ deferred class
 	V_BINARY_TREE_ITERATOR [G]
 
 inherit
-	V_ITERATOR [G]
+	V_IO_ITERATOR [G]
 		undefine
 			off
 		redefine

@@ -24,10 +24,10 @@ inherit
 			copy
 		end
 
-create {V_CONTAINER, V_INPUT_ITERATOR}
+create {V_CONTAINER, V_ITERATOR}
 	make
 
-feature {V_CONTAINER, V_INPUT_ITERATOR} -- Initialization
+feature {V_CONTAINER, V_ITERATOR} -- Initialization
 	make (list: V_LINKED_LIST [G])
 			-- Create iterator over `list'.
 		require
@@ -175,7 +175,7 @@ feature -- Extension
 			target.extend_after (v, active)
 		end
 
-	insert_left (other: V_INPUT_ITERATOR [G])
+	insert_left (other: V_ITERATOR [G])
 			-- Append sequence of values, over which `input' iterates to the left of current position. Do not move cursor.
 		do
 			if is_first then
@@ -187,7 +187,7 @@ feature -- Extension
 			end
 		end
 
-	insert_right (other: V_INPUT_ITERATOR [G])
+	insert_right (other: V_ITERATOR [G])
 			-- Append sequence of values, over which `input' iterates to the right of current position. Move cursor to the last element of inserted sequence.
 		do
 			from

@@ -1,5 +1,5 @@
 note
-	description: "Maps where key-value pairs can be added and removed."
+	description: "Maps where key-value pairs can be updated, added and removed."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,41 +9,23 @@ deferred class
 	V_TABLE [K, V]
 
 inherit
-	V_UPDATABLE_MAP [K, V]
+	V_MAP [K, V]
 		redefine
-			is_equal,
-			out
-		end
-
-	V_CONTAINER [V]
-		redefine
-			is_equal,
-			out
+			item,
+			is_equal
 		end
 
 feature -- Access
 	item alias "[]" (k: K): V assign force
 			-- Value associated with `k'.
-		local
-			i: V_TABLE_ITERATOR [K, V]
 		do
-			i := at_key (k)
-			Result := i.value
+			Result := Precursor (k)
 		end
 
 feature -- Iteration
-	new_iterator: V_TABLE_ITERATOR [K, V]
-			-- New iterator pointing to a position in the table, from which it can traverse all elements by going `forth'.
-		deferred
-		end
-
 	at_key (k: K): V_TABLE_ITERATOR [K, V]
 			-- New iterator pointing to a position with key `k'
 		deferred
-		ensure
-			target_definition: Result.target = Current
-			index_definition_found: has_key (k) implies equivalent (Result.key_sequence [Result.index], k)
-			index_definition_not_found: not has_key (k) implies Result.index = Result.key_sequence.count + 1
 		end
 
 feature -- Comparison
@@ -51,7 +33,7 @@ feature -- Comparison
 			-- Does `other' have equivalent set of keys (with respect to both `key_equivalence' and `other.key_equivalence'),
 			-- and associate them with then same values?
 		local
-			i, j: V_TABLE_ITERATOR [K, V]
+			i, j: V_MAP_ITERATOR [K, V]
 		do
 			if other = Current then
 				Result := True
@@ -79,11 +61,15 @@ feature -- Comparison
 feature -- Replacement
 	put (v: V; k: K)
 			-- Associate `v' with key `k'.
+		require
+			has_key: has_key (k)
 		local
 			i: V_TABLE_ITERATOR [K, V]
 		do
 			i := at_key (k)
 			i.put (v)
+		ensure
+			map_effect: map |=| old map.updated (key (k), v)
 		end
 
 feature -- Extension
@@ -123,49 +109,10 @@ feature -- Removal
 			map_effect: map |=| old map.removed (key (k))
 		end
 
-feature -- Output
-	out: STRING
-			-- String representation of the content.
-		local
-			it: V_TABLE_ITERATOR [K, V]
-		do
-			from
-				Result := ""
-				it := new_iterator
-			until
-				it.off
-			loop
-				Result.append ("(" + it.key.out + ", " + it.value.out + ")")
-				if not it.is_last then
-					Result.append (" ")
-				end
-				it.forth
-			end
+	wipe_out
+			-- Remove all elements.
+		deferred
+		ensure
+			map_effect: map.is_empty
 		end
-
-feature -- Specification
-	map: MML_MAP [K, V]
-			-- Map of keys to values.
-		note
-			status: specification
-		local
-			it: V_TABLE_ITERATOR [K, V]
-		do
-			create Result
-			from
-				it := new_iterator
-			until
-				it.after
-			loop
-				Result := Result.updated (it.key, it.value)
-				it.forth
-			end
-		end
-
-invariant
-	bag_domain_definition: bag.domain |=| map.range
-	bag_definition: bag.domain.for_all (agent (x: V): BOOLEAN
-		do
-			Result := bag [x] = map.inverse.image_of (x).count
-		end)
 end

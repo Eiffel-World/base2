@@ -1,5 +1,8 @@
 note
-	description: "Containers for a finite number of values."
+	description: "[
+		Containers for a finite number of values.
+		Immutable interface.
+		]"
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -32,7 +35,7 @@ feature -- Search
 			-- Is value `v' contained?
 			-- (Uses reference equality.)
 		local
-			it: V_INPUT_ITERATOR [G]
+			it: V_ITERATOR [G]
 		do
 			it := new_iterator
 			it.search_forth (v)
@@ -45,7 +48,7 @@ feature -- Search
 			-- How many times is value `v' contained?
 			-- (Uses reference equality.)
 		local
-			it: V_INPUT_ITERATOR [G]
+			it: V_ITERATOR [G]
 		do
 			from
 				it := new_iterator
@@ -66,9 +69,12 @@ feature -- Search
 		require
 			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: precondition_satisfied (pred)
+			precondition_satisfied: bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+				do
+					Result := p.precondition ([x])
+				end (?, pred))
 		local
-			it: V_INPUT_ITERATOR [G]
+			it: V_ITERATOR [G]
 		do
 			from
 				it := new_iterator
@@ -89,9 +95,12 @@ feature -- Search
 		require
 			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: precondition_satisfied (pred)
+			precondition_satisfied: bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+				do
+					Result := p.precondition ([x])
+				end (?, pred))
 		local
-			it: V_INPUT_ITERATOR [G]
+			it: V_ITERATOR [G]
 		do
 			it := new_iterator
 			it.satisfy_forth (pred)
@@ -105,9 +114,12 @@ feature -- Search
 		require
 			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: precondition_satisfied (pred)
+			precondition_satisfied: bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+				do
+					Result := p.precondition ([x])
+				end (?, pred))
 		local
-			it: V_INPUT_ITERATOR [G]
+			it: V_ITERATOR [G]
 		do
 			from
 				Result := True
@@ -123,20 +135,12 @@ feature -- Search
 		end
 
 feature -- Iteration
-	new_iterator: V_INPUT_ITERATOR [G]
+	new_iterator: V_ITERATOR [G]
 			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'.
 		deferred
 		ensure
 			target_definition: Result.target = Current
 			index_definition: Result.index = 1
-		end
-
-feature -- Removal
-	wipe_out
-			-- Remove all elements.
-		deferred
-		ensure
-			bag_effect: bag.is_empty
 		end
 
 feature -- Output
@@ -157,7 +161,7 @@ feature -- Specification
 		note
 			status: specification
 		local
-			i: V_INPUT_ITERATOR [G]
+			i: V_ITERATOR [G]
 		do
 			create Result
 			from
@@ -170,22 +174,6 @@ feature -- Specification
 			end
 		ensure
 			exists: Result /= Void
-		end
-
-	precondition_satisfied (pred: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
-			-- Does the precondition of `pred' hold for all elements of `Current'?
-		note
-			status: specification
-		do
-			Result := for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
-				do
-					Result := p.precondition ([x])
-				end (?, pred))
-		ensure
-			definition: Result = bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
-				do
-					Result := p.precondition ([x])
-				end (?, pred))
 		end
 
 invariant

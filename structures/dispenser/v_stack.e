@@ -20,7 +20,7 @@ feature -- Comparison
 			-- Is stack made of the same values in the same order as `other'?
 			-- (Use reference comparison.)
 		local
-			i, j: V_INPUT_ITERATOR [G]
+			i, j: V_ITERATOR [G]
 		do
 			if other = Current then
 				Result := True

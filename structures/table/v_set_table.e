@@ -28,7 +28,7 @@ feature -- Measurement
 		end
 
 feature -- Iteration
-	new_iterator: V_SET_TABLE_ITERATOR [K, V]
+	new_iterator: like at_key
 			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'.
 		do
 			create Result.make_at_start (Current)

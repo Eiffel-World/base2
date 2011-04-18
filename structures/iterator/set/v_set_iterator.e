@@ -9,7 +9,7 @@ deferred class
 	V_SET_ITERATOR [G]
 
 inherit
-	V_INPUT_ITERATOR [G]
+	V_ITERATOR [G]
 
 feature -- Access
 	target: V_SET [G]

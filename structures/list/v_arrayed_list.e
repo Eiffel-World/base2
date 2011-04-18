@@ -16,7 +16,9 @@ class
 inherit
 	V_LIST [G]
 		redefine
+			item,
 			default_create,
+			put,
 			copy,
 			prepend
 		end
@@ -107,13 +109,13 @@ feature -- Extension
 			end
 		end
 
-	prepend (input: V_INPUT_ITERATOR [G])
+	prepend (input: V_ITERATOR [G])
 			-- Prepend sequence of values, over which `input' iterates.
 		do
 			insert_at (input, 1)
 		end
 
-	insert_at (input: V_INPUT_ITERATOR [G]; i: INTEGER)
+	insert_at (input: V_ITERATOR [G]; i: INTEGER)
 			-- Insert sequence of values, over which `input' iterates, starting at position `i'.
 		local
 			ic: INTEGER

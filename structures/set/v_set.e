@@ -283,6 +283,13 @@ feature -- Removal
 				end (?, old Current.twin, other))
 		end
 
+	wipe_out
+			-- Remove all elements.
+		deferred
+		ensure
+			set_effect: set.is_empty
+		end
+
 feature {V_SET} -- Implementation
 	iterator: V_SET_ITERATOR [G]
 			-- Internal iterator (to be used only in procedures).		
@@ -295,7 +302,7 @@ feature -- Specification
 		note
 			status: specification
 		local
-			i: V_INPUT_ITERATOR [G]
+			i: V_ITERATOR [G]
 		do
 			create Result
 			from

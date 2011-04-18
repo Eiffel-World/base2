@@ -9,7 +9,7 @@ deferred class
 	V_LIST_ITERATOR [G]
 
 inherit
-	V_ITERATOR [G]
+	V_MUTABLE_SEQUENCE_ITERATOR [G]
 		redefine
 			target
 		end
@@ -43,7 +43,7 @@ feature -- Extension
 			index_effect: index = old index
 		end
 
-	insert_left (other: V_INPUT_ITERATOR [G])
+	insert_left (other: V_ITERATOR [G])
 			-- Append, to the left of current position, sequence of values produced by `other'.
 			-- Do not move cursor.
 		require
@@ -59,7 +59,7 @@ feature -- Extension
 			other_sequence_effect: other.sequence |=| old other.sequence
 		end
 
-	insert_right (other: V_INPUT_ITERATOR [G])
+	insert_right (other: V_ITERATOR [G])
 			-- Append, to the right of current position, sequence of values produced by `other'.
 			-- Move cursor to the last element of inserted sequence.
 		require

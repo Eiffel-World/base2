@@ -13,10 +13,12 @@ class
 	V_ARRAY [G]
 
 inherit
-	V_SEQUENCE [G]
+	V_MUTABLE_SEQUENCE [G]
 		redefine
+			item,
 			copy,
 			is_equal,
+			put,
 			fill,
 			clear,
 			copy_range
@@ -114,7 +116,7 @@ feature -- Measurement
 			-- Upper bound of index interval.		
 
 feature -- Iteration
-	at (i: INTEGER): V_SEQUENCE_ITERATOR [G]
+	at (i: INTEGER): V_ARRAY_ITERATOR [G]
 			-- New iterator pointing at position `i'.
 		do
 			create Result.make (Current, i - lower + 1)

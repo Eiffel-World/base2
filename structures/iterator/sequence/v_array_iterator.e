@@ -1,15 +1,22 @@
 note
-	description: "Iterators over sequences that allow only traversal, search and replacement."
+	description: "Iterators over mutable sequences that allow only traversal, search and replacement."
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
 	model: target, index
 
 class
-	V_SEQUENCE_ITERATOR [G]
+	V_ARRAY_ITERATOR [G]
 
 inherit
 	V_INDEX_ITERATOR [G]
+		redefine
+			copy
+		end
+
+	V_MUTABLE_SEQUENCE_ITERATOR [G]
+		undefine
+			go_to
 		redefine
 			copy
 		end
@@ -18,7 +25,7 @@ create {V_CONTAINER}
 	make
 
 feature {NONE} -- Initialization
-	make (t: V_SEQUENCE [G]; i: INTEGER)
+	make (t: V_MUTABLE_SEQUENCE [G]; i: INTEGER)
 			-- Create an iterator at position `i' in `t'.
 		require
 			t_exists: t /= Void
@@ -45,6 +52,13 @@ feature -- Initialization
 		end
 
 feature -- Access
-	target: V_SEQUENCE [G]
+	target: V_MUTABLE_SEQUENCE [G]
 			-- Target container.
+
+feature -- Replacement
+	put (v: G)
+			-- Replace item at current position with `v'.
+		do
+			target.put (v, target.lower + index - 1)
+		end
 end

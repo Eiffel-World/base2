@@ -210,8 +210,8 @@ feature -- Modification
 			Result := Current - other
 			Result.lefts.resize (Result.lefts.lower, Result.lefts.upper + other.lefts.count)
 			Result.rights.resize (Result.rights.lower, Result.rights.upper + other.rights.count)
-			Result.lefts.copy_range (other.lefts, other.lefts.lower, other.lefts.upper, Result.count - other.count + 1)
-			Result.rights.copy_range (other.rights, other.rights.lower, other.rights.upper, Result.count - other.count + 1)
+			Result.lefts.copy_range (other.lefts, other.lefts.lower, other.lefts.upper, Result.lefts.upper - other.count + 1)
+			Result.rights.copy_range (other.rights, other.rights.lower, other.rights.upper, Result.rights.upper - other.count + 1)
 		end
 
 	intersection alias "*" (other: MML_RELATION [G, H]): MML_RELATION [G, H]

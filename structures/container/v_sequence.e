@@ -1,5 +1,8 @@
 note
-	description: "Containers where values are associated with integer indexes from a continuous interval."
+	description: "[
+		Containers where values are associated with integer indexes from a continuous interval.
+		Immutable interface.
+		]"
 	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
@@ -9,19 +12,14 @@ deferred class
 	V_SEQUENCE [G]
 
 inherit
-	V_CONTAINER [G]
+	V_MAP [INTEGER, G]
 		rename
-			new_iterator as at_first
-		end
-
-	V_UPDATABLE_MAP [INTEGER, G]
-		rename
-			has_key as has_index
-		undefine
-			out
+			has_key as has_index,
+			new_iterator as at_first,
+			at_key as at
 		redefine
-			has_index,
-			map
+			out,
+			key
 		end
 
 inherit {NONE}
@@ -40,11 +38,6 @@ inherit {NONE}
 		end
 
 feature -- Access
-	item alias "[]" (i: INTEGER): G assign put
-			-- Value at position `i'.
-		deferred
-		end
-
 	first: G
 			-- First element.
 		require
@@ -107,7 +100,7 @@ feature -- Search
 		require
 			has_index: has_index (i)
 		local
-			it: V_INPUT_ITERATOR [G]
+			it: V_ITERATOR [G]
 			j: INTEGER
 		do
 			from
@@ -135,7 +128,10 @@ feature -- Search
 		require
 			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: precondition_satisfied (pred)
+			precondition_satisfied: map.range.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+				do
+					Result := p.precondition ([x])
+				end (?, pred))
 		do
 			if not is_empty then
 				Result := index_satisfying_from (pred, lower)
@@ -151,10 +147,13 @@ feature -- Search
 		require
 			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
-			precondition_satisfied: precondition_satisfied (pred)
+			precondition_satisfied: map.range.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+				do
+					Result := p.precondition ([x])
+				end (?, pred))
 			has_index: has_index (i)
 		local
-			it: V_INPUT_ITERATOR [G]
+			it: V_ITERATOR [G]
 			j: INTEGER
 		do
 			from
@@ -189,11 +188,6 @@ feature -- Iteration
 			-- New iterator pointing to the first position.
 		do
 			Result := at (lower)
-		ensure then
-			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_SEQUENCE [G]): BOOLEAN
-				do
-					Result := s [j] = map [lower + j - 1]
-				end (?, Result.sequence))
 		end
 
 	at_last: like at
@@ -202,190 +196,37 @@ feature -- Iteration
 			Result := at (upper)
 		ensure
 			target_definition: Result.target = Current
-			sequence_domain_definition: Result.sequence.count = map.count
-			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_SEQUENCE [G]): BOOLEAN
-				do
-					Result := s [j] = map [lower + j - 1]
-				end (?, Result.sequence))
 			index_definition: Result.index = map.count
 		end
 
-	at (i: INTEGER): V_ITERATOR [G]
+	at (i: INTEGER): V_SEQUENCE_ITERATOR [G]
 			-- New iterator pointing at position `i'.
-		require
-			valid_position: lower - 1 <= i and i <= upper + 1
+			-- If `i' is off scope, iterator is off.
 		deferred
-		ensure
-			target_definition: Result.target = Current
-			sequence_domain_definition: Result.sequence.count = bag.count
-			sequence_definition: Result.sequence.domain.for_all (agent (j: INTEGER; s: MML_SEQUENCE [G]): BOOLEAN
-				do
-					Result := s [j] = map [lower + j - 1]
-				end (?, Result.sequence))
-			index_definition_nonempty: not map.is_empty implies Result.index = i - lower + 1
-			index_definition_empty: map.is_empty implies Result.index = i
+		ensure then
+			index_definition_before: i < lower implies Result.index = 0
+			index_definition_after: i > upper implies Result.index = map.count + 1
 		end
 
-feature -- Replacement
-	fill (v: G; l, u: INTEGER)
-			-- Put `v' at positions [`l', `u'].
-		require
-			l_not_too_small: l >= lower
-			u_not_too_large: u <= upper
-			l_not_too_large: l <= u + 1
+feature -- Output
+	out: STRING
+			-- String representation of the content.
 		local
-			it: V_ITERATOR [G]
-			j: INTEGER
+			stream: V_STRING_OUTPUT
 		do
-			from
-				it := at (l)
-				j := l
-			until
-				j > u
-			loop
-				it.put (v)
-				it.forth
-				j := j + 1
-			end
-		ensure
-			map_domain_effect: map.domain |=| old map.domain
-			map_changed_effect: (map | {MML_INTERVAL}[[l, u]]).is_constant (v)
-			map_unchanged_effect: (map | (map.domain - {MML_INTERVAL}[[l, u]])) |=| old (map | (map.domain - {MML_INTERVAL}[[l, u]]))
-		end
-
-	clear (l, u: INTEGER)
-			-- Put default value at positions [`l', `u'].
-		require
-			l_not_too_small: l >= lower
-			u_not_too_large: u <= upper
-			l_not_too_large: l <= u + 1
-		do
-			fill (({G}).default, l, u)
-		ensure
-			map_domain_effect: map.domain |=| old map.domain
-			map_changed_effect: (map | {MML_INTERVAL}[[l, u]]).is_constant (({G}).default)
-			map_unchanged_effect: (map | (map.domain - {MML_INTERVAL}[[l, u]])) |=| old (map | (map.domain - {MML_INTERVAL}[[l, u]]))
-		end
-
-	copy_range (other: V_SEQUENCE [G]; other_first, other_last, index: INTEGER)
-			-- Copy items of `other' within bounds [`other_first', `other_last'] to current sequence starting at index `index'.
-		require
-			other_exists: other /= Void
-			other_first_not_too_small: other_first >= other.lower
-			other_last_not_too_large: other_last <= other.upper
-			other_first_not_too_large: other_first <= other_last + 1
-			index_not_too_small: index >= lower
-			enough_space: upper - index >= other_last - other_first
-		local
-			j: INTEGER
-		do
-			from
-				j := other_first
-			until
-				j > other_last
-			loop
-				put (other [j], j - other_first + index)
-				j := j + 1
-			end
-		ensure
-			map_domain_effect: map.domain |=| old map.domain
-			map_changed_effect: {MML_INTERVAL} [[index, index + other_last - other_first]].for_all (
-				agent (i: INTEGER; other_map: MML_MAP [INTEGER, G]; f, of: INTEGER): BOOLEAN
-					do
-						Result := map [i] = other_map [i - f + of]
-					end (?, old other.map, index, other_first))
-			map_unchanged_effect: (map | (map.domain - {MML_INTERVAL} [[index, index + other_last - other_first]])) |=|
-				old (map | (map.domain - {MML_INTERVAL} [[index, index + other_last - other_first]]))
-			other_map_effect: other /= Current implies other.map |=| old other.map
-		end
-
-	sort (order: PREDICATE [ANY, TUPLE [G, G]])
-			-- Sort elements in `order' left to right.
-		require
-			order_exists: order /= Void
-			order_has_two_args: order.open_count = 2
-			--- order_is_total: order.precondition |=| True
-			--- order_is_total_order: is_total_order (order)
-		do
-			quick_sort (lower, upper, order)
-		ensure
-			map_effect_short: map.count < 2 implies map |=| old map
-			map_effect_long: map.count >= 2 implies
-				bag |=| old bag and
-				(map.domain / map.domain.extremum (agent greater_equal)).for_all (
-					agent (i: INTEGER; o: PREDICATE [ANY, TUPLE [G, G]]): BOOLEAN
-						do
-							Result := o.item ([map [i], map [i + 1]])
-						end (?, order))
-		end
-
-feature {NONE} -- Implementation
-	quick_sort (left, right: INTEGER; order: PREDICATE [ANY, TUPLE [G, G]])
-			-- Sort element in index range [`left', `right'] in `order' left to right.
-		require
-			in_range: right > left implies has_index (left) and has_index (right)
-			order_exists: order /= Void
-			order_has_two_args: order.open_count = 2
-			--- is_total_order: is_total_order (order)
-		local
-			pivot, l, r: INTEGER
-		do
-			if right > left then
-				from
-					l := left
-					r := right
-					pivot := (left + right) // 2
-				until
-					l > pivot or r < pivot
-				loop
-					from
-					until
-						order.item ([item (pivot), item (l)]) or l > pivot
-					loop
-						l := l + 1
-					end
-					from
-					until
-						order.item ([item (r), item (pivot)]) or r < pivot
-					loop
-						r := r - 1
-					end
-					swap (l, r)
-					l := l + 1
-					r := r - 1
-					if l - 1 = pivot then
-						r := r + 1
-						pivot := r
-					elseif r + 1 = pivot then
-						l := l - 1
-						pivot := l
-					end
-				end
-				quick_sort (left, pivot - 1, order)
-				quick_sort (pivot + 1, right, order)
-			end
+			create Result.make_empty
+			create stream.make (Result)
+			stream.pipe (at_first)
+			Result.remove_tail (stream.separator.count)
 		end
 
 feature -- Specification
-	map: MML_MAP [INTEGER, G]
-			-- Map of indexes to values.
+	key (i: INTEGER): INTEGER
+			-- Identity.
 		note
 			status: specification
-		local
-			it: V_INPUT_ITERATOR [G]
-			i: INTEGER
 		do
-			create Result
-			from
-				i := lower
-				it := at_first
-			until
-				it.after
-			loop
-				Result := Result.updated (i, it.item)
-				it.forth
-				i := i + 1
-			end
+			Result := i
 		end
 
 ---	is_total_order (o: PREDICATE [ANY, TUPLE [G, G]])
@@ -408,10 +249,5 @@ invariant
 	first_definition: not map.is_empty implies first = map [lower]
 	last_definition: not map.is_empty implies last = map [upper]
 	indexes_in_interval: map.domain |=| {MML_INTERVAL} [[lower, upper]]
-	bag_domain_definition: bag.domain |=| map.range
-	bag_definition: bag.domain.for_all (agent (x: G): BOOLEAN
-		do
-			Result := bag [x] = map.inverse.image_of (x).count
-		end)
 	--- key_equivalence_definition: key_equivalence |=| agent reference_equal
 end

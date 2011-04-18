@@ -9,7 +9,7 @@ deferred class
 	V_INDEX_ITERATOR [G]
 
 inherit
-	V_ITERATOR [G]
+	V_SEQUENCE_ITERATOR [G]
 		redefine
 			go_to
 		end
@@ -98,13 +98,6 @@ feature -- Cursor movement
 			index := target.count + 1
 		end
 
-feature -- Replacement
-	put (v: G)
-			-- Replace item at current position with `v'.
-		do
-			target.put (v, target.lower + index - 1)
-		end
-
 feature -- Specification
 	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements.
@@ -123,11 +116,4 @@ feature -- Specification
 				i := i + 1
 			end
 		end
-
-invariant
-	sequence_domain_definition: sequence.count = target.map.count
-	sequence_definition: sequence.domain.for_all (agent (i: INTEGER): BOOLEAN
-		do
-			Result := sequence [i] = target.map [target.lower + i - 1]
-		end)
 end
