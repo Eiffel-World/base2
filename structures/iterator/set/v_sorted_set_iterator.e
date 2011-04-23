@@ -71,20 +71,8 @@ feature -- Cursor movement
 			-- Move to an element equivalent to `v'.
 			-- (Use `target.equivalence'.)
 		do
-			from
-				go_root
-			until
-				active = Void or else target.equivalent (v, item)
-			loop
-				if target.less_equal (v, item) then
-					left
-				else
-					right
-				end
-			end
-			if active = Void then
-				after := True
-			end
+			active := target.cell_equivalent (v)
+			after := active = Void
 		end
 
 	search_forth (v: G)

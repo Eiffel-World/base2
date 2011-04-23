@@ -18,6 +18,9 @@ inherit
 		redefine
 			default_create,
 			copy,
+			first,
+			last,
+			exists,
 			put,
 			prepend
 		end
@@ -26,7 +29,6 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create an empty list.
 		do
-			create iterator.make (Current)
 		ensure then
 			sequence_effect: sequence.is_empty
 		end
@@ -37,9 +39,6 @@ feature -- Initialization
 		do
 			if other /= Current then
 				wipe_out
-				if iterator = Void then
-					create iterator.make (Current)
-				end
 				append (other.at_first)
 			end
 		ensure then
@@ -47,9 +46,39 @@ feature -- Initialization
 			other_sequence_effect: other.sequence |=| old other.sequence
 		end
 
+feature -- Access
+	item alias "[]" (i: INTEGER): G assign put
+			-- Value at position `i'.
+		do
+			if i = count then
+				Result := last
+			else
+				Result := cell_at (i).item
+			end
+		end
+
+	first: G
+			-- First element.
+		do
+			Result := first_cell.item
+		end
+
+	last: G
+			-- Last element.
+		do
+			Result := last_cell.item
+		end
+
 feature -- Measurement		
 	count: INTEGER
 			-- Number of elements.
+
+feature -- Search		
+	exists (pred: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
+			-- Is there an element that satisfies `pred'?
+		do
+			Result := cell_satisfying (pred) /= Void
+		end
 
 feature -- Iteration
 	at (i: INTEGER): V_LINKED_LIST_ITERATOR [G]
@@ -63,8 +92,7 @@ feature -- Replacement
 	put (v: G; i: INTEGER)
 			-- Associate `v' with index `i'.
 		do
-			iterator.go_to (i)
-			iterator.put (v)
+			cell_at (i).put (v)
 		end
 
 feature -- Extension
@@ -106,24 +134,25 @@ feature -- Extension
 			elseif i = count + 1 then
 				extend_back (v)
 			else
-				iterator.go_to (i - 1)
-				iterator.extend_right (v)
+				extend_after (v, cell_at (i - 1))
 			end
 		end
 
 	prepend (input: V_ITERATOR [G])
 			-- Prepend sequence of values, over which `input' iterates.
+		local
+			it: V_LINKED_LIST_ITERATOR [G]
 		do
 			if not input.after then
 				extend_front (input.item)
 				input.forth
 				from
-					iterator.start
+					it := at_first
 				until
 					input.after
 				loop
-					iterator.extend_right (input.item)
-					iterator.forth
+					it.extend_right (input.item)
+					it.forth
 					input.forth
 				end
 			end
@@ -131,17 +160,19 @@ feature -- Extension
 
 	insert_at (input: V_ITERATOR [G]; i: INTEGER)
 			-- Insert sequence of values, over which `input' iterates, starting at position `i'.
+		local
+			it: V_LINKED_LIST_ITERATOR [G]
 		do
 			if i = 1 then
 				prepend (input)
 			else
 				from
-					iterator.go_to (i - 1)
+					it := at (i - 1)
 				until
 					input.after
 				loop
-					iterator.extend_right (input.item)
-					iterator.forth
+					it.extend_right (input.item)
+					it.forth
 					input.forth
 				end
 			end
@@ -166,8 +197,7 @@ feature -- Removal
 				last_cell := Void
 				count := 0
 			else
-				iterator.go_to (count - 1)
-				iterator.remove_right
+				remove_after (cell_at (count - 1))
 			end
 		end
 
@@ -177,8 +207,7 @@ feature -- Removal
 			if i = 1 then
 				remove_front
 			else
-				iterator.go_to (i - 1)
-				iterator.remove_right
+				remove_after (cell_at (i - 1))
 			end
 		end
 
@@ -190,12 +219,42 @@ feature -- Removal
 			count := 0
 		end
 
-feature {V_LINKED_LIST, V_LINKED_LIST_ITERATOR} -- Implementation
+feature {V_CONTAINER, V_ITERATOR} -- Implementation
 	first_cell: V_LINKABLE [G]
 			-- First cell of the list.
 
 	last_cell: V_LINKABLE [G]
 			-- Last cell of the list.
+
+	cell_at (i: INTEGER): V_LINKABLE [G]
+			-- Cell at position `i'.
+		require
+			valid_position: 1 <= i and i <= count
+		local
+			j: INTEGER
+		do
+			from
+				j := 1
+				Result := first_cell
+			until
+				j = i
+			loop
+				Result := Result.right
+				j := j + 1
+			end
+		end
+
+	cell_satisfying (pred: PREDICATE [ANY, TUPLE [G]]): V_LINKABLE [G]
+			-- Cell where item satisfies `pred'.
+		do
+			from
+				Result := first_cell
+			until
+				Result = Void or else pred.item ([Result.item])
+			loop
+				Result := Result.right
+			end
+		end
 
 	extend_after (v: G; c: V_LINKABLE [G])
 			-- Add a new cell with value `v' after `c'.
@@ -257,12 +316,7 @@ feature {V_LINKED_LIST, V_LINKED_LIST_ITERATOR} -- Implementation
 			end
 		end
 
-feature {NONE} --Implementation
-	iterator: V_LINKED_LIST_ITERATOR [G]
-			-- Internal iterator.
-
 invariant
 	first_cell_exists_in_nonempty: is_empty = (first_cell = Void)
 	last_cell_exists_in_nonempty: is_empty = (last_cell = Void)
-	iterator_exists: iterator /= Void
 end

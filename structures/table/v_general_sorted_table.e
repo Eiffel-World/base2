@@ -84,7 +84,7 @@ feature -- Search
 			--- definition: Result |=| agent (x, y: K): BOOLEAN -> key_order (x, y) and key_order (y, x) 	
 		end
 
-feature {V_SET_TABLE, V_SET_TABLE_ITERATOR} -- Implementation
+feature {V_CONTAINER, V_ITERATOR} -- Implementation
 	set: V_GENERAL_SORTED_SET [TUPLE [key: K; value: V]]
 			-- Underlying set of key-value pairs.
 			-- Should not be reassigned after creation.

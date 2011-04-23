@@ -17,8 +17,7 @@ inherit
 feature -- Access
 	item alias "[]" (i: INTEGER): G assign put
 			-- Value at position `i'.
-		do
-			Result := Precursor (i)
+		deferred
 		end
 
 feature -- Iteration
@@ -44,11 +43,14 @@ feature -- Replacement
 			has_index_one: has_index (i1)
 			has_index_two: has_index (i2)
 		local
+			it1, it2: V_IO_ITERATOR [G]
 			v: G
 		do
-			v := item (i1)
-			put (item (i2), i1)
-			put (v, i2)
+			it1 := at (i1)
+			it2 := at (i2)
+			v := it1.item
+			it1.put (it2.item)
+			it2.put (v)
 		ensure
 			map_effect: map |=| old map.updated (i1, map [i2]).updated (i2, map [i1])
 		end
@@ -103,14 +105,21 @@ feature -- Replacement
 			index_not_too_small: index >= lower
 			enough_space: upper - index >= other_last - other_first
 		local
-			j: INTEGER
+			other_it: V_ITERATOR [G]
+			it: V_IO_ITERATOR [G]
+			j, n: INTEGER
 		do
+			n := other_last - other_first + 1
 			from
-				j := other_first
+				j := 1
+				other_it := other.at (other_first)
+				it := at (index)
 			until
-				j > other_last
+				j > n
 			loop
-				put (other [j], j - other_first + index)
+				it.put (other_it.item)
+				other_it.forth
+				it.forth
 				j := j + 1
 			end
 		ensure

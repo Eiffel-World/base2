@@ -1,6 +1,6 @@
 Structures:
 
-- Improve lookup efficiency (no iterator creation)
+- Look at efficiency of HASH_SET.remove
 - Define is_equal in MAP
 - Finite streams: filter, mapper, folder
 - Extender iterator

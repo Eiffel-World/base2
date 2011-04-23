@@ -22,6 +22,27 @@ inherit
 		end
 
 feature -- Search
+	has (v: G): BOOLEAN
+			-- Is `v' contained?
+			-- (Uses `equivalence'.)
+		note
+			status: specification
+		deferred
+		ensure
+			definition: Result = set.exists (agent equivalent (v, ?))
+		end
+
+	item (v: G): G
+			-- Element of `set' equivalent to `v' according to `relation'.
+		note
+			status: specification
+		require
+			has: has (v)
+		deferred
+		ensure
+			Result = (set | agent equivalent (v, ?)).any_item
+		end
+
 	equivalence: PREDICATE [ANY, TUPLE [G, G]]
 			-- Equivalence relation on values.
 		deferred
@@ -35,33 +56,6 @@ feature -- Search
 			Result := equivalence.item ([x, y])
 		ensure
 			definition: Result = equivalence.item ([x, y])
-		end
-
-	has (v: G): BOOLEAN
-			-- Is `v' contained?
-			-- (Uses `equivalence'.)
-		note
-			status: specification
-		local
-			i: V_SET_ITERATOR [G]
-		do
-			i := new_iterator
-			i.search (v)
-			Result := not i.after
-		ensure
-			definition: Result = set.exists (agent equivalent (v, ?))
-		end
-
-	equivalent_item (v: G): G
-			-- Element of `set' equivalent to `v' according to `relation'.
-		note
-			status: specification
-		require
-			has: has (v)
-		do
-			Result := (set | agent equivalent (v, ?)).any_item
-		ensure
-			Result = (set | agent equivalent (v, ?)).any_item
 		end
 
 	has_exactly (v: G): BOOLEAN
@@ -157,7 +151,7 @@ feature -- Comparison
 			definition: Result = (set.count = other.set.count and
 				set.for_all (agent (x: G; o: like Current): BOOLEAN
 					do
-						Result := o.has (x) and then equivalent (x, o.equivalent_item (x))
+						Result := o.has (x) and then equivalent (x, o.item (x))
 					end (?, other)))
 		end
 
@@ -202,7 +196,7 @@ feature -- Removal
 				iterator.remove
 			end
 		ensure
-			set_effect_has: old has (v) implies set |=| old (set / equivalent_item (v))
+			set_effect_has: old has (v) implies set |=| old (set / item (v))
 			set_effect_not_has: not old has (v) implies set |=| old set
 		end
 
@@ -290,7 +284,7 @@ feature -- Removal
 			set_effect: set.is_empty
 		end
 
-feature {V_SET} -- Implementation
+feature {V_CONTAINER, V_ITERATOR} -- Implementation
 	iterator: V_SET_ITERATOR [G]
 			-- Internal iterator (to be used only in procedures).		
 		deferred

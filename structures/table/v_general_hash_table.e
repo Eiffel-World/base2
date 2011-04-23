@@ -90,7 +90,7 @@ feature -- Search
 --			definition: Result = key_hash.item ([k])
 --		end
 
-feature {V_SET_TABLE, V_SET_TABLE_ITERATOR} -- Implementation
+feature {V_CONTAINER, V_ITERATOR} -- Implementation
 	set: V_GENERAL_HASH_SET [TUPLE [key: K; value: V]]
 			-- Underlying set of key-value pairs.
 			-- Should not be reassigned after creation.

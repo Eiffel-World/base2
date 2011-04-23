@@ -187,7 +187,7 @@ feature -- Removal
 			to_next_bucket
 		end
 
-feature {V_GENERAL_HASH_SET, V_HASH_SET_ITERATOR} -- Implementation
+feature {V_CONTAINER, V_ITERATOR} -- Implementation
 	list_iterator: V_LINKED_LIST_ITERATOR [G]
 			-- Iterator inside current bucket.
 

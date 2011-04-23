@@ -23,8 +23,7 @@ feature -- Access
 			-- Value associated with `k'.
 		require
 			has_key: has_key (k)
-		do
-			Result := at_key (k).value
+		deferred
 		ensure
 			definition: Result = map [key (k)]
 		end

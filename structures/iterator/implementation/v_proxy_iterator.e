@@ -125,7 +125,7 @@ feature -- Cursor movement
 			iterator.go_after
 		end
 
-feature {V_PROXY_ITERATOR} -- Implementation
+feature {V_CONTAINER, V_ITERATOR} -- Implementation
 	iterator: V_ITERATOR [G]
 			-- Iterator over the storage.
 

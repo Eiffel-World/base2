@@ -82,7 +82,7 @@ feature -- Removal
 			list.wipe_out
 		end
 
-feature {V_LINKED_STACK} -- Implementation
+feature {V_CONTAINER, V_ITERATOR} -- Implementation
 	list: V_LINKED_LIST [G]
 			-- Underlying list.
 			-- Should not be reassigned after creation.			

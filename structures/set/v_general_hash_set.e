@@ -78,6 +78,19 @@ feature -- Measurement
 			-- Number of elements.
 
 feature -- Search
+	has (v: G): BOOLEAN
+			-- Is `v' contained?
+			-- (Uses `equivalence'.)
+		do
+			Result := buckets [index (v)].cell_satisfying (agent equivalent (v, ?)) /= Void
+		end
+
+	item (v: G): G
+			-- Element of `set' equivalent to `v' according to `relation'.
+		do
+			Result := buckets [index (v)].cell_satisfying (agent equivalent (v, ?)).item
+		end
+
 	equivalence: PREDICATE [ANY, TUPLE [G, G]]
 			-- Equivalence relation on values.
 
@@ -141,7 +154,7 @@ feature {NONE} -- Performance parameters
 	growth_rate: INTEGER = 2
 			-- Rate by which bucket array grows and shrinks.
 
-feature {V_HASH_SET_ITERATOR, V_GENERAL_HASH_SET} -- Implementation
+feature {V_CONTAINER, V_ITERATOR} -- Implementation
 	buckets: V_ARRAY [V_LINKED_LIST [G]]
 			-- Element storage.
 

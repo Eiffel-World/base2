@@ -18,8 +18,7 @@ inherit
 feature -- Access
 	item alias "[]" (k: K): V assign force
 			-- Value associated with `k'.
-		do
-			Result := Precursor (k)
+		deferred
 		end
 
 feature -- Iteration

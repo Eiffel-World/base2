@@ -14,6 +14,13 @@ inherit
 			has_key
 		end
 
+feature -- Access
+	item alias "[]" (k: K): V assign force
+			-- Value associated with `k'.
+		do
+			Result := set.item ([k, ({V}).default]).value
+		end
+
 feature -- Measurement
 	count: INTEGER
 			-- Number of elements.
@@ -60,7 +67,7 @@ feature -- Removal
 			set.wipe_out
 		end
 
-feature {V_SET_TABLE, V_SET_TABLE_ITERATOR} -- Implementation
+feature {V_CONTAINER, V_ITERATOR} -- Implementation
 	set: V_SET [TUPLE [key: K; value: V]]
 			-- Underlying set of key-value pairs.
 			-- Should not be reassigned after creation.

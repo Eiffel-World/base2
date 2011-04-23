@@ -166,7 +166,7 @@ feature -- Removal
 			set_iterator.remove
 		end
 
-feature {V_SET_TABLE_ITERATOR} -- Implementation
+feature {V_CONTAINER, V_ITERATOR} -- Implementation
 	set_iterator: V_SET_ITERATOR [TUPLE [key: K; value: V]]
 			-- Iterator over the underlying set.
 

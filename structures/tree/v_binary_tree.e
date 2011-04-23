@@ -109,7 +109,7 @@ feature -- Output
 			Result := subtree_to_string (root, 0)
 		end
 
-feature {V_BINARY_TREE, V_BINARY_TREE_CURSOR} -- Implementation
+feature {V_CONTAINER, V_BINARY_TREE_CURSOR} -- Implementation
 	root: V_BINARY_TREE_CELL [G]
 			-- Root node.
 

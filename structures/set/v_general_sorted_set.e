@@ -68,6 +68,19 @@ feature -- Measurement
 		end
 
 feature -- Search
+	has (v: G): BOOLEAN
+			-- Is `v' contained?
+			-- (Uses `equivalence'.)
+		do
+			Result := cell_equivalent (v) /= Void
+		end
+
+	item (v: G): G
+			-- Element of `set' equivalent to `v' according to `relation'.
+		do
+			Result := cell_equivalent (v).item
+		end
+
 	order: PREDICATE [ANY, TUPLE [G, G]]
 			-- Order relation on values.
 
@@ -149,10 +162,26 @@ feature -- Removal
 			tree.wipe_out
 		end
 
-feature {V_GENERAL_SORTED_SET, V_SORTED_SET_ITERATOR} -- Implementation
+feature {V_CONTAINER, V_ITERATOR} -- Implementation
 	tree: V_BINARY_TREE [G]
 			-- Element storage.
 			-- Should not be reassigned after creation.
+
+	cell_equivalent (v: G): V_BINARY_TREE_CELL [G]
+			-- Tree cell where item is equivalent to `v'.
+		do
+			from
+				Result := tree.root
+			until
+				Result = Void or else equivalent (Result.item, v)
+			loop
+				if less_equal (v, Result.item) then
+					Result := Result.left
+				else
+					Result := Result.right
+				end
+			end
+		end
 
 feature {NONE} -- Implementation
 	iterator: V_SORTED_SET_ITERATOR [G]
