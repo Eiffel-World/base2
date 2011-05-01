@@ -187,10 +187,13 @@ feature {NONE} -- Implementation
 			-- String representation of a subtree with root `cell' indented by `indent'.
 		require
 			indent_non_negative: indent >= 0
+		local
+			stream: V_STRING_OUTPUT
 		do
 			if cell /= Void then
 				create Result.make_filled (' ', indent)
-				Result.append (cell.item.out + "%N")
+				create stream.make_with_separator (Result, "%N")
+				stream.output (cell.item)
 				Result.append (subtree_to_string (cell.left, indent + 1))
 				Result.append (subtree_to_string (cell.right, indent + 1))
 			else

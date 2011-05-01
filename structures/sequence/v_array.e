@@ -232,7 +232,8 @@ feature -- Resizing
 				resize (lower, i)
 			end
 		ensure
-			map_domain_effect: map.domain |=| {MML_INTERVAL} [[i.min (old lower), i.max (old upper)]]
+			map_domain_effect_empty: old map.is_empty implies map.domain |=| {MML_SET [INTEGER]} [i]
+			map_domain_effect_non_empty: not old map.is_empty implies map.domain |=| {MML_INTERVAL} [[i.min (old lower), i.max (old upper)]]
 			map_old_effect: (map | (map.domain * old map.domain)) |=| (old map | (map.domain * old map.domain))
 			map_new_effect: (map | (map.domain - old map.domain)).is_constant (({G}).default)
 		end
@@ -244,7 +245,8 @@ feature -- Resizing
 			include (i)
 			put (v, i)
 		ensure
-			map_domain_effect: map.domain |=| {MML_INTERVAL} [[i.min (old lower), i.max (old upper)]]
+			map_domain_effect_empty: old map.is_empty implies map.domain |=| {MML_SET [INTEGER]} [i]
+			map_domain_effect_non_empty: not old map.is_empty implies map.domain |=| {MML_INTERVAL} [[i.min (old lower), i.max (old upper)]]
 			map_i_effect: map [i] = v
 			map_old_effect: (map | (map.domain * old map.domain - {MML_INTERVAL}[i])) |=| (old map | (map.domain * old map.domain - {MML_INTERVAL}[i]))
 			map_new_effect: (map | (map.domain - old map.domain - {MML_INTERVAL}[i])).is_constant (({G}).default)

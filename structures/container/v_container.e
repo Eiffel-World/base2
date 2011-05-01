@@ -87,7 +87,7 @@ feature -- Search
 				it.forth
 			end
 		ensure
-			definition: Result = (bag.domain | pred).count
+			definition: Result = (bag | (bag.domain | pred)).count
 		end
 
 	exists (pred: PREDICATE [ANY, TUPLE [G]]): BOOLEAN

@@ -114,16 +114,22 @@ feature -- Output
 			-- String representation of the content.
 		local
 			it: V_MAP_ITERATOR [K, V]
+			stream: V_STRING_OUTPUT
 		do
 			from
 				Result := ""
+				create stream.make_with_separator (Result, "")
 				it := new_iterator
 			until
 				it.off
 			loop
-				Result.append ("(" + it.key.out + ", " + it.value.out + ")")
+				stream.output ("(")
+				stream.output (it.key)
+				stream.output (", ")
+				stream.output (it.value)
+				stream.output (")")
 				if not it.is_last then
-					Result.append (" ")
+					stream.output (" ")
 				end
 				it.forth
 			end

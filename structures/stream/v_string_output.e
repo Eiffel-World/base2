@@ -50,7 +50,10 @@ feature -- Access
 			-- String that is output after every element.
 
 	default_separator: STRING = " "
-			-- Default value of `separator'.			
+			-- Default value of `separator'.
+
+	Void_out: STRING = "Void"
+			-- String representation of `Void'.			
 
 feature -- Status report
 	off: BOOLEAN = False
@@ -60,10 +63,15 @@ feature -- Replacement
 	output (v: ANY)
 			-- Put `v' into the stream and move to the next position.
 		do
-			destination.append (v.out)
+			if v = Void then
+				destination.append (Void_out)
+			else
+				destination.append (v.out)
+			end
 			destination.append (separator)
 		ensure then
-			string_effect: destination ~ (old destination.twin) + v.out + separator
+			string_effect_void: v = Void implies destination ~ (old destination.twin) + Void_out + separator
+			string_effect_non_void: v /= Void implies destination ~ (old destination.twin) + v.out + separator
 		end
 
 invariant

@@ -1,7 +1,5 @@
 Structures:
 
-- Look at efficiency of HASH_SET.remove
-- Define is_equal in MAP
 - Finite streams: filter, mapper, folder
 - Extender iterator
 - V_STRING, V_MUTABLE_STRING
