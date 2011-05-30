@@ -83,9 +83,10 @@ feature -- Comparison
 	is_equal (other: like Current): BOOLEAN
 			-- Does `other' have the same `target' and `path'?
 		do
-			Result := target = other.target and (off and other.off or active = other.active)
+			Result := same_type (other) and then
+				target = other.target and (off and other.off or active = other.active)
 		ensure then
-			definition: Result = (target = other.target and path |=| other.path)
+			definition: Result = same_type (other) and then (target = other.target and path |=| other.path)
 		end
 
 feature -- Cursor movement

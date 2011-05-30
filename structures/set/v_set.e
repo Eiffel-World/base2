@@ -169,13 +169,15 @@ feature -- Extension
 		require
 			other_exists: other /= Void
 		do
-			from
-				other.iterator.start
-			until
-				other.iterator.after
-			loop
-				extend (other.iterator.item)
-				other.iterator.forth
+			if other /= Current then
+				from
+					other.iterator.start
+				until
+					other.iterator.after
+				loop
+					extend (other.iterator.item)
+					other.iterator.forth
+				end
 			end
 		ensure
 			set_effect_old: (old set).for_all (agent has)
@@ -205,15 +207,17 @@ feature -- Removal
 		require
 			other_exists: other /= Void
 		do
-			from
-				iterator.start
-			until
-				iterator.after
-			loop
-				if not other.has (iterator.item) then
-					iterator.remove
-				else
-					iterator.forth
+			if other /= Current then
+				from
+					iterator.start
+				until
+					iterator.after
+				loop
+					if not other.has (iterator.item) then
+						iterator.remove
+					else
+						iterator.forth
+					end
 				end
 			end
 		ensure
@@ -229,19 +233,23 @@ feature -- Removal
 		require
 			other_exists: other /= Void
 		do
-			from
-				other.iterator.start
-			until
-				other.iterator.after
-			loop
-				remove (other.iterator.item)
-				other.iterator.forth
+			if other /= Current then
+				from
+					other.iterator.start
+				until
+					other.iterator.after
+				loop
+					remove (other.iterator.item)
+					other.iterator.forth
+				end
+			else
+				wipe_out
 			end
 		ensure
 			set_effect_old: (old set).for_all (agent (x: G; o: V_SET [G]): BOOLEAN
 				do
 					Result := has (x) or o.has (x)
-				end (?, other))
+				end (?, old other.twin))
 			set_effect_new: set.for_all (agent (old Current.twin).has)
 		end
 
@@ -250,23 +258,27 @@ feature -- Removal
 		require
 			other_exists: other /= Void
 		do
-			from
-				other.iterator.start
-			until
-				other.iterator.after
-			loop
-				if has (other.iterator.item) then
-					remove (other.iterator.item)
-				else
-					extend (other.iterator.item)
+			if other /= Current then
+				from
+					other.iterator.start
+				until
+					other.iterator.after
+				loop
+					if has (other.iterator.item) then
+						remove (other.iterator.item)
+					else
+						extend (other.iterator.item)
+					end
+					other.iterator.forth
 				end
-				other.iterator.forth
+			else
+				wipe_out
 			end
 		ensure
 			set_effect_old: (old set).for_all (agent (x: G; o: V_SET [G]): BOOLEAN
 				do
 					Result := not o.has (x) implies has (x)
-				end (?, other))
+				end (?, old other.twin))
 			set_effect_other: other.set.for_all (agent (x: G; c: V_SET [G]): BOOLEAN
 				do
 					Result := not c.has (x) implies has (x)
@@ -274,7 +286,7 @@ feature -- Removal
 			set_effect_new: set.for_all (agent (x: G; c, o: V_SET [G]): BOOLEAN
 				do
 					Result := c.has (x) or o.has (x)
-				end (?, old Current.twin, other))
+				end (?, old Current.twin, old other.twin))
 		end
 
 	wipe_out

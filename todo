@@ -1,5 +1,6 @@
 Structures:
 
+- Do not rely on agents in standard sorted and hash structures
 - Finite streams: filter, mapper, folder
 - Extender iterator
 - V_STRING, V_MUTABLE_STRING

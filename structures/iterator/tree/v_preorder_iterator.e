@@ -36,6 +36,8 @@ feature -- Cursor movement
 						left
 					end
 				end
+			else
+				active := Void
 			end
 			after := False
 		end

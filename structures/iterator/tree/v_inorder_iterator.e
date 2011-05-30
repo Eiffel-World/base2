@@ -28,6 +28,7 @@ feature -- Cursor movement
 				end
 				after := False
 			else
+				active := Void
 				after := True
 			end
 		end
@@ -43,6 +44,8 @@ feature -- Cursor movement
 				loop
 					right
 				end
+			else
+				active := Void
 			end
 			after := False
 		end
