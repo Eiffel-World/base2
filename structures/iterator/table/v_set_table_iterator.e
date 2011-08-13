@@ -23,7 +23,7 @@ feature {NONE} -- Initialization
 			-- Create an iterator at start of `t'.
 		do
 			target := t
-			set_iterator := target.set.new_iterator
+			set_iterator := target.set.new_cursor
 		ensure
 			target_effect: target = t
 			index_effect: index = 1

@@ -39,7 +39,7 @@ feature -- Initialization
 		do
 			if other /= Current then
 				wipe_out
-				append (other.at_first)
+				append (other.new_cursor)
 			end
 		ensure then
 			sequence_effect: sequence |=| other.sequence
@@ -147,7 +147,7 @@ feature -- Extension
 				extend_front (input.item)
 				input.forth
 				from
-					it := at_first
+					it := new_cursor
 				until
 					input.after
 				loop

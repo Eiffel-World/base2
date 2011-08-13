@@ -22,6 +22,13 @@ inherit
 			satisfy_forth
 		end
 
+	ITERATION_CURSOR [G]
+		rename
+			after as off
+		redefine
+			is_equal
+		end
+
 feature -- Access
 	target: V_CONTAINER [G]
 			-- Container to iterate over.

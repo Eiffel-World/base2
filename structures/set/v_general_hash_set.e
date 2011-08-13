@@ -98,7 +98,7 @@ feature -- Search
 			-- Hash function.
 
 feature -- Iteration
-	new_iterator: V_HASH_SET_ITERATOR [G]
+	new_cursor: V_HASH_SET_ITERATOR [G]
 			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'.
 		do
 			create Result.make (Current)

@@ -11,7 +11,7 @@ class
 inherit
 	V_CONTAINER [G]
 		rename
-			new_iterator as inorder
+			new_cursor as inorder
 		redefine
 			copy,
 			is_equal,

@@ -57,7 +57,7 @@ feature -- Search
 		do
 			from
 				Result := False
-				it := new_iterator
+				it := new_cursor
 			until
 				it.after or Result
 			loop
@@ -77,24 +77,14 @@ feature -- Search
 				do
 					Result := p.precondition ([k])
 				end (?, pred))
-		local
-			it: V_MAP_ITERATOR [K, V]
 		do
-			from
-				Result := True
-				it := new_iterator
-			until
-				it.after or not Result
-			loop
-				Result := pred.item ([it.key])
-				it.forth
-			end
+			Result := across Current as it all pred.item ([it.key]) end
 		ensure
 			definition: Result = map.domain.for_all (pred)
 		end
 
 feature -- Iteration
-	new_iterator: like at_key
+	new_cursor: like at_key
 			-- New iterator pointing to a position in the map, from which it can traverse all elements by going `forth'.
 		deferred
 		end
@@ -113,15 +103,12 @@ feature -- Output
 	out: STRING
 			-- String representation of the content.
 		local
-			it: V_MAP_ITERATOR [K, V]
 			stream: V_STRING_OUTPUT
 		do
-			from
-				Result := ""
-				create stream.make_with_separator (Result, "")
-				it := new_iterator
-			until
-				it.off
+			Result := ""
+			create stream.make_with_separator (Result, "")
+			across
+				Current as it
 			loop
 				stream.output ("(")
 				stream.output (it.key)
@@ -131,7 +118,6 @@ feature -- Output
 				if not it.is_last then
 					stream.output (" ")
 				end
-				it.forth
 			end
 		end
 
@@ -140,17 +126,12 @@ feature -- Specification
 			-- Map of keys to values.
 		note
 			status: specification
-		local
-			it: V_MAP_ITERATOR [K, V]
 		do
 			create Result
-			from
-				it := new_iterator
-			until
-				it.after
+			across
+				Current as it
 			loop
 				Result := Result.updated (it.key, it.value)
-				it.forth
 			end
 		end
 

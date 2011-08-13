@@ -20,7 +20,7 @@ feature -- Access
 		end
 
 feature -- Iteration
-	new_iterator: V_ITERATOR [G]
+	new_cursor: V_ITERATOR [G]
 			-- New iterator pointing to the accessible element.
 			-- (Traversal in the order of accessibility.)
 		deferred
@@ -59,7 +59,7 @@ feature -- Specification
 		note
 			status: specification
 		do
-			Result := new_iterator.sequence
+			Result := new_cursor.sequence
 		ensure
 			exists: Result /= Void
 		end

@@ -12,7 +12,7 @@ deferred class
 	V_CONTAINER [G]
 
 inherit
-	ANY
+	ITERABLE [G]
 		redefine
 			out
 		end
@@ -37,7 +37,7 @@ feature -- Search
 		local
 			it: V_ITERATOR [G]
 		do
-			it := new_iterator
+			it := new_cursor
 			it.search_forth (v)
 			Result := not it.after
 		ensure
@@ -47,18 +47,13 @@ feature -- Search
 	occurrences (v: G): INTEGER
 			-- How many times is value `v' contained?
 			-- (Uses reference equality.)
-		local
-			it: V_ITERATOR [G]
 		do
-			from
-				it := new_iterator
-			until
-				it.after
+			across
+				Current as it
 			loop
 				if it.item = v then
 					Result := Result + 1
 				end
-				it.forth
 			end
 		ensure
 			definition: Result = bag [v]
@@ -73,18 +68,13 @@ feature -- Search
 				do
 					Result := p.precondition ([x])
 				end (?, pred))
-		local
-			it: V_ITERATOR [G]
 		do
-			from
-				it := new_iterator
-			until
-				it.after
+			across
+				Current as it
 			loop
 				if pred.item ([it.item]) then
 					Result := Result + 1
 				end
-				it.forth
 			end
 		ensure
 			definition: Result = (bag | (bag.domain | pred)).count
@@ -102,7 +92,7 @@ feature -- Search
 		local
 			it: V_ITERATOR [G]
 		do
-			it := new_iterator
+			it := new_cursor
 			it.satisfy_forth (pred)
 			Result := not it.after
 		ensure
@@ -118,27 +108,17 @@ feature -- Search
 				do
 					Result := p.precondition ([x])
 				end (?, pred))
-		local
-			it: V_ITERATOR [G]
 		do
-			from
-				Result := True
-				it := new_iterator
-			until
-				it.after or not Result
-			loop
-				Result := pred.item ([it.item])
-				it.forth
-			end
+			Result := across Current as it all pred.item ([it.item]) end
 		ensure
 			definition: Result = bag.domain.for_all (pred)
 		end
 
 feature -- Iteration
-	new_iterator: V_ITERATOR [G]
+	new_cursor: V_ITERATOR [G]
 			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'.
 		deferred
-		ensure
+		ensure then
 			target_definition: Result.target = Current
 			index_definition: Result.index = 1
 		end
@@ -151,7 +131,7 @@ feature -- Output
 		do
 			create Result.make_empty
 			create stream.make (Result)
-			stream.pipe (new_iterator)
+			stream.pipe (new_cursor)
 			Result.remove_tail (stream.separator.count)
 		end
 
@@ -160,17 +140,10 @@ feature -- Specification
 			-- Bag of elements.
 		note
 			status: specification
-		local
-			i: V_ITERATOR [G]
 		do
 			create Result
-			from
-				i := new_iterator
-			until
-				i.after
-			loop
+			across Current as i loop
 				Result := Result & i.item
-				i.forth
 			end
 		ensure
 			exists: Result /= Void

@@ -17,7 +17,7 @@ inherit
 	V_SET [G]
 		redefine
 			copy,
-			new_iterator
+			new_cursor
 		end
 
 create
@@ -106,7 +106,7 @@ feature -- Search
 		end
 
 feature -- Iteration
-	new_iterator: V_SORTED_SET_ITERATOR [G]
+	new_cursor: V_SORTED_SET_ITERATOR [G]
 			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'.
 		do
 			create Result.make (Current, tree)

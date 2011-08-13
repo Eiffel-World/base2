@@ -39,8 +39,8 @@ feature -- Comparison
 			elseif count = other.count then
 				from
 					Result := True
-					i := new_iterator
-					j := other.new_iterator
+					i := new_cursor
+					j := other.new_cursor
 				until
 					i.after or not Result
 				loop

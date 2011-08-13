@@ -64,7 +64,7 @@ feature -- Search
 		local
 			i: V_SET_ITERATOR [G]
 		do
-			i := new_iterator
+			i := new_cursor
 			i.search (v)
 			Result := not i.after and then i.item = v
 		end
@@ -79,7 +79,7 @@ feature -- Search
 		end
 
 feature -- Iteration
-	new_iterator: V_SET_ITERATOR [G]
+	new_cursor: V_SET_ITERATOR [G]
 			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'.
 		deferred
 		end
@@ -137,8 +137,8 @@ feature -- Comparison
 			elseif count = other.count then
 				from
 					Result := True
-					i := new_iterator
-					j := other.new_iterator
+					i := new_cursor
+					j := other.new_cursor
 				until
 					i.after or not Result
 				loop
@@ -307,17 +307,12 @@ feature -- Specification
 			-- Set of elements.
 		note
 			status: specification
-		local
-			i: V_ITERATOR [G]
 		do
 			create Result
-			from
-				i := new_iterator
-			until
-				i.after
+			across
+				Current as i
 			loop
 				Result := Result & i.item
-				i.forth
 			end
 		ensure
 			exists: Result /= Void

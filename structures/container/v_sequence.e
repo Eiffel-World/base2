@@ -17,7 +17,6 @@ inherit
 			has_key as has_index,
 			exists_key as exists_index,
 			for_all_keys as for_all_indexes,
-			new_iterator as at_first,
 			at_key as at
 		redefine
 			out,
@@ -186,7 +185,7 @@ feature -- Search
 		end
 
 feature -- Iteration
-	at_first: like at
+	new_cursor: like at
 			-- New iterator pointing to the first position.
 		do
 			Result := at (lower)
@@ -218,7 +217,7 @@ feature -- Output
 		do
 			create Result.make_empty
 			create stream.make (Result)
-			stream.pipe (at_first)
+			stream.pipe (new_cursor)
 			Result.remove_tail (stream.separator.count)
 		end
 
