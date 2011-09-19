@@ -46,13 +46,35 @@ feature {NONE} -- Initialization
 	default_create
 			-- Create an empty table with reference equality as equivalence relation on keys.
 		do
-			make (agent reference_equal, agent hash_code)
+--			make (agent reference_equal, agent hash_code)
+			key_equivalence := agent reference_equal
+			key_hash := agent hash_code
+			create set.make (
+				agent (kv1, kv2: TUPLE [key: K; value: V]): BOOLEAN
+					do
+						Result := kv1.key = kv2.key
+					end,
+				agent (kv: TUPLE [key: K; value: V]): INTEGER
+					do
+						Result := kv.key.hash_code
+					end)
 		end
 
 	with_object_equality
 			-- Create an empty table with object equality as equivalence relation on keys.
 		do
-			make (agent object_equal, agent hash_code)
+--			make (agent object_equal, agent hash_code)
+			key_equivalence := agent object_equal
+			key_hash := agent hash_code
+			create set.make (
+				agent (kv1, kv2: TUPLE [key: K; value: V]): BOOLEAN
+					do
+						Result := kv1.key ~ kv2.key
+					end,
+				agent (kv: TUPLE [key: K; value: V]): INTEGER
+					do
+						Result := kv.key.hash_code
+					end)
 		end
 
 end
