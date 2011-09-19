@@ -50,14 +50,8 @@ feature {NONE} -- Initialization
 			key_equivalence := agent reference_equal
 			key_hash := agent hash_code
 			create set.make (
-				agent (kv1, kv2: TUPLE [key: K; value: V]): BOOLEAN
-					do
-						Result := kv1.key = kv2.key
-					end,
-				agent (kv: TUPLE [key: K; value: V]): INTEGER
-					do
-						Result := kv.key.hash_code
-					end)
+				agent keys_reference_equal,
+				agent key_hash_code)
 		end
 
 	with_object_equality
@@ -67,14 +61,25 @@ feature {NONE} -- Initialization
 			key_equivalence := agent object_equal
 			key_hash := agent hash_code
 			create set.make (
-				agent (kv1, kv2: TUPLE [key: K; value: V]): BOOLEAN
-					do
-						Result := kv1.key ~ kv2.key
-					end,
-				agent (kv: TUPLE [key: K; value: V]): INTEGER
-					do
-						Result := kv.key.hash_code
-					end)
+				agent keys_object_equal,
+				agent key_hash_code)
+		end
+
+feature -- Implementation
+
+	keys_reference_equal (kv1, kv2: TUPLE [key: K; value: V]): BOOLEAN
+		do
+			Result := kv1.key = kv2.key
+		end
+
+	keys_object_equal (kv1, kv2: TUPLE [key: K; value: V]): BOOLEAN
+		do
+			Result := kv1.key ~ kv2.key
+		end
+
+	key_hash_code (kv: TUPLE [key: K; value: V]): INTEGER
+		do
+			Result := kv.key.hash_code
 		end
 
 end
