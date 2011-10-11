@@ -11,7 +11,6 @@ deferred class
 inherit
 	V_ITERATOR [V]
 		rename
-			item as value,
 			sequence as value_sequence
 		end
 

@@ -152,13 +152,13 @@ feature -- Removal
 			sequence_effect: sequence |=| old sequence.but_last
 		end
 
-	remove_at  (i: INTEGER)
+	remove_at (i: INTEGER)
 			-- Remove element at position `i'.
 		require
 			has_index: has_index (i)
 		deferred
 		ensure
-			sequence_effect: sequence |=| old (sequence.front (i - 1) + sequence.tail (i + 1))
+			sequence_effect: sequence |=| old (sequence.removed_at (i))
 		end
 
 	wipe_out

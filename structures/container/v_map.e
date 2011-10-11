@@ -113,7 +113,7 @@ feature -- Output
 				stream.output ("(")
 				stream.output (it.key)
 				stream.output (", ")
-				stream.output (it.value)
+				stream.output (it.item)
 				stream.output (")")
 				if not it.is_last then
 					stream.output (" ")
@@ -131,7 +131,7 @@ feature -- Specification
 			across
 				Current as it
 			loop
-				Result := Result.updated (it.key, it.value)
+				Result := Result.updated (it.key, it.item)
 			end
 		end
 

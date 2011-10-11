@@ -16,7 +16,6 @@ inherit
 
 	V_IO_ITERATOR [V]
 		rename
-			item as value,
 			sequence as value_sequence
 		redefine
 			target

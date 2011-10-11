@@ -45,7 +45,7 @@ feature -- Comparison
 					i.after or not Result
 				loop
 					j.search_key (i.key)
-					Result := not j.after and then (equivalent (i.key, j.key) and i.value = j.value)
+					Result := not j.after and then (equivalent (i.key, j.key) and i.item = j.item)
 					i.forth
 				end
 			end

@@ -14,7 +14,6 @@ inherit
 			key as target_index,
 			search_key as search_target_index,
 			key_sequence as target_index_sequence,
-			value as item,
 			value_sequence as sequence
 		end
 

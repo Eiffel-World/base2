@@ -67,8 +67,8 @@ feature -- Access
 			Result := set_iterator.item.key
 		end
 
-	value: V
-			-- Value at current position.
+	item: V
+			-- Item at current position.
 		do
 			Result := set_iterator.item.value
 		end
