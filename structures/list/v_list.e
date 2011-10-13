@@ -161,7 +161,7 @@ feature -- Removal
 			sequence_effect: sequence |=| old (sequence.removed_at (i))
 		end
 
-	remove_one (v: G)
+	remove (v: G)
 			-- Remove the first occurrence of `v'.
 		require
 			has: has (v)
@@ -193,7 +193,7 @@ feature -- Removal
 			sequence_effect: sequence |=| old (sequence.removed (sequence.inverse.image_of (v)))
 		end
 
-	remove_one_satisfying (pred: PREDICATE [ANY, TUPLE [G]])
+	remove_satisfying (pred: PREDICATE [ANY, TUPLE [G]])
 			-- Remove the first element satisfying `pred'.
 		require
 			exists: exists (pred)
