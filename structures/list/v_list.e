@@ -161,6 +161,70 @@ feature -- Removal
 			sequence_effect: sequence |=| old (sequence.removed_at (i))
 		end
 
+	remove_one (v: G)
+			-- Remove the first occurrence of `v'.
+		require
+			has: has (v)
+		local
+			i: V_LIST_ITERATOR [G]
+		do
+			i := new_cursor
+			i.search_forth (v)
+			i.remove
+		ensure
+			sequence_effect: sequence |=| old (sequence.removed_at (sequence.inverse.image_of (v).extremum (agent less_equal)))
+		end
+
+	remove_all (v: G)
+			-- Remove all occurrences of `v'.
+		local
+			i: V_LIST_ITERATOR [G]
+		do
+			from
+				i := new_cursor
+				i.search_forth (v)
+			until
+				i.after
+			loop
+				i.remove
+				i.search_forth (v)
+			end
+		ensure
+			sequence_effect: sequence |=| old (sequence.removed (sequence.inverse.image_of (v)))
+		end
+
+	remove_one_satisfying (pred: PREDICATE [ANY, TUPLE [G]])
+			-- Remove the first element satisfying `pred'.
+		require
+			exists: exists (pred)
+		local
+			i: V_LIST_ITERATOR [G]
+		do
+			i := new_cursor
+			i.satisfy_forth (pred)
+			i.remove
+		ensure
+			sequence_effect: sequence |=| old (sequence.removed_at (sequence.inverse.image (sequence.inverse.domain | pred).extremum (agent less_equal)))
+		end
+
+	remove_all_satisfying (pred: PREDICATE [ANY, TUPLE [G]])
+			-- Remove all elements satisfying `pred'.
+		local
+			i: V_LIST_ITERATOR [G]
+		do
+			from
+				i := new_cursor
+				i.satisfy_forth (pred)
+			until
+				i.after
+			loop
+				i.remove
+				i.satisfy_forth (pred)
+			end
+		ensure
+			sequence_effect: sequence |=| old (sequence.removed (sequence.inverse.image (sequence.inverse.domain | pred)))
+		end
+
 	wipe_out
 			-- Remove all elements.
 		deferred

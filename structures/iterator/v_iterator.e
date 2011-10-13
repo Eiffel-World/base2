@@ -194,6 +194,8 @@ feature -- Cursor movement
 			-- Move to the first position at or after current where `pred' holds.
 			-- If `pred' never holds, move `after'.
 		require else
+			pred_exists: pred /= Void
+			pred_has_one_arg: pred.open_count = 1
 			precondition_satisfied: target.bag.domain.for_all (agent (x: G; p: PREDICATE [ANY, TUPLE [G]]): BOOLEAN
 				do
 					Result := p.precondition ([x])

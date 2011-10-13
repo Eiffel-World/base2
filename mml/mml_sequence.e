@@ -182,6 +182,52 @@ feature -- Decomposition
 			create Result.make_from_array (array.subarray (array.lower + l - 1, array.lower + u - 1))
 		end
 
+	removed_at (i: INTEGER): MML_SEQUENCE [G]
+			-- Current sequence with element at position `i' removed.
+		require
+			in_domain: domain [i]
+		local
+			a: V_ARRAY [G]
+		do
+			create a.make (1, array.count - 1)
+			a.copy_range (array, array.lower, array.lower + i - 2, 1)
+			a.copy_range (array, array.lower + i, array.upper, i)
+			create Result.make_from_array (a)
+		end
+
+	restricted (subdomain: MML_SET [INTEGER]): MML_SEQUENCE [G]
+			-- Current sequence with all elements with indexes outside of `subdomain' removed.
+		require
+			subdomain_exists: subdomain /= Void
+		local
+			a: V_ARRAY [G]
+			i, j: INTEGER
+		do
+			create a.make (1, array.count)
+			from
+				i := 1
+				j := 1
+			until
+				i > array.count
+			loop
+				if subdomain [i] then
+					a [j] := array [array.lower + i - 1]
+					j := j + 1
+				end
+				i := i + 1
+			end
+			a.resize (1, j - 1)
+			create Result.make_from_array (a)
+		end
+
+	removed (subdomain: MML_SET [INTEGER]): MML_SEQUENCE [G]
+			-- Current sequence with all elements with indexes from `subdomain' removed.
+		require
+			subdomain_exists: subdomain /= Void
+		do
+			Result := restricted (domain - subdomain)
+		end
+
 feature -- Modification
 	extended alias "&" (x: G): MML_SEQUENCE [G]
 			-- Current sequence extended with `x' at the end.
@@ -233,19 +279,6 @@ feature -- Modification
 		do
 			a := array.twin
 			a [array.lower + i - 1] := x
-			create Result.make_from_array (a)
-		end
-
-	removed_at (i: INTEGER): MML_SEQUENCE [G]
-			-- Current sequence with element at position `i' removed.
-		require
-			in_domain: domain [i]
-		local
-			a: V_ARRAY [G]
-		do
-			create a.make (1, array.count - 1)
-			a.copy_range (array, array.lower, array.lower + i - 2, 1)
-			a.copy_range (array, array.lower + i, array.upper, i)
 			create Result.make_from_array (a)
 		end
 
