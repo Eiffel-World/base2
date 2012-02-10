@@ -61,9 +61,9 @@ feature -- Sets
 		do
 			create Result
 			from
-				i := lefts.lower
+				i := 1
 			until
-				i > lefts.upper
+				i > lefts.count
 			loop
 				Result := Result & lefts [i]
 				i := i + 1
@@ -77,9 +77,9 @@ feature -- Sets
 		do
 			create Result
 			from
-				i := rights.lower
+				i := 1
 			until
-				i > rights.upper
+				i > rights.count
 			loop
 				Result := Result & rights [i]
 				i := i + 1
@@ -116,9 +116,9 @@ feature -- Comparison
 			if attached {MML_RELATION [G, H]} other as rel and then count = rel.count then
 				from
 					Result := True
-					i := lefts.lower
+					i := 1
 				until
-					i > lefts.upper or not Result
+					i > lefts.count or not Result
 				loop
 					Result := rel [lefts [i], rights [i]]
 					i := i + 1
@@ -135,10 +135,10 @@ feature -- Modification
 		do
 			if not Current [x, y] then
 				create ls.make (1, lefts.count + 1)
-				ls.copy_range (lefts, lefts.lower, lefts.upper, 1)
+				ls.copy_range (lefts, 1, lefts.count, 1)
 				ls [ls.count] := x
 				create rs.make (1, rights.count + 1)
-				rs.copy_range (rights, rights.lower, rights.upper, 1)
+				rs.copy_range (rights, 1, rights.count, 1)
 				rs [rs.count] := y
 				create Result.make_from_arrays (ls, rs)
 			else
@@ -155,12 +155,12 @@ feature -- Modification
 		do
 			i := lefts.index_satisfying (agent meq_left (x, ?))
 			if lefts.has_index (i) and then model_equals (y, rights [i]) then
-				create ls.make (lefts.lower, lefts.upper - 1)
-				ls.copy_range (lefts, lefts.lower, i - 1, ls.lower)
-				ls.copy_range (lefts, i + 1, lefts.upper, i)
-				create rs.make (rights.lower, rights.upper - 1)
-				rs.copy_range (rights, rights.lower, i - 1, rs.lower)
-				rs.copy_range (rights, i + 1, rights.upper, i)
+				create ls.make (1, lefts.count - 1)
+				ls.copy_range (lefts, 1, i - 1, 1)
+				ls.copy_range (lefts, i + 1, lefts.count, i)
+				create rs.make (1, rights.count - 1)
+				rs.copy_range (rights, 1, i - 1, 1)
+				rs.copy_range (rights, i + 1, rights.count, i)
 				create Result.make_from_arrays (ls, rs)
 			else
 				Result := Current
@@ -176,13 +176,13 @@ feature -- Modification
 			rs: V_ARRAY [H]
 			i, j: INTEGER
 		do
-			create ls.make (lefts.lower, lefts.upper)
-			create rs.make (rights.lower, rights.upper)
+			create ls.make (1, lefts.count)
+			create rs.make (1, rights.count)
 			from
-				i := lefts.lower
-				j := ls.lower
+				i := 1
+				j := 1
 			until
-				i > lefts.upper
+				i > lefts.count
 			loop
 				if subdomain [lefts [i]] then
 					ls [j] := lefts [i]
@@ -191,8 +191,8 @@ feature -- Modification
 				end
 				i := i + 1
 			end
-			ls.resize (ls.lower, j - 1)
-			rs.resize (rs.lower, j - 1)
+			ls.resize (1, j - 1)
+			rs.resize (1, j - 1)
 			create Result.make_from_arrays (ls, rs)
 		end
 
@@ -208,10 +208,10 @@ feature -- Modification
 			other_exists: other /= Void
 		do
 			Result := Current - other
-			Result.lefts.resize (Result.lefts.lower, Result.lefts.upper + other.lefts.count)
-			Result.rights.resize (Result.rights.lower, Result.rights.upper + other.rights.count)
-			Result.lefts.copy_range (other.lefts, other.lefts.lower, other.lefts.upper, Result.lefts.upper - other.count + 1)
-			Result.rights.copy_range (other.rights, other.rights.lower, other.rights.upper, Result.rights.upper - other.count + 1)
+			Result.lefts.resize (1, Result.lefts.count + other.lefts.count)
+			Result.rights.resize (1, Result.rights.count + other.rights.count)
+			Result.lefts.copy_range (other.lefts, 1, other.lefts.count, Result.lefts.count - other.count + 1)
+			Result.rights.copy_range (other.rights, 1, other.rights.count, Result.rights.count - other.count + 1)
 		end
 
 	intersection alias "*" (other: MML_RELATION [G, H]): MML_RELATION [G, H]
@@ -223,13 +223,13 @@ feature -- Modification
 			rs: V_ARRAY [H]
 			i, j: INTEGER
 		do
-			create ls.make (lefts.lower, lefts.upper)
-			create rs.make (rights.lower, rights.upper)
+			create ls.make (1, lefts.count)
+			create rs.make (1, rights.count)
 			from
-				i := lefts.lower
-				j := ls.lower
+				i := 1
+				j := 1
 			until
-				i > lefts.upper
+				i > lefts.count
 			loop
 				if other [lefts [i], rights [i]] then
 					ls [j] := lefts [i]
@@ -238,8 +238,8 @@ feature -- Modification
 				end
 				i := i + 1
 			end
-			ls.resize (ls.lower, j - 1)
-			rs.resize (rs.lower, j - 1)
+			ls.resize (1, j - 1)
+			rs.resize (1, j - 1)
 			create Result.make_from_arrays (ls, rs)
 		end
 
@@ -252,13 +252,13 @@ feature -- Modification
 			rs: V_ARRAY [H]
 			i, j: INTEGER
 		do
-			create ls.make (lefts.lower, lefts.upper)
-			create rs.make (rights.lower, rights.upper)
+			create ls.make (1, lefts.count)
+			create rs.make (1, rights.count)
 			from
-				i := lefts.lower
-				j := ls.lower
+				i := 1
+				j := 1
 			until
-				i > lefts.upper
+				i > lefts.count
 			loop
 				if not other [lefts [i], rights [i]] then
 					ls [j] := lefts [i]
@@ -267,8 +267,8 @@ feature -- Modification
 				end
 				i := i + 1
 			end
-			ls.resize (ls.lower, j - 1)
-			rs.resize (rs.lower, j - 1)
+			ls.resize (1, j - 1)
+			rs.resize (1, j - 1)
 			create Result.make_from_arrays (ls, rs)
 		end
 
@@ -293,6 +293,9 @@ feature {MML_MODEL} -- Implementation
 		require
 			ls_exists: ls /= Void
 			rs_exists: rs /= Void
+			same_lower: ls.lower = rs.lower
+			same_upper: ls.upper = rs.upper
+			start_from_one: ls.lower = 1
 		do
 			lefts := ls
 			rights := rs
@@ -317,4 +320,7 @@ feature {MML_MODEL} -- Implementation
 invariant
 	lefts_exists: lefts /= Void
 	rights_exists: rights /= Void
+	same_lower: lefts.lower = rights.lower
+	same_upper: lefts.upper = rights.upper
+	start_from_one: lefts.lower = 1
 end

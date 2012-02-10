@@ -62,7 +62,7 @@ feature -- Elements
 		require
 			in_domain: domain [i]
 		do
-			Result := array [i + array.lower - 1]
+			Result := array [i]
 		end
 
 feature -- Sets
@@ -79,9 +79,9 @@ feature -- Sets
 		do
 			create Result
 			from
-				i := array.lower
+				i := 1
 			until
-				i > array.upper
+				i > array.count
 			loop
 				Result := Result & array [i]
 				i := i + 1
@@ -176,10 +176,13 @@ feature -- Decomposition
 			-- Subsequence from `lower' to `upper'.
 		local
 			l, u: INTEGER
+			a: V_ARRAY [G]
 		do
 			l := lower.max (1)
 			u := upper.min (count).max (l - 1)
-			create Result.make_from_array (array.subarray (array.lower + l - 1, array.lower + u - 1))
+			create a.make (1, u - l + 1)
+			a.copy_range (array, l, u, 1)
+			create Result.make_from_array (a)
 		end
 
 	removed_at (i: INTEGER): MML_SEQUENCE [G]
@@ -190,8 +193,8 @@ feature -- Decomposition
 			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count - 1)
-			a.copy_range (array, array.lower, array.lower + i - 2, 1)
-			a.copy_range (array, array.lower + i, array.upper, i)
+			a.copy_range (array, 1, i - 1, 1)
+			a.copy_range (array, i + 1, array.count, i)
 			create Result.make_from_array (a)
 		end
 
@@ -211,7 +214,7 @@ feature -- Decomposition
 				i > array.count
 			loop
 				if subdomain [i] then
-					a [j] := array [array.lower + i - 1]
+					a [j] := array [i]
 					j := j + 1
 				end
 				i := i + 1
@@ -235,7 +238,7 @@ feature -- Modification
 			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count + 1)
-			a.copy_range (array, array.lower, array.upper, 1)
+			a.copy_range (array, 1, array.count, 1)
 			a [a.count] := x
 			create Result.make_from_array (a)
 		end
@@ -246,7 +249,7 @@ feature -- Modification
 			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count + 1)
-			a.copy_range (array, array.lower, array.upper, 2)
+			a.copy_range (array, 1, array.count, 2)
 			a [1] := x
 			create Result.make_from_array (a)
 		end
@@ -264,8 +267,8 @@ feature -- Modification
 				Result := Current
 			else
 				create a.make (1, count + other.count)
-				a.copy_range(array, array.lower, array.upper, 1)
-				a.copy_range(other.array, other.array.lower, other.array.upper, count + 1)
+				a.copy_range(array, 1, array.count, 1)
+				a.copy_range(other.array, 1, other.array.count, count + 1)
 				create Result.make_from_array (a)
 			end
 		end
@@ -278,7 +281,7 @@ feature -- Modification
 			a: V_ARRAY [G]
 		do
 			a := array.twin
-			a [array.lower + i - 1] := x
+			a [i] := x
 			create Result.make_from_array (a)
 		end
 
@@ -296,6 +299,7 @@ feature {MML_MODEL} -- Implementation
 			-- Create with a predefined array.
 		require
 			a_exists: a /= Void
+			starts_from_one: a.lower = 1
 		do
 			array := a
 		end
@@ -310,5 +314,6 @@ feature {MML_MODEL} -- Implementation
 
 invariant
 	array_exists: array /= Void
+	starts_from_one: array.lower = 1
 end
 

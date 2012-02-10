@@ -1,6 +1,11 @@
 Structures:
 
+- V_EQUALITY, V_ORDER - should be in MML?
+- V_SET: change contract according to Anton's suggestion
+- ARRAY2, doubly linked list
+- List reversal
 - Do not rely on agents in standard sorted and hash structures
+- Set/table with no requirements on elements/keys
 - Finite streams: filter, mapper, folder
 - Extender iterator
 - V_STRING, V_MUTABLE_STRING

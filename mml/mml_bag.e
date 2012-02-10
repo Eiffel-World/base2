@@ -109,9 +109,9 @@ feature -- Comparison
 			if attached {MML_BAG [G]} other as bag and then count = bag.count then
 				from
 					Result := True
-					i := keys.lower
+					i := 1
 				until
-					i > keys.upper or not Result
+					i > keys.count or not Result
 				loop
 					Result := bag [keys [i]] = values [i]
 					i := i + 1
@@ -142,12 +142,12 @@ feature -- Modification
 					vs := values.twin
 					vs [i] := vs [i] + n
 				else
-					create ks.make (keys.lower, keys.upper + 1)
-					ks.copy_range (keys, keys.lower, keys.upper, keys.lower)
-					ks [ks.upper] := x
-					create vs.make (values.lower, values.upper + 1)
-					vs [vs.upper] := n
-					vs.copy_range (values, values.lower, values.upper, values.lower)
+					create ks.make (1, keys.count + 1)
+					ks.copy_range (keys, 1, keys.count, 1)
+					ks [ks.count] := x
+					create vs.make (1, values.count + 1)
+					vs [vs.count] := n
+					vs.copy_range (values, 1, values.count, 1)
 				end
 				create Result.make_from_arrays (ks, vs, count + n)
 			else
@@ -174,12 +174,12 @@ feature -- Modification
 			if n = 0 or not keys.has_index (i) then
 				Result := Current
 			elseif values [i] <= n then
-				create ks.make (keys.lower, keys.upper - 1)
-				ks.copy_range (keys, keys.lower, i - 1, keys.lower)
-				ks.copy_range (keys, i + 1, keys.upper, i)
-				create vs.make (values.lower, values.upper - 1)
-				vs.copy_range (values, values.lower, i - 1, values.lower)
-				vs.copy_range (values, i + 1, values.upper, i)
+				create ks.make (1, keys.count - 1)
+				ks.copy_range (keys, 1, i - 1, 1)
+				ks.copy_range (keys, i + 1, keys.count, i)
+				create vs.make (1, values.count - 1)
+				vs.copy_range (values, 1, i - 1, 1)
+				vs.copy_range (values, i + 1, values.count, i)
 				create Result.make_from_arrays (ks, vs, count - n)
 			else
 				vs := values.twin
@@ -204,13 +204,13 @@ feature -- Modification
 			vs: V_ARRAY [INTEGER]
 			n: INTEGER
 		do
-			create ks.make (keys.lower, keys.upper)
-			create vs.make (values.lower, values.upper)
+			create ks.make (1, keys.count)
+			create vs.make (1, values.count)
 			from
-				i := keys.lower
-				j := ks.lower
+				i := 1
+				j := 1
 			until
-				i > keys.upper
+				i > keys.count
 			loop
 				if subdomain [keys [i]] then
 					ks [j] := keys [i]
@@ -220,8 +220,8 @@ feature -- Modification
 				end
 				i := i + 1
 			end
-			ks.resize (ks.lower, j - 1)
-			vs.resize (vs.lower, j - 1)
+			ks.resize (1, j - 1)
+			vs.resize (1, j - 1)
 			create Result.make_from_arrays (ks, vs, n)
 		end
 
@@ -236,13 +236,13 @@ feature -- Modification
 		do
 			create ks.make (1, keys.count + other.keys.count)
 			create vs.make (1, values.count + other.values.count)
-			ks.copy_range (keys, keys.lower, keys.upper, 1)
-			vs.copy_range (values, values.lower, values.upper, 1)
+			ks.copy_range (keys, 1, keys.count, 1)
+			vs.copy_range (values, 1, values.count, 1)
 			from
-				i := other.keys.lower
+				i := 1
 				j := keys.count + 1
 			until
-				i > other.keys.upper
+				i > other.keys.count
 			loop
 				k := keys.index_satisfying (agent meq (other.keys [i], ?))
 				if keys.has_index (k) then
@@ -254,8 +254,8 @@ feature -- Modification
 				end
 				i := i + 1
 			end
-			ks.resize (ks.lower, j - 1)
-			vs.resize (vs.lower, j - 1)
+			ks.resize (1, j - 1)
+			vs.resize (1, j - 1)
 			create Result.make_from_arrays (ks, vs, count + other.count)
 		end
 
@@ -271,10 +271,10 @@ feature -- Modification
 			create ks.make (1, keys.count)
 			create vs.make (1, values.count)
 			from
-				i := keys.lower
-				j := keys.lower
+				i := 1
+				j := 1
 			until
-				i > keys.upper
+				i > keys.count
 			loop
 				k := other [keys [i]]
 				if k < values [i] then
@@ -285,8 +285,8 @@ feature -- Modification
 				end
 				i := i + 1
 			end
-			ks.resize (ks.lower, j - 1)
-			vs.resize (vs.lower, j - 1)
+			ks.resize (1, j - 1)
+			vs.resize (1, j - 1)
 			create Result.make_from_arrays (ks, vs, c)
 		end
 
@@ -302,6 +302,9 @@ feature {MML_MODEL} -- Implementation
 		require
 			ks_exists: ks /= Void
 			vs_exists: vs /= Void
+			same_lower: ks.lower = vs.lower
+			same_upper: ks.upper = vs.upper
+			start_at_one: ks.lower = 1
 			ks_has_no_duplicates: ks.bag.is_constant (1)
 			vs_positive: vs.for_all (agent (x: INTEGER): BOOLEAN do Result := x > 0 end)
 			--- n_valid: n = sum i: INTEGER :: vs.lower <= i and i <= vs.upper ==> vs [i]
@@ -322,4 +325,7 @@ feature {MML_MODEL} -- Implementation
 invariant
 	keys_exists: keys /= Void
 	values_exists: values /= Void
+	same_lower: keys.lower = values.lower
+	same_upper: keys.upper = values.upper
+	start_at_one: keys.lower = 1
 end

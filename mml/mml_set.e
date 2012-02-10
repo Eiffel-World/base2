@@ -83,7 +83,7 @@ feature -- Elements
 		do
 			if not is_empty then
 				-- Workaround for semistrict postconditions
-				Result := array [array.lower]
+				Result := array [1]
 			end
 		ensure
 			element: has (Result)
@@ -102,9 +102,9 @@ feature -- Elements
 		do
 			from
 				Result := array.first
-				i := array.lower + 1
+				i := 2
 			until
-				i > array.upper
+				i > array.count
 			loop
 				if order.item ([array [i], Result]) then
 					Result := array [i]
@@ -129,12 +129,12 @@ feature -- Subsets
 			a: V_ARRAY [G]
 			i, j: INTEGER
 		do
-			create a.make (array.lower, array.upper)
+			create a.make (1, array.count)
 			from
-				i := array.lower
-				j := a.lower
+				i := 1
+				j := 1
 			until
-				i > array.upper
+				i > array.count
 			loop
 				if test.item ([array [i]]) then
 					a [j] := array [i]
@@ -142,7 +142,7 @@ feature -- Subsets
 				end
 				i := i + 1
 			end
-			a.resize (a.lower, j - 1)
+			a.resize (1, j - 1)
 			create Result.make_from_array (a)
 		ensure
 			subset: Result <= Current
@@ -203,7 +203,7 @@ feature -- Modification
 		do
 			if not Current [x] then
 				create a.make (1, array.count + 1)
-				a.copy_range (array, array.lower, array.upper, 1)
+				a.copy_range (array, 1, array.count, 1)
 				a [a.count] := x
 				create Result.make_from_array (a)
 			else
@@ -221,9 +221,9 @@ feature -- Modification
 		do
 			i := array.index_satisfying (agent meq (x, ?))
 			if array.has_index (i) then
-				create a.make (array.lower, array.upper - 1)
-				a.copy_range (array, array.lower, i - 1, a.lower)
-				a.copy_range (array, i + 1, array.upper, i)
+				create a.make (1, array.count - 1)
+				a.copy_range (array, 1, i - 1, a.lower)
+				a.copy_range (array, i + 1, array.count, i)
 				create Result.make_from_array (a)
 			else
 				Result := Current
@@ -238,8 +238,8 @@ feature -- Modification
 			other_exists: other /= Void
 		do
 			Result := Current - other
-			Result.array.resize (Result.array.lower, Result.array.upper + other.array.count)
-			Result.array.copy_range (other.array, other.array.lower, other.array.upper, Result.array.upper - other.count + 1)
+			Result.array.resize (1, Result.array.count + other.array.count)
+			Result.array.copy_range (other.array, 1, other.array.count, Result.array.count - other.count + 1)
 		ensure
 			contains_current: Current <= Result
 			contains_other: other <= Result
@@ -257,12 +257,12 @@ feature -- Modification
 			a: V_ARRAY [G]
 			i, j: INTEGER
 		do
-			create a.make (array.lower, array.upper)
+			create a.make (1, array.count)
 			from
-				i := array.lower
-				j := a.lower
+				i := 1
+				j := 1
 			until
-				i > array.upper
+				i > array.count
 			loop
 				if other [array [i]] then
 					a [j] := array [i]
@@ -270,7 +270,7 @@ feature -- Modification
 				end
 				i := i + 1
 			end
-			a.resize (a.lower, j - 1)
+			a.resize (1, j - 1)
 			create Result.make_from_array (a)
 		ensure
 			contained_in_current: Result <= Current
@@ -289,12 +289,12 @@ feature -- Modification
 			a: V_ARRAY [G]
 			i, j: INTEGER
 		do
-			create a.make (array.lower, array.upper)
+			create a.make (1, array.count)
 			from
-				i := array.lower
-				j := a.lower
+				i := 1
+				j := 1
 			until
-				i > array.upper
+				i > array.count
 			loop
 				if not other [array [i]] then
 					a [j] := array [i]
@@ -302,7 +302,7 @@ feature -- Modification
 				end
 				i := i + 1
 			end
-			a.resize (a.lower, j - 1)
+			a.resize (1, j - 1)
 			create Result.make_from_array (a)
 		ensure
 			contained_in_current: Result <= Current
@@ -331,6 +331,7 @@ feature {MML_MODEL} -- Implementation
 			-- Create with a predefined array.
 		require
 			a_exists: a /= Void
+			starts_from_one: a.lower = 1
 			no_duplicates: a.bag.is_constant (1)
 		do
 			array := a
@@ -346,4 +347,5 @@ feature {MML_MODEL} -- Implementation
 
 invariant
 	array_exists: array /= Void
+	starts_from_one: array.lower = 1
 end

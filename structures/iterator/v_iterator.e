@@ -100,7 +100,7 @@ feature -- Cursor movement
 	start
 			-- Go to the first position.
 		deferred
-		ensure
+		ensure then
 			index_effect: index = 1
 		end
 

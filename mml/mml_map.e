@@ -84,9 +84,9 @@ feature -- Sets
 		do
 			create Result
 			from
-				i := values.lower
+				i := 1
 			until
-				i > values.upper
+				i > values.count
 			loop
 				Result := Result & values [i]
 				i := i + 1
@@ -140,11 +140,11 @@ feature -- Comparison
 			if attached {MML_MAP [K, V]} other as map and then domain |=| map.domain then
 				from
 					Result := True
-					i := keys.lower
+					i := 1
 				until
-					i > keys.upper or not Result
+					i > keys.count or not Result
 				loop
-					Result := model_equals (values [i], map[keys [i]])
+					Result := model_equals (values [i], map [keys [i]])
 					i := i + 1
 				end
 			end
@@ -165,12 +165,12 @@ feature -- Modification
 				vs [i] := x
 				create Result.make_from_arrays (keys, vs)
 			else
-				create ks.make (keys.lower, keys.upper + 1)
-				ks.copy_range (keys, keys.lower, keys.upper, keys.lower)
-				ks [ks.upper] := k
-				create vs.make (values.lower, values.upper + 1)
-				vs.copy_range (values, values.lower, values.upper, values.lower)
-				vs [vs.upper] := x
+				create ks.make (1, keys.count + 1)
+				ks.copy_range (keys, 1, keys.count, 1)
+				ks [ks.count] := k
+				create vs.make (1, values.count + 1)
+				vs.copy_range (values, 1, values.count, 1)
+				vs [vs.count] := x
 				create Result.make_from_arrays (ks, vs)
 			end
 		end
@@ -185,12 +185,12 @@ feature -- Modification
 		do
 			i := keys.index_satisfying (agent meq_key (k, ?))
 			if keys.has_index (i) then
-				create ks.make (keys.lower, keys.upper - 1)
-				create vs.make (values.lower, values.upper - 1)
-				ks.copy_range (keys, keys.lower, i - 1, ks.lower)
-				ks.copy_range (keys, i + 1, keys.upper, i)
-				vs.copy_range (values, values.lower, i - 1, vs.lower)
-				vs.copy_range (values, i + 1, values.upper, i)
+				create ks.make (1, keys.count - 1)
+				create vs.make (1, values.count - 1)
+				ks.copy_range (keys, 1, i - 1, 1)
+				ks.copy_range (keys, i + 1, keys.count, i)
+				vs.copy_range (values, 1, i - 1, 1)
+				vs.copy_range (values, i + 1, values.count, i)
 				create Result.make_from_arrays (ks, vs)
 			else
 				Result := Current
@@ -206,13 +206,13 @@ feature -- Modification
 			ks: V_ARRAY [K]
 			vs: V_ARRAY [V]
 		do
-			create ks.make (keys.lower, keys.upper)
-			create vs.make (values.lower, values.upper)
+			create ks.make (1, keys.count)
+			create vs.make (1, values.count)
 			from
-				i := keys.lower
-				j := ks.lower
+				i := 1
+				j := 1
 			until
-				i > keys.upper
+				i > keys.count
 			loop
 				if subdomain [keys [i]] then
 					ks [j] := keys [i]
@@ -221,8 +221,8 @@ feature -- Modification
 				end
 				i := i + 1
 			end
-			ks.resize (ks.lower, j - 1)
-			vs.resize (vs.lower, j - 1)
+			ks.resize (1, j - 1)
+			vs.resize (1, j - 1)
 			create Result.make_from_arrays (ks, vs)
 		end
 
@@ -237,13 +237,13 @@ feature -- Modification
 		do
 			create ks.make (1, keys.count + other.keys.count)
 			create vs.make (1, values.count + other.values.count)
-			ks.copy_range (other.keys, other.keys.lower, other.keys.upper, 1)
-			vs.copy_range (other.values, other.values.lower, other.values.upper, 1)
+			ks.copy_range (other.keys, 1, other.keys.count, 1)
+			vs.copy_range (other.values, 1, other.values.count, 1)
 			from
-				i := keys.lower
-				j := other.keys.upper + 1
+				i := 1
+				j := other.keys.count + 1
 			until
-				i > keys.upper
+				i > keys.count
 			loop
 				if not other.domain [keys [i]] then
 					ks [j] := keys [i]
@@ -252,8 +252,8 @@ feature -- Modification
 				end
 				i := i + 1
 			end
-			ks.resize (ks.lower, j - 1)
-			vs.resize (vs.lower, j - 1)
+			ks.resize (1, j - 1)
+			vs.resize (1, j - 1)
 			create Result.make_from_arrays (ks, vs)
 		end
 
@@ -275,6 +275,9 @@ feature {MML_MODEL} -- Implementation
 		require
 			ks_exists: ks /= Void
 			vs_exists: vs /= Void
+			same_lower: ks.lower = vs.lower
+			same_upper: ks.upper = vs.upper
+			start_from_one: ks.lower = 1
 			ks_has_no_duplicates: ks.bag.is_constant (1)
 		do
 			keys := ks
@@ -300,4 +303,7 @@ feature {MML_MODEL} -- Implementation
 invariant
 	keys_exists: keys /= Void
 	values_exists: values /= Void
+	same_lower: keys.lower = values.lower
+	same_upper: keys.upper = values.upper
+	start_from_one: keys.lower = 1
 end
