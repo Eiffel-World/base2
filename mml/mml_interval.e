@@ -30,13 +30,13 @@ feature {NONE} -- Initialization
 			i: INTEGER
 		do
 			if l <= u then
-				create array.make (l, u)
+				create array.make (1, u - l + 1)
 				from
 					i := l
 				until
 					i > u
 				loop
-					array [i] := i
+					array [i - l + 1] := i
 					i := i + 1
 				end
 			else
