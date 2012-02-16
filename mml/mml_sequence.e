@@ -234,12 +234,21 @@ feature -- Decomposition
 feature -- Modification
 	extended alias "&" (x: G): MML_SEQUENCE [G]
 			-- Current sequence extended with `x' at the end.
+		do
+			Result := extended_at (count + 1, x)
+		end
+
+	extended_at (i: INTEGER; x: G): MML_SEQUENCE [G]
+			-- Current sequence with `x' inserted at position `i'.
+		require
+			valid_position: 1 <= i and i <= count + 1
 		local
 			a: V_ARRAY [G]
 		do
 			create a.make (1, array.count + 1)
-			a.copy_range (array, 1, array.count, 1)
-			a [a.count] := x
+			a.copy_range (array, 1, i - 1, 1)
+			a [i] := x
+			a.copy_range (array, i, array.count, i + 1)
 			create Result.make_from_array (a)
 		end
 
