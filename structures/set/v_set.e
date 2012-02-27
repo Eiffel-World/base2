@@ -279,7 +279,7 @@ feature -- Removal
 				do
 					Result := not o.has (x) implies has (x)
 				end (?, old other.twin))
-			set_effect_other: other.set.for_all (agent (x: G; c: V_SET [G]): BOOLEAN
+			set_effect_other: (old other.set).for_all (agent (x: G; c: V_SET [G]): BOOLEAN
 				do
 					Result := not c.has (x) implies has (x)
 				end (?, old Current.twin))
