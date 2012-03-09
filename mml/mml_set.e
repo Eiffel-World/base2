@@ -100,16 +100,19 @@ feature -- Elements
 		local
 			i: INTEGER
 		do
-			from
-				Result := array.first
-				i := 2
-			until
-				i > array.count
-			loop
-				if order.item ([array [i], Result]) then
-					Result := array [i]
+			if not is_empty then
+				-- Workaround for semistrict postconditions
+				from
+					Result := array.first
+					i := 2
+				until
+					i > array.count
+				loop
+					if order.item ([array [i], Result]) then
+						Result := array [i]
+					end
+					i := i + 1
 				end
-				i := i + 1
 			end
 		ensure
 			element: has (Result)

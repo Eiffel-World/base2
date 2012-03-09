@@ -65,7 +65,7 @@ feature -- Elements
 			Result := array [i]
 		end
 
-feature -- Sets
+feature -- Conversion
 	domain: MML_INTERVAL
 			-- Set of indexes.
 		do
@@ -84,6 +84,22 @@ feature -- Sets
 				i > array.count
 			loop
 				Result := Result & array [i]
+				i := i + 1
+			end
+		end
+
+	to_bag: MML_BAG [G]
+			-- Bag of sequence values.
+		local
+			i: INTEGER
+		do
+			from
+				create Result
+				i := 1
+			until
+				i > array.count
+			loop
+				Result := result & array [i]
 				i := i + 1
 			end
 		end

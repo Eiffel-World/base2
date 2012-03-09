@@ -70,7 +70,7 @@ feature -- Elements
 			end
 		end
 
-feature -- Sets
+feature -- Conversion
 	domain: MML_SET [K]
 			-- Set of keys.
 		do
@@ -122,6 +122,22 @@ feature -- Sets
 				end
 			end
 			create Result.make_from_array (a)
+		end
+
+	to_bag: MML_BAG [V]
+			-- Bag of map values.
+		local
+			i: INTEGER
+		do
+			from
+				create Result
+				i := 1
+			until
+				i > values.count
+			loop
+				Result := result & values [i]
+				i := i + 1
+			end
 		end
 
 feature -- Measurement

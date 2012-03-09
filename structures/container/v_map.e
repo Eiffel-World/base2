@@ -174,8 +174,5 @@ invariant
 	--- equivalence_is_total: equivalence.precondition |=| True
 	--- equivalence_is_equivalence: is_equivalence (key_equivalence)
 	bag_domain_definition: bag.domain |=| map.range
-	bag_definition: bag.domain.for_all (agent (x: V): BOOLEAN
-		do
-			Result := bag [x] = map.inverse.image_of (x).count
-		end)
+	bag_definition: bag |=| map.to_bag
 end
