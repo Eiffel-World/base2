@@ -122,10 +122,10 @@ feature {NONE} -- Implementation
 	Random_bit_count: INTEGER = 48
 			-- Number of random bits in `value' and `next_value'.
 
-	Multiplier: NATURAL_64 = {NATURAL_64} 0x5DEECE66D
+	Multiplier: NATURAL_64 = 0x5DEECE66D
 			-- Multiplier used for generation.
 
-	Increment: NATURAL_64 = {NATURAL_64} 0xB
+	Increment: NATURAL_64 = 0xB
 			-- Increment used for generation.
 
 	random_bits (v: NATURAL_64; n: INTEGER): INTEGER
