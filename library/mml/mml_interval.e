@@ -68,4 +68,19 @@ feature -- Access
 		do
 			Result := array.last
 		end
+
+feature -- Modification
+	interval_union alias "|+|" (other: MML_INTERVAL): MML_INTERVAL
+			-- Minimal interval that includes this interval and `other'.
+		require
+			other_exists: other /= Void
+		do
+			if is_empty then
+				Result := other
+			elseif other.is_empty then
+				Result := Current
+			else
+				create Result.from_range (lower.min (other.lower), upper.max (other.upper))
+			end
+		end
 end
