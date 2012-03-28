@@ -9,6 +9,12 @@ class
 
 inherit
 	MML_SET [INTEGER]
+		redefine
+			has,
+			is_model_equal,
+			is_subset_of,
+			disjoint
+		end
 
 create
 	default_create,
@@ -67,6 +73,44 @@ feature -- Access
 			not_empty: not is_empty
 		do
 			Result := array.last
+		end
+
+feature -- Properties
+	has alias "[]" (x: INTEGER): BOOLEAN
+			-- Is `x' contained?
+		do
+			Result := not is_empty and then (lower <= x and x <= upper)
+		end
+
+feature -- Comparison
+	is_model_equal alias "|=|" (other: MML_MODEL): BOOLEAN
+			-- Does this set contain same elements as `other'?
+		do
+			if attached {MML_INTERVAL} other as interval then
+				Result := (is_empty and interval.is_empty) or else (lower = interval.lower and upper = interval.upper)
+			else
+				Result := Precursor (other)
+			end
+		end
+
+	is_subset_of alias "<=" (other: MML_SET [INTEGER]): BOOLEAN
+			-- Does `other' have all elements of `Current'?
+		do
+			if attached {MML_INTERVAL} other as interval then
+				Result := (is_empty and interval.is_empty) or else (interval.lower <= lower and upper <= interval.upper)
+			else
+				Result := Precursor (other)
+			end
+		end
+
+	disjoint (other: MML_SET [INTEGER]): BOOLEAN
+			-- Do no elements of `other' occur in `Current'?
+		do
+			if attached {MML_INTERVAL} other as interval then
+				Result := (is_empty and interval.is_empty) or else (interval.upper < lower or upper < interval.lower)
+			else
+				Result := Precursor (other)
+			end
 		end
 
 feature -- Modification
