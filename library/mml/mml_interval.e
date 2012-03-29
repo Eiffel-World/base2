@@ -1,8 +1,6 @@
 note
 	description: "Closed integer intervals."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	MML_INTERVAL
@@ -30,6 +28,7 @@ convert
 	from_tuple ({TUPLE [min: INTEGER; max: INTEGER]})
 
 feature {NONE} -- Initialization
+
 	from_range (l, u: INTEGER)
 			-- Create interval [l, u].
 		local
@@ -59,6 +58,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
 	lower: INTEGER
 			-- Lower bound.
 		require
@@ -76,6 +76,7 @@ feature -- Access
 		end
 
 feature -- Properties
+
 	has alias "[]" (x: INTEGER): BOOLEAN
 			-- Is `x' contained?
 		do
@@ -83,6 +84,7 @@ feature -- Properties
 		end
 
 feature -- Comparison
+
 	is_model_equal alias "|=|" (other: MML_MODEL): BOOLEAN
 			-- Does this set contain same elements as `other'?
 		do
@@ -114,6 +116,7 @@ feature -- Comparison
 		end
 
 feature -- Modification
+
 	interval_union alias "|+|" (other: MML_INTERVAL): MML_INTERVAL
 			-- Minimal interval that includes this interval and `other'.
 		require

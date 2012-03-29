@@ -25,6 +25,7 @@ create {V_CONTAINER}
 	make
 
 feature {NONE} -- Initialization
+
 	make (t: V_MUTABLE_SEQUENCE [G]; i: INTEGER)
 			-- Create an iterator at position `i' in `t'.
 		require
@@ -39,6 +40,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize with the same `target' and `index' as in `other'.
 		do
@@ -52,10 +54,12 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	target: V_MUTABLE_SEQUENCE [G]
 			-- Target container.
 
 feature -- Replacement
+
 	put (v: G)
 			-- Replace item at current position with `v'.
 		do

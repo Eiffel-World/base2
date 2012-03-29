@@ -24,6 +24,7 @@ convert
 	singleton ({G})
 
 feature {NONE} -- Initialization
+
 	default_create
 			-- Create an empty set.
 		do
@@ -43,6 +44,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Properties
+
 	has alias "[]" (x: G): BOOLEAN
 			-- Is `x' contained?
 		do
@@ -76,6 +78,7 @@ feature -- Properties
 		end
 
 feature -- Elements
+
 	any_item: G
 			-- Arbitrary element.
 		require
@@ -123,6 +126,7 @@ feature -- Elements
 		end
 
 feature -- Subsets
+
 	filtered alias "|" (test: PREDICATE [ANY, TUPLE [G]]): MML_SET [G]
 			-- Set of all elements that satisfy `test'.
 		require
@@ -154,6 +158,7 @@ feature -- Subsets
 		end
 
 feature -- Measurement
+
 	count alias "#": INTEGER
 			-- Cardinality.
 		do
@@ -161,6 +166,7 @@ feature -- Measurement
 		end
 
 feature -- Comparison
+
 	is_model_equal alias "|=|" (other: MML_MODEL): BOOLEAN
 			-- Does this set contain same elements as `other'?
 		do
@@ -199,6 +205,7 @@ feature -- Comparison
 		end
 
 feature -- Modification
+
 	extended alias "&" (x: G): MML_SET [G]
 			-- Current set extended with `x' if absent.
 		local
@@ -327,6 +334,7 @@ feature -- Modification
 		end
 
 feature {MML_MODEL} -- Implementation
+
 	array: V_ARRAY [G]
 			-- Element storage.
 

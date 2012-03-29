@@ -1,8 +1,6 @@
 note
 	description: "Iterators over hash sets."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, sequence, index
 
 class
@@ -18,6 +16,7 @@ create {V_GENERAL_HASH_SET}
 	make
 
 feature {NONE} -- Initialization
+
 	make (s: V_GENERAL_HASH_SET [G])
 			-- Create an iterator over `s'.
 		require
@@ -31,6 +30,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
 		do
@@ -49,6 +49,7 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	target: V_GENERAL_HASH_SET [G]
 			-- Set to iterate over.
 
@@ -59,6 +60,7 @@ feature -- Access
 		end
 
 feature -- Measurement		
+
 	index: INTEGER
 			-- Current position.
 		do
@@ -70,6 +72,7 @@ feature -- Measurement
 		end
 
 feature -- Status report
+
 	before: BOOLEAN
 			-- Is current position before any position in `target'?
 		do
@@ -96,6 +99,7 @@ feature -- Status report
 		end
 
 feature -- Cursor movement
+
 	search (v: G)
 			-- Move to an element equivalent to `v'.
 			-- If `v' does not appear, go after.
@@ -180,6 +184,7 @@ feature -- Cursor movement
 		end
 
 feature -- Removal
+
 	remove
 			-- Remove element at current position. Move cursor to the next position.
 		do
@@ -188,6 +193,7 @@ feature -- Removal
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
+
 	list_iterator: V_LINKED_LIST_ITERATOR [G]
 			-- Iterator inside current bucket.
 
@@ -195,6 +201,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			-- Index of current bucket.
 
 feature {NONE} -- Implementation
+
 	count_sum (l, u: INTEGER): INTEGER
 			-- Total number of elements in buckets `l' to `u'.
 		local
@@ -229,6 +236,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Specification
+
 	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements	in `target'.
 		note

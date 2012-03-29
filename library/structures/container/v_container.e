@@ -4,8 +4,6 @@ note
 		Immutable interface.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: bag
 
 deferred class
@@ -18,12 +16,14 @@ inherit
 		end
 
 feature -- Measurement
+
 	count: INTEGER
 			-- Number of elements.
 		deferred
 		end
 
 feature -- Status report
+
 	is_empty: BOOLEAN
 			-- Is container empty?
 		do
@@ -31,6 +31,7 @@ feature -- Status report
 		end
 
 feature -- Search
+
 	has (v: G): BOOLEAN
 			-- Is value `v' contained?
 			-- (Uses reference equality.)
@@ -115,6 +116,7 @@ feature -- Search
 		end
 
 feature -- Iteration
+
 	new_cursor: V_ITERATOR [G]
 			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'.
 		deferred
@@ -124,6 +126,7 @@ feature -- Iteration
 		end
 
 feature -- Output
+
 	out: STRING
 			-- String representation of the content.
 		local
@@ -136,6 +139,7 @@ feature -- Output
 		end
 
 feature -- Specification
+
 	bag: MML_BAG [G]
 			-- Bag of elements.
 		note

@@ -1,8 +1,6 @@
 note
 	description: "Streams that output textual representation of values to a string."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: string, separator
 
 class
@@ -16,6 +14,7 @@ create
 	make_with_separator
 
 feature {NONE} -- Initialization
+
 	make (dest: STRING)
 			-- Create a stream that outputs into `dest'.
 			-- (Use `default_separator' as `separator').
@@ -43,6 +42,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
 	destination: STRING
 			-- Destination string.
 
@@ -56,10 +56,12 @@ feature -- Access
 			-- String representation of `Void'.			
 
 feature -- Status report
+
 	off: BOOLEAN = False
 			-- Is current position off scope?
 
 feature -- Replacement
+
 	output (v: ANY)
 			-- Put `v' into the stream and move to the next position.
 		do

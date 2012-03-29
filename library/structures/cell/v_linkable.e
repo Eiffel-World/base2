@@ -1,8 +1,6 @@
 note
 	description: "Cells that can be linked to another cell."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: item, right
 
 class
@@ -15,10 +13,12 @@ create
 	put
 
 feature -- Access
+
 	right: V_LINKABLE [G]
 			-- Next cell.
 
 feature -- Replacement
+
 	put_right (cell: V_LINKABLE [G])
 			-- Replace `right' with `cell'.
 		do

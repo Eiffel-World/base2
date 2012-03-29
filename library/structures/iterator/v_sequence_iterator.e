@@ -1,8 +1,6 @@
 note
 	description: "Itreators to read from sequences."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, index
 
 deferred class
@@ -18,6 +16,7 @@ inherit
 		end
 
 feature -- Access
+
 	target_index: INTEGER
 			-- Target index at current position.
 		do
@@ -30,6 +29,7 @@ feature -- Access
 		end
 
 feature -- Cursor movement
+
 	search_target_index (i: INTEGER)
 			-- Move to a position where target index is `i'.
 			-- If `i' is not a valid index, go after.
@@ -43,6 +43,7 @@ feature -- Cursor movement
 		end
 
 feature -- Specification
+
 	target_index_sequence: MML_SEQUENCE [INTEGER]
 			-- Sequence of indexes in `target'.
 		note

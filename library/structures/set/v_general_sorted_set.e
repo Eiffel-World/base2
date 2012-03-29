@@ -6,8 +6,6 @@ note
 			Iteration produces a sorted sequence.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: set, order
 
 class
@@ -24,6 +22,7 @@ create
 	make
 
 feature {NONE} -- Initialization
+
 	make (o: PREDICATE [ANY, TUPLE [G, G]])
 			-- Create an empty set with elements order `o'.
 		require
@@ -40,6 +39,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Copy order relation and values values from `other'.
 		do
@@ -61,6 +61,7 @@ feature -- Initialization
 		end
 
 feature -- Measurement
+
 	count: INTEGER
 			-- Number of elements.
 		do
@@ -68,6 +69,7 @@ feature -- Measurement
 		end
 
 feature -- Search
+
 	has (v: G): BOOLEAN
 			-- Is `v' contained?
 			-- (Uses `equivalence'.)
@@ -106,6 +108,7 @@ feature -- Search
 		end
 
 feature -- Iteration
+
 	new_cursor: V_SORTED_SET_ITERATOR [G]
 			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'.
 		do
@@ -121,6 +124,7 @@ feature -- Iteration
 		end
 
 feature -- Extension
+
 	extend (v: G)
 			-- Add `v' to the set.
 		local
@@ -156,6 +160,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	wipe_out
 			-- Remove all elements.
 		do
@@ -163,6 +168,7 @@ feature -- Removal
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
+
 	tree: V_BINARY_TREE [G]
 			-- Element storage.
 			-- Should not be reassigned after creation.
@@ -184,6 +190,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
 	iterator: V_SORTED_SET_ITERATOR [G]
 			-- Internal cursor.
 

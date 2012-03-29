@@ -1,8 +1,6 @@
 note
 	description: "Containers that can be extended with values and make only one element accessible at a time."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: sequence
 
 deferred class
@@ -12,6 +10,7 @@ inherit
 	V_CONTAINER [G]
 
 feature -- Access
+
 	item: G
 			-- The accessible element.
 		require
@@ -20,6 +19,7 @@ feature -- Access
 		end
 
 feature -- Iteration
+
 	new_cursor: V_ITERATOR [G]
 			-- New iterator pointing to the accessible element.
 			-- (Traversal in the order of accessibility.)
@@ -29,6 +29,7 @@ feature -- Iteration
 		end
 
 feature -- Extension
+
 	extend (v: G)
 			-- Add `v' to the dispenser.
 		deferred
@@ -37,6 +38,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	remove
 			-- Remove the accessible element.
 		require
@@ -54,6 +56,7 @@ feature -- Removal
 		end
 
 feature -- Specification
+
 	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements in the order of access.
 		note

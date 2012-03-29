@@ -5,9 +5,7 @@ note
 			Search, extension and removal are logarithmic on average.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
-	model: map, order
+	model: map, key_order
 
 class
 	V_GENERAL_SORTED_TABLE [K, V]
@@ -22,6 +20,7 @@ create
 	make
 
 feature {NONE} -- Initialization
+
 	make (o: PREDICATE [ANY, TUPLE [K, K]])
 			-- Create an empty table with key order `o'.
 		require
@@ -40,6 +39,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize table by copying `key_order', and key-value pair from `other'.
 		do
@@ -60,6 +60,7 @@ feature -- Initialization
 		end
 
 feature -- Search
+
 	key_order: PREDICATE [ANY, TUPLE [K, K]]
 			-- Order relation on keys.
 
@@ -85,11 +86,13 @@ feature -- Search
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
+
 	set: V_GENERAL_SORTED_SET [TUPLE [key: K; value: V]]
 			-- Underlying set of key-value pairs.
 			-- Should not be reassigned after creation.
 
 feature -- Specification
+
 ---	is_total_order (o: PREDICATE [ANY, TUPLE [K, K]])
 			-- Is `o' a total order relation?
 ---		note

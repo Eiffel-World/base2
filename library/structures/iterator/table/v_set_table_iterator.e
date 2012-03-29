@@ -1,8 +1,6 @@
 note
 	description: "Iterators over tables implemented as set of key-value pairs."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, key_sequence, index
 
 class
@@ -19,6 +17,7 @@ create {V_SET_TABLE}
 	make_at_key
 
 feature {NONE} -- Initialization
+
 	make_at_start (t: V_SET_TABLE [K, V])
 			-- Create an iterator at start of `t'.
 		do
@@ -41,6 +40,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
 		do
@@ -58,6 +58,7 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	target: V_SET_TABLE [K, V]
 			-- Container to iterate over.
 
@@ -73,7 +74,8 @@ feature -- Access
 			Result := set_iterator.item.value
 		end
 
-feature -- Measurement		
+feature -- Measurement	
+
 	index: INTEGER
 			-- Current position.
 		do
@@ -81,6 +83,7 @@ feature -- Measurement
 		end
 
 feature -- Status report
+
 	before: BOOLEAN
 			-- Is current position before any position in `target'?
 		do
@@ -106,6 +109,7 @@ feature -- Status report
 		end
 
 feature -- Cursor movement
+
 	start
 			-- Go to the first position.
 		do
@@ -151,6 +155,7 @@ feature -- Cursor movement
 		end
 
 feature -- Replacement
+
 	put (v: V)
 			-- Replace item at current position with `v'.
 		do
@@ -160,6 +165,7 @@ feature -- Replacement
 		end
 
 feature -- Removal
+
 	remove
 			-- Remove key-value pair at current position. Move to the next position.
 		do
@@ -167,10 +173,12 @@ feature -- Removal
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
+
 	set_iterator: V_SET_ITERATOR [TUPLE [key: K; value: V]]
 			-- Iterator over the underlying set.
 
 feature -- Specification
+
 	key_sequence: MML_SEQUENCE [K]
 			-- Sequence of keys.
 		note

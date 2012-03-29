@@ -4,8 +4,6 @@ note
 		Elements can be added and removed.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: set, equivalence
 
 deferred class
@@ -22,6 +20,7 @@ inherit
 		end
 
 feature -- Search
+
 	has (v: G): BOOLEAN
 			-- Is `v' contained?
 			-- (Uses `equivalence'.)
@@ -79,6 +78,7 @@ feature -- Search
 		end
 
 feature -- Iteration
+
 	new_cursor: V_SET_ITERATOR [G]
 			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'.
 		deferred
@@ -94,6 +94,7 @@ feature -- Iteration
 		end
 
 feature -- Comparison
+
 	is_subset_of (other: V_SET [G]): BOOLEAN
 			-- Does `other' have all elements of `Current'?
 			-- (Uses `other.equivalence'.)
@@ -156,6 +157,7 @@ feature -- Comparison
 		end
 
 feature -- Extension
+
 	extend (v: G)
 			-- Add `v' to the set.
 		deferred
@@ -189,6 +191,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	remove (v: G)
 			-- Remove `v' from the set, if contained.
 			-- Otherwise do nothing.		
@@ -297,12 +300,14 @@ feature -- Removal
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
+
 	iterator: V_SET_ITERATOR [G]
 			-- Internal iterator (to be used only in procedures).		
 		deferred
 		end
 
 feature -- Specification
+
 	set: MML_SET [G]
 			-- Set of elements.
 		note

@@ -1,8 +1,6 @@
 note
 	description: "Dispensers where the earliest added element is accessible."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: sequence
 
 deferred class
@@ -16,6 +14,7 @@ inherit
 		end
 
 feature -- Comparison
+
 	is_equal (other: like Current): BOOLEAN
 			-- Is queue made of the same values in the same order as `other'?
 			-- (Use reference comparison.)
@@ -42,6 +41,7 @@ feature -- Comparison
 		end
 
 feature -- Extension
+
 	extend (v: G)
 			-- Enqueue `v'.
 		deferred

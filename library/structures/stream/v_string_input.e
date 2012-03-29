@@ -1,8 +1,6 @@
 note
 	description: "Streams that parse textual representation of values from a string."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: source, index, from_string, is_separator
 
 class
@@ -20,6 +18,7 @@ create
 	make_with_separators
 
 feature {NONE} -- Initialization
+
 	make (src: STRING; fs: FUNCTION [ANY, TUPLE [STRING], G])
 			-- Create a stream that reads from `src' and uses function `fs' to convert from string to `G'.
 			-- (Use function `default_is_separator' to recognize separator characters).
@@ -59,6 +58,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize with the same `source' and position as in `other'.
 		do
@@ -76,6 +76,7 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	item: G
 			-- Current token.
 
@@ -101,6 +102,7 @@ feature -- Access
 		end
 
 feature -- Status report
+
 	off: BOOLEAN
 			-- Is current position off scope?
 		do
@@ -108,6 +110,7 @@ feature -- Status report
 		end
 
 feature -- Comparison
+
 	is_equal (other: like Current): BOOLEAN
 			-- Does `other' read from an equal string at the same position?
 		do
@@ -120,6 +123,7 @@ feature -- Comparison
 		end
 
 feature -- Cursor movement
+
 	start
 			-- Read the first token.
 		do
@@ -151,10 +155,12 @@ feature -- Cursor movement
 		end
 
 feature {V_STRING_INPUT} -- Implementation
+
 	next: INTEGER
 			-- Position of the first character of next token in `source'.
 
 feature {NONE} -- Implementation
+
 	skip_separators
 			-- Move to the next character not in `separators'.
 		do
@@ -191,6 +197,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Specification
+
 	index_satisfying_from (s: STRING; p: PREDICATE [ANY, TUPLE [CHARACTER]]; i: INTEGER): INTEGER
 			-- Index of the first character of `s' that satisfies `p' starting from position `i';
 			-- out of range, if `p' is never satisfied.	

@@ -1,8 +1,6 @@
 note
 	description: "Iterators over sequences that access elements directly through an integer index."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, index
 
 deferred class
@@ -15,6 +13,7 @@ inherit
 		end
 
 feature -- Access
+
 	target: V_SEQUENCE [G]
 			-- Target container.
 		deferred
@@ -27,10 +26,12 @@ feature -- Access
 		end
 
 feature -- Measurement
+
 	index: INTEGER
 			-- Index of current position.
 
 feature -- Status report
+
 	before: BOOLEAN
 			-- Is current position before any position in `target'?
 		do
@@ -56,6 +57,7 @@ feature -- Status report
 		end
 
 feature -- Cursor movement
+
 	start
 			-- Go to the first position.
 		do
@@ -99,6 +101,7 @@ feature -- Cursor movement
 		end
 
 feature -- Specification
+
 	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements.
 		note

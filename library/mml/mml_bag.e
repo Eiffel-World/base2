@@ -1,8 +1,6 @@
 note
 	description: "Finite bags."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	MML_BAG [G]
@@ -30,6 +28,7 @@ create {MML_MODEL}
 	make_from_arrays
 
 feature {NONE} -- Initialization
+
 	default_create
 			-- Create an empty bag.
 		do
@@ -60,6 +59,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Properties
+
 	has (x: G): BOOLEAN
 			-- Is `x' contained?
 		do
@@ -79,6 +79,7 @@ feature -- Properties
 		end
 
 feature -- Sets
+
 	domain: MML_SET [G]
 			-- Set of values that occur at least once.
 		do
@@ -86,6 +87,7 @@ feature -- Sets
 		end
 
 feature -- Measurement
+
 	occurrences alias "[]" (x: G): INTEGER
 			-- How many times `v' appears.
 		local
@@ -101,6 +103,7 @@ feature -- Measurement
 			-- Total number of elements.
 
 feature -- Comparison
+
 	is_model_equal alias "|=|" (other: MML_MODEL): BOOLEAN
 			-- Does this bag contain the same elements the same number of times as `other'?		
 		local
@@ -120,6 +123,7 @@ feature -- Comparison
 		end
 
 feature -- Modification
+
 	extended alias "&" (x: G): MML_BAG [G]
 			-- Current bag extended with one occurrence of `x'.
 		do
@@ -291,6 +295,7 @@ feature -- Modification
 		end
 
 feature {MML_MODEL} -- Implementation
+
 	keys: V_ARRAY [G]
 			-- Element storage.
 

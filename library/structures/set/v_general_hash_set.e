@@ -5,8 +5,6 @@ note
 			Search, extension and removal are amortized constant time.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: set, equivalence, hash
 
 class
@@ -22,6 +20,7 @@ create
 	make
 
 feature {NONE} -- Initialization
+
 	make (eq: PREDICATE [ANY, TUPLE [G, G]]; h: FUNCTION [ANY, TUPLE [G], INTEGER])
 			-- Create an empty set with equivalence relation `eq' and hash function `h'.
 		require
@@ -44,6 +43,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Copy equivalence relation, hash function, capacity, optimal load and values values from `other'.
 		local
@@ -74,10 +74,12 @@ feature -- Initialization
 		end
 
 feature -- Measurement
+
 	count: INTEGER
 			-- Number of elements.
 
 feature -- Search
+
 	has (v: G): BOOLEAN
 			-- Is `v' contained?
 			-- (Uses `equivalence'.)
@@ -98,6 +100,7 @@ feature -- Search
 			-- Hash function.
 
 feature -- Iteration
+
 	new_cursor: V_HASH_SET_ITERATOR [G]
 			-- New iterator pointing to a position in the set, from which it can traverse all elements by going `forth'.
 		do
@@ -113,6 +116,7 @@ feature -- Iteration
 		end
 
 feature -- Extension
+
 	extend (v: G)
 			-- Add `v' to the set.
 		local
@@ -127,6 +131,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	wipe_out
 			-- Remove all elements.
 		local
@@ -145,6 +150,7 @@ feature -- Removal
 		end
 
 feature {NONE} -- Performance parameters
+
 	default_capacity: INTEGER = 8
 			-- Default size of `buckets'.
 
@@ -155,6 +161,7 @@ feature {NONE} -- Performance parameters
 			-- Rate by which bucket array grows and shrinks.
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
+
 	buckets: V_ARRAY [V_LINKED_LIST [G]]
 			-- Element storage.
 
@@ -183,6 +190,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
 	iterator: V_HASH_SET_ITERATOR [G]
 			-- Internal iterator.
 

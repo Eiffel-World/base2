@@ -6,8 +6,6 @@ note
 		Inserting or removing elements in the middle is linear time.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: sequence
 
 class
@@ -25,6 +23,7 @@ inherit
 		end
 
 feature {NONE} -- Initialization
+
 	default_create
 			-- Create an empty list with default `capacity' and `growth_rate'.
 		do
@@ -34,6 +33,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize by copying all the items of `other'.
 		do
@@ -48,17 +48,20 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	item alias "[]" (i: INTEGER): G assign put
 			-- Value associated with `i'.
 		do
 			Result := array [array_index (i)]
 		end
 
-feature -- Measurement		
+feature -- Measurement
+
 	count: INTEGER
 			-- Number of elements.
 
 feature -- Iteration
+
 	at (i: INTEGER): V_ARRAYED_LIST_ITERATOR [G]
 			-- New iterator pointing at position `i'.
 		do
@@ -66,6 +69,7 @@ feature -- Iteration
 		end
 
 feature -- Replacement
+
 	put (v: G; i: INTEGER)
 			-- Associate `v' with index `i'.
 		do
@@ -79,6 +83,7 @@ feature -- Replacement
 		end
 
 feature -- Extension
+
 	extend_front (v: G)
 			-- Insert `v' at the front.
 		do
@@ -139,6 +144,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	remove_front
 			-- Remove first element.
 		do
@@ -176,6 +182,7 @@ feature -- Removal
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
+
 	array: V_ARRAY [G]
 			-- Element storage.
 
@@ -183,6 +190,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 			-- Index of the first list element in `array'.
 
 feature {NONE} -- Implementation
+
 	frozen capacity: INTEGER
 			-- Size of the underlying array.
 		do

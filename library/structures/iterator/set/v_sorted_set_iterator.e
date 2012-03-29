@@ -1,8 +1,6 @@
 note
 	description: "Iterators over sorted sets."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, index
 
 class
@@ -36,6 +34,7 @@ create {V_GENERAL_SORTED_SET}
 	make
 
 feature {NONE} -- Initialization
+
 	make (s: V_GENERAL_SORTED_SET [G]; t: V_BINARY_TREE [G])
 			-- Create an iterator over `s'.
 			-- (Passing `t' is needed to avoid violating invariant `iterator /= Void' when calling `s.tree')
@@ -50,6 +49,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
 		do
@@ -63,10 +63,12 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	target: V_GENERAL_SORTED_SET [G]
 			-- Set to iterate over.
 
 feature -- Cursor movement
+
 	search (v: G)
 			-- Move to an element equivalent to `v'.
 			-- (Use `target.equivalence'.)
@@ -102,6 +104,7 @@ feature -- Cursor movement
 		end
 
 feature -- Removal
+
 	remove
 			-- Remove element at current position. Move cursor to the next position.
 		local

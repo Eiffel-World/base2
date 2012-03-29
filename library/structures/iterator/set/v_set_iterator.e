@@ -1,8 +1,6 @@
 note
 	description: "Iterators over sets, allowing efficient search."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, sequence, index
 
 deferred class
@@ -12,12 +10,14 @@ inherit
 	V_ITERATOR [G]
 
 feature -- Access
+
 	target: V_SET [G]
 			-- Set to iterate over.
 		deferred
 		end
 
 feature -- Cursor movement
+
 	search (v: G)
 			-- Move to an element equivalent to `v'.
 			-- If `v' does not appear, go after.
@@ -29,6 +29,7 @@ feature -- Cursor movement
 		end
 
 feature -- Removal
+
 	remove
 			-- Remove element at current position. Move to the next position.
 		require

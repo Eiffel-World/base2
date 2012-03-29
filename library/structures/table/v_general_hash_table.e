@@ -5,8 +5,6 @@ note
 			Search, extension and removal are amortized constant time.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: map, key_equivalence, key_hash
 
 class
@@ -22,6 +20,7 @@ create
 	make
 
 feature {NONE} -- Initialization
+
 	make (eq: PREDICATE [ANY, TUPLE [K, K]]; h: FUNCTION [ANY, TUPLE [K], INTEGER])
 			-- Create an empty table with key equivalence `eq' and hash function `h'.
 		require
@@ -51,6 +50,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize table by copying `key_order', and key-value pair from `other'.
 		do
@@ -74,6 +74,7 @@ feature -- Initialization
 		end
 
 feature -- Search
+
 	key_equivalence: PREDICATE [ANY, TUPLE [K, K]]
 			-- Equivalence relation on keys.
 
@@ -91,6 +92,7 @@ feature -- Search
 --		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
+
 	set: V_GENERAL_HASH_SET [TUPLE [key: K; value: V]]
 			-- Underlying set of key-value pairs.
 			-- Should not be reassigned after creation.

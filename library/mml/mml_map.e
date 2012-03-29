@@ -1,8 +1,6 @@
 note
 	description: "Finite maps."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	MML_MAP [K, V]
@@ -21,6 +19,7 @@ create {MML_MODEL}
 	make_from_arrays
 
 feature {NONE} -- Initialization
+
 	default_create
 			-- Create an empty map.
 		do
@@ -38,6 +37,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Properties
+
 	has (x: V): BOOLEAN
 			-- Is value `x' contained?
 		do
@@ -57,6 +57,7 @@ feature -- Properties
 		end
 
 feature -- Elements
+
 	item alias "[]" (k: K): V
 			-- Value associated with `k'.
 		require
@@ -71,6 +72,7 @@ feature -- Elements
 		end
 
 feature -- Conversion
+
 	domain: MML_SET [K]
 			-- Set of keys.
 		do
@@ -141,6 +143,7 @@ feature -- Conversion
 		end
 
 feature -- Measurement
+
 	count: INTEGER
 			-- Map cardinality.
 		do
@@ -148,6 +151,7 @@ feature -- Measurement
 		end
 
 feature -- Comparison
+
 	is_model_equal alias "|=|" (other: MML_MODEL): BOOLEAN
 			-- Does this map contain the same key-value pairs as `other'?		
 		local
@@ -167,6 +171,7 @@ feature -- Comparison
 		end
 
 feature -- Modification
+
 	updated (k: K; x: V): MML_MAP [K, V]
 			-- Current map with `x' associated with `k'.
 			-- If `k' already exists, the value is replaced, otherwise added.
@@ -280,6 +285,7 @@ feature -- Modification
 		end
 
 feature {MML_MODEL} -- Implementation
+
 	keys: V_ARRAY [K]
 			-- Storage for keys.
 

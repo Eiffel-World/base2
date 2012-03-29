@@ -1,8 +1,6 @@
 note
 	description: "Iterators over containers that store their elements in another container."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, sequence, index
 
 class
@@ -18,6 +16,7 @@ create {V_CONTAINER}
 	make
 
 feature {NONE} -- Initialization
+
 	make (t: V_CONTAINER [G]; it: V_ITERATOR [G])
 			-- Create a proxy for `it' with target `t'.
 		require
@@ -33,6 +32,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize by copying `other'.
 		do
@@ -47,6 +47,7 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	target: V_CONTAINER [G]
 			-- Container to iterate over.
 
@@ -57,6 +58,7 @@ feature -- Access
 		end
 
 feature -- Measurement		
+
 	index: INTEGER
 			-- Current position.
 		do
@@ -64,6 +66,7 @@ feature -- Measurement
 		end
 
 feature -- Status report
+
 	before: BOOLEAN
 			-- Is current position before any position in `target'?
 		do
@@ -89,6 +92,7 @@ feature -- Status report
 		end
 
 feature -- Cursor movement
+
 	start
 			-- Go to the first position.
 		do
@@ -126,10 +130,12 @@ feature -- Cursor movement
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
+
 	iterator: V_ITERATOR [G]
 			-- Iterator over the storage.
 
 feature -- Specification
+
 	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements	in `target'.
 		note

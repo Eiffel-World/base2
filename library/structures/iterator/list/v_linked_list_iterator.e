@@ -1,8 +1,6 @@
 note
 	description: "Iterators over linked lists."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, index
 
 class
@@ -28,6 +26,7 @@ create {V_CONTAINER, V_ITERATOR}
 	make
 
 feature {V_CONTAINER, V_ITERATOR} -- Initialization
+
 	make (list: V_LINKED_LIST [G])
 			-- Create iterator over `list'.
 		require
@@ -42,6 +41,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
 		do
@@ -56,10 +56,12 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	target: V_LINKED_LIST [G]
 			-- Container to iterate over.
 
 feature -- Measurement			
+
 	index: INTEGER
 			-- Current position.
 		do
@@ -72,7 +74,8 @@ feature -- Measurement
 			end
 		end
 
-feature -- Status report		
+feature -- Status report	
+
 	is_first: BOOLEAN
 			-- Is cursor at the first position?
 		do
@@ -95,6 +98,7 @@ feature -- Status report
 		end
 
 feature -- Cursor movement
+
 	start
 			-- Go to the first position.
 		do
@@ -156,6 +160,7 @@ feature -- Cursor movement
 		end
 
 feature -- Extension
+
 	extend_left (v: G)
 			-- Insert `v' to the left of current position. Do not move cursor.
 		do
@@ -219,6 +224,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	remove
 			-- Remove element at current position. Move cursor to the next position.
 		do
@@ -246,6 +252,7 @@ feature -- Removal
 		end
 
 feature {V_CELL_CURSOR} -- Implementation
+
 	active: V_LINKABLE [G]
 			-- Cell at current position.
 			-- If unreachable from `target.first_cell' iterator is considered `before'.
@@ -280,6 +287,7 @@ feature {V_CELL_CURSOR} -- Implementation
 		end
 
 feature -- Specification
+
 	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements	in `target'.
 		note

@@ -6,8 +6,6 @@ note
 		and doesn't require reallocation of other elements.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: sequence
 
 class
@@ -26,6 +24,7 @@ inherit
 		end
 
 feature {NONE} -- Initialization
+
 	default_create
 			-- Create an empty list.
 		do
@@ -34,6 +33,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize by copying all the items of `other'.
 		do
@@ -47,6 +47,7 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	item alias "[]" (i: INTEGER): G assign put
 			-- Value at position `i'.
 		do
@@ -65,11 +66,13 @@ feature -- Access
 			Result := last_cell.item
 		end
 
-feature -- Measurement		
+feature -- Measurement
+
 	count: INTEGER
 			-- Number of elements.
 
 feature -- Iteration
+
 	at (i: INTEGER): V_DOUBLY_LINKED_LIST_ITERATOR [G]
 			-- New iterator pointing at position `i'.
 		do
@@ -78,6 +81,7 @@ feature -- Iteration
 		end
 
 feature -- Replacement
+
 	put (v: G; i: INTEGER)
 			-- Associate `v' with index `i'.
 		do
@@ -105,6 +109,7 @@ feature -- Replacement
 		end
 
 feature -- Extension
+
 	extend_front (v: G)
 			-- Insert `v' at the front.
 		local
@@ -188,6 +193,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	remove_front
 			-- Remove first element.
 		do
@@ -231,6 +237,7 @@ feature -- Removal
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
+
 	first_cell: V_DOUBLY_LINKABLE [G]
 			-- First cell of the list.
 
@@ -328,4 +335,8 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 				end
 			end
 		end
+
+invariant
+	first_cell_exists_in_nonempty: is_empty = (first_cell = Void)
+	last_cell_exists_in_nonempty: is_empty = (last_cell = Void)
 end

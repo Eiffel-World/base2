@@ -1,8 +1,6 @@
 note
 	description: "Iterators to traverse binary trees in order left subtree - root - right subtree."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, path, after
 
 class
@@ -15,6 +13,7 @@ create {V_CONTAINER}
 	make
 
 feature -- Cursor movement
+
 	start
 			-- Go to the first position.
 		do
@@ -98,6 +97,7 @@ feature -- Cursor movement
 		end
 
 feature -- Specification
+
 	subtree_path_sequence (root: MML_SEQUENCE [BOOLEAN]): MML_SEQUENCE [MML_SEQUENCE [BOOLEAN]]
 			-- Sequence of paths in subtree of `target.map' strating from `root' by order of traversal.
 		note

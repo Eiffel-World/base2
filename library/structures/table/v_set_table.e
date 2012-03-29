@@ -1,8 +1,6 @@
 note
 	description: "Tables implemented as sets of key-value pairs."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: map, key_equivalence
 
 deferred class
@@ -15,6 +13,7 @@ inherit
 		end
 
 feature -- Access
+
 	item alias "[]" (k: K): V assign force
 			-- Value associated with `k'.
 		do
@@ -22,6 +21,7 @@ feature -- Access
 		end
 
 feature -- Measurement
+
 	count: INTEGER
 			-- Number of elements.
 		do
@@ -35,6 +35,7 @@ feature -- Measurement
 		end
 
 feature -- Iteration
+
 	new_cursor: like at_key
 			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'.
 		do
@@ -48,6 +49,7 @@ feature -- Iteration
 		end
 
 feature -- Extension
+
 	extend (v: V; k: K)
 			-- Extend table with key-value pair <`k', `v'>.
 		do
@@ -55,6 +57,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	remove (k: K)
 			-- Remove key `k' and its associated value.
 		do
@@ -68,6 +71,7 @@ feature -- Removal
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
+
 	set: V_SET [TUPLE [key: K; value: V]]
 			-- Underlying set of key-value pairs.
 			-- Should not be reassigned after creation.

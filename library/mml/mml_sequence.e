@@ -1,8 +1,6 @@
 note
 	description: "Finite sequence."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	MML_SEQUENCE [G]
@@ -24,6 +22,7 @@ convert
 	singleton ({G})
 
 feature {NONE} -- Initialization
+
 	default_create
 			-- Create an empty sequence.
 		do
@@ -38,6 +37,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Properties
+
 	has (x: G): BOOLEAN
 			-- Is `x' contained?
 		do
@@ -57,6 +57,7 @@ feature -- Properties
 		end
 
 feature -- Elements
+
 	item alias "[]" (i: INTEGER): G
 			-- Value at position `i'.
 		require
@@ -66,6 +67,7 @@ feature -- Elements
 		end
 
 feature -- Conversion
+
 	domain: MML_INTERVAL
 			-- Set of indexes.
 		do
@@ -105,6 +107,7 @@ feature -- Conversion
 		end
 
 feature -- Measurement
+
 	count alias "#": INTEGER
 			-- Number of elements.
 		do
@@ -118,6 +121,7 @@ feature -- Measurement
 		end
 
 feature -- Comparison
+
 	is_model_equal alias "|=|" (other: MML_MODEL): BOOLEAN
 			-- Does this sequence contain the same elements in the same order as `other'?		
 		do
@@ -144,6 +148,7 @@ feature -- Comparison
 		end
 
 feature -- Decomposition
+
 	first: G
 			-- First element.
 		require
@@ -248,6 +253,7 @@ feature -- Decomposition
 		end
 
 feature -- Modification
+
 	extended alias "&" (x: G): MML_SEQUENCE [G]
 			-- Current sequence extended with `x' at the end.
 		do
@@ -317,6 +323,7 @@ feature -- Modification
 		end
 
 feature {MML_MODEL} -- Implementation
+
 	array: V_ARRAY [G]
 			-- Element storage.
 

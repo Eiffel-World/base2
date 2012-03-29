@@ -1,8 +1,6 @@
 note
 	description: "Iterators to traverse binary trees in some linear order."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, path, after
 
 deferred class
@@ -25,6 +23,7 @@ inherit
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
 		do
@@ -40,6 +39,7 @@ feature -- Initialization
 		end
 
 feature -- Measurement
+
 	index: INTEGER
 			-- Index of current position.
 		do
@@ -50,7 +50,8 @@ feature -- Measurement
 			end
 		end
 
-feature -- Status report		
+feature -- Status report
+
 	is_first: BOOLEAN
 			-- Is cursor at the first position?
 		local
@@ -93,6 +94,7 @@ feature -- Status report
 		end
 
 feature -- Cursor movement
+
 	go_root
 			-- Move cursor to the root.
 		do
@@ -122,6 +124,7 @@ feature -- Cursor movement
 		end
 
 feature {NONE} -- Implementation
+
 	active_index: INTEGER
 			-- Index of `active' in inorder.
 			-- 0 if `active' is not part of the tree.
@@ -151,6 +154,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Specification
+
 	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements.
 		note

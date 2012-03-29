@@ -1,8 +1,6 @@
 note
 	description: "Linked implementation of stacks."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: sequence
 
 class
@@ -16,6 +14,7 @@ inherit
 		end
 
 feature {NONE} -- Initialization
+
 	default_create
 			-- Create an empty stack.
 		do
@@ -25,6 +24,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize by copying all the items of `other'.
 		do
@@ -42,6 +42,7 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	item: G
 			-- The top element.
 		do
@@ -49,6 +50,7 @@ feature -- Access
 		end
 
 feature -- Measurement
+
 	count: INTEGER
 			-- Number of elements.
 		do
@@ -56,6 +58,7 @@ feature -- Measurement
 		end
 
 feature -- Iteration
+
 	new_cursor: V_ITERATOR [G]
 			-- New iterator pointing to a position in the container, from which it can traverse all elements by going `forth'.
 		do
@@ -63,6 +66,7 @@ feature -- Iteration
 		end
 
 feature -- Extension
+
 	extend (v: G)
 			-- Push `v' on the stack.
 		do
@@ -70,6 +74,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	remove
 			-- Pop the top element.
 		do
@@ -83,6 +88,7 @@ feature -- Removal
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
+
 	list: V_LINKED_LIST [G]
 			-- Underlying list.
 			-- Should not be reassigned after creation.			

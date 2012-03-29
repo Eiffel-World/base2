@@ -5,8 +5,6 @@ note
 		The logical size of array is the same as the physical size of the underlying memory area.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: map
 
 class
@@ -30,6 +28,7 @@ create
 	make_filled
 
 feature {NONE} -- Initialization
+
 	make (l, u: INTEGER)
 			-- Create array with indexes in [`l', `u']; set all values to default.
 		require
@@ -67,6 +66,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize by copying all the items of `other'.
 			-- Reallocate memory unless count stays the same.
@@ -86,6 +86,7 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	item alias "[]" (i: INTEGER): G assign put
 			-- Value associated with `i'.
 		do
@@ -110,6 +111,7 @@ feature -- Access
 		end
 
 feature -- Measurement
+
 	lower: INTEGER
 			-- Lower bound of index interval.
 
@@ -117,6 +119,7 @@ feature -- Measurement
 			-- Upper bound of index interval.		
 
 feature -- Iteration
+
 	at (i: INTEGER): V_ARRAY_ITERATOR [G]
 			-- New iterator pointing at position `i'.
 		do
@@ -124,6 +127,7 @@ feature -- Iteration
 		end
 
 feature -- Comparison
+
 	is_equal (other: like Current): BOOLEAN
 			-- Is array made of the same items as `other'?
 			-- (Use reference comparison.)
@@ -139,6 +143,7 @@ feature -- Comparison
 		end
 
 feature -- Replacement
+
 	put (v: G; i: INTEGER)
 			-- Put `v' at position `i'.
 		do
@@ -180,6 +185,7 @@ feature -- Replacement
 		end
 
 feature -- Resizing
+
 	resize (l, u: INTEGER)
 			-- Set index interval to [`l', `u']; keep values at old indexes; set to default at new indexes.
 			-- Reallocate memory unless count stays the same.
@@ -259,6 +265,7 @@ feature -- Resizing
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
+
 	area: SPECIAL [G]
 			-- Memory area where elements are stored.
 

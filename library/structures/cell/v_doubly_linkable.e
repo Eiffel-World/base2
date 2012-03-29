@@ -1,8 +1,6 @@
 note
 	description: "Cells that can be linked to two neighbour cells."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: item, left, right
 
 class
@@ -15,6 +13,7 @@ create
 	put
 
 feature -- Access
+
 	right: V_DOUBLY_LINKABLE [G]
 			-- Next cell.
 
@@ -22,6 +21,7 @@ feature -- Access
 			-- Previous cell.
 
 feature -- Replacement
+
 	put_right (cell: V_DOUBLY_LINKABLE [G])
 			-- Replace `right' with `cell'.
 		do

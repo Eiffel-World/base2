@@ -5,8 +5,6 @@ note
 		Immutable interface.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: map, key_equivalence
 
 deferred class
@@ -19,6 +17,7 @@ inherit
 		end
 
 feature -- Access
+
 	item alias "[]" (k: K): V
 			-- Value associated with `k'.
 		require
@@ -29,6 +28,7 @@ feature -- Access
 		end
 
 feature -- Search
+
 	key_equivalence: PREDICATE [ANY, TUPLE [K, K]]
 			-- Key equivalence relation.
 		deferred
@@ -84,6 +84,7 @@ feature -- Search
 		end
 
 feature -- Iteration
+
 	new_cursor: like at_key
 			-- New iterator pointing to a position in the map, from which it can traverse all elements by going `forth'.
 		deferred
@@ -100,6 +101,7 @@ feature -- Iteration
 		end
 
 feature -- Output
+
 	out: STRING
 			-- String representation of the content.
 		local
@@ -122,6 +124,7 @@ feature -- Output
 		end
 
 feature -- Specification
+
 	map: MML_MAP [K, V]
 			-- Map of keys to values.
 		note

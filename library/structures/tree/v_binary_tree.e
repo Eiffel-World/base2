@@ -1,8 +1,6 @@
 note
 	description: "Binary trees (doubly linked implementation)."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: map
 
 class
@@ -22,6 +20,7 @@ create
 	default_create
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Copy values and structure from `other'.
 		do
@@ -35,10 +34,12 @@ feature -- Initialization
 		end
 
 feature -- Measurement
+
 	count: INTEGER
 			-- Number of elements.
 
 feature -- Iteration
+
 	at_root: V_BINARY_TREE_CURSOR [G]
 			-- New cursor pointing to the root.
 		do
@@ -72,6 +73,7 @@ feature -- Iteration
 		end
 
 feature -- Comparison
+
 	is_equal (other: like Current): BOOLEAN
 			-- Does `other' has the same structure and contain the same objects?
 		do
@@ -81,6 +83,7 @@ feature -- Comparison
 		end
 
 feature -- Extension
+
 	add_root (v: G)
 			-- Add a root with value `v' to an empty tree.
 		require
@@ -92,7 +95,8 @@ feature -- Extension
 			map_effect: map |=| create {like map}.singleton (True, v)
 		end
 
-feature -- Removal		
+feature -- Removal
+
 	wipe_out
 			-- Remove all elements.
 		do
@@ -103,6 +107,7 @@ feature -- Removal
 		end
 
 feature -- Output
+
 	out: STRING
 			-- String representation of the content.
 		do
@@ -110,10 +115,12 @@ feature -- Output
 		end
 
 feature {V_CONTAINER, V_BINARY_TREE_CURSOR} -- Implementation
+
 	root: V_BINARY_TREE_CELL [G]
 			-- Root node.
 
 feature {V_BINARY_TREE_CURSOR} -- Implementation
+
 	extend_left (v: G; cell: V_BINARY_TREE_CELL [G])
 			-- Add a left child with value `v' to `cell'.
 		require
@@ -163,6 +170,7 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 		end
 
 feature {NONE} -- Implementation
+
 	subtree_twin (cell: V_BINARY_TREE_CELL [G]): V_BINARY_TREE_CELL [G]
 			-- Copy of subtree with root `cell'.
 		do
@@ -204,6 +212,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Specification
+
 	map: MML_MAP [MML_SEQUENCE [BOOLEAN], G]
 			-- Map of paths to elements.
 		note

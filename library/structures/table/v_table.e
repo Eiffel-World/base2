@@ -1,8 +1,6 @@
 note
 	description: "Maps where key-value pairs can be updated, added and removed."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: map, key_equivalence
 
 deferred class
@@ -16,18 +14,21 @@ inherit
 		end
 
 feature -- Access
+
 	item alias "[]" (k: K): V assign force
 			-- Value associated with `k'.
 		deferred
 		end
 
 feature -- Iteration
+
 	at_key (k: K): V_TABLE_ITERATOR [K, V]
 			-- New iterator pointing to a position with key `k'
 		deferred
 		end
 
 feature -- Comparison
+
 	is_equal (other: like Current): BOOLEAN
 			-- Does `other' have equivalent set of keys (with respect to both `key_equivalence' and `other.key_equivalence'),
 			-- and associate them with then same values?
@@ -58,6 +59,7 @@ feature -- Comparison
 		end
 
 feature -- Replacement
+
 	put (v: V; k: K)
 			-- Associate `v' with key `k'.
 		require
@@ -72,6 +74,7 @@ feature -- Replacement
 		end
 
 feature -- Extension
+
 	extend (v: V; k: K)
 			-- Extend table with key-value pair <`k', `v'>.
 		require
@@ -99,6 +102,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	remove (k: K)
 			-- Remove key `k' and its associated value.
 		require

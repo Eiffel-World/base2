@@ -1,8 +1,7 @@
 note
 	description: "Sorted tables with order relation on keys provided by COMPARABLE."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
+	model: map, key_order
 
 class
 	V_SORTED_TABLE [K -> COMPARABLE, V]
@@ -30,6 +29,7 @@ create
 	default_create
 
 feature {NONE} -- Initialization
+
 	default_create
 			-- Create an empty set with reference equality as equivalence relation.
 		do

@@ -1,8 +1,6 @@
 note
 	description: "Iterators over lists."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, index
 
 deferred class
@@ -15,12 +13,14 @@ inherit
 		end
 
 feature -- Access
+
 	target: V_LIST [G]
 			-- Container to iterate over.
 		deferred
 		end
 
 feature -- Extension
+
 	extend_left (v: G)
 			-- Insert `v' to the left of current position.
 			-- Do not move cursor.
@@ -76,6 +76,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	remove
 			-- Remove element at current position. Move cursor to the next position.
 		require

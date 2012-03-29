@@ -1,8 +1,6 @@
 note
 	description: "Iterators over arrayed lists."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, index
 
 class
@@ -25,6 +23,7 @@ create {V_ARRAYED_LIST}
 	make
 
 feature {NONE} -- Initialization
+
 	make (list: V_ARRAYED_LIST [G]; i: INTEGER)
 			-- Create an iterator at position `i' in `list'.
 		require
@@ -39,6 +38,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
 		do
@@ -52,10 +52,12 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	target: V_ARRAYED_LIST [G]
 			-- Container to iterate over.
 
 feature -- Replacement
+
 	put (v: G)
 			-- Replace item at current position with `v'.
 		do
@@ -63,6 +65,7 @@ feature -- Replacement
 		end
 
 feature -- Extension
+
 	extend_left (v: G)
 			-- Insert `v' to the left of current position. Do not move cursor.
 		do
@@ -97,6 +100,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	remove
 			-- Remove element at current position. Move cursor to the next position.
 		do

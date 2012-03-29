@@ -1,8 +1,6 @@
 note
 	description: "Sorted sets with order relation provided by COMPARABLE."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: set, order
 
 class
@@ -31,6 +29,7 @@ create
 	default_create
 
 feature {NONE} -- Initialization
+
 	default_create
 			-- Create an empty set with reference equality as equivalence relation.
 		do

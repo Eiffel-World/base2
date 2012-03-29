@@ -1,20 +1,20 @@
 note
 	description: "Streams where values can be output one by one."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: off
 
 deferred class
 	V_OUTPUT_STREAM [G]
 
 feature -- Status report
+
 	off: BOOLEAN
 			-- Is current position off scope?
 		deferred
 		end
 
 feature -- Replacement
+
 	output (v: G)
 			-- Put `v' into the stream and move to the next position.
 		require
@@ -65,6 +65,7 @@ feature -- Replacement
 		end
 
 feature -- Specification
+
 	relevant (x: ANY): BOOLEAN
 			-- Always true.
 		note

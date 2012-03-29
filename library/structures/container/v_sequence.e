@@ -4,8 +4,6 @@ note
 		Immutable interface.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: map
 
 deferred class
@@ -39,6 +37,7 @@ inherit {NONE}
 		end
 
 feature -- Access
+
 	first: G
 			-- First element.
 		require
@@ -56,6 +55,7 @@ feature -- Access
 		end
 
 feature -- Measurement
+
 	lower: INTEGER
 			-- Lower bound of index interval.
 		note
@@ -83,6 +83,7 @@ feature -- Measurement
 		end
 
 feature -- Search
+
 	index_of (v: G): INTEGER
 			-- Index of the first occurrence of `v';
 			-- out of range, if `v' does not occur.
@@ -185,6 +186,7 @@ feature -- Search
 		end
 
 feature -- Iteration
+
 	new_cursor: like at
 			-- New iterator pointing to the first position.
 		do
@@ -210,6 +212,7 @@ feature -- Iteration
 		end
 
 feature -- Output
+
 	out: STRING
 			-- String representation of the content.
 		local
@@ -222,6 +225,7 @@ feature -- Output
 		end
 
 feature -- Specification
+
 	key (i: INTEGER): INTEGER
 			-- Identity.
 		note

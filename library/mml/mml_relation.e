@@ -1,8 +1,6 @@
 note
 	description: "Finite relations."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	MML_RELATION [G, H]
@@ -21,6 +19,7 @@ create {MML_MODEL}
 	make_from_arrays
 
 feature {NONE} -- Initialization
+
 	default_create
 			-- Create an empty relation.
 		do
@@ -38,6 +37,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Properties
+
 	has alias "[]" (x: G; y: H): BOOLEAN
 			-- Is `x' related `y'?
 		local
@@ -54,6 +54,7 @@ feature -- Properties
 		end
 
 feature -- Sets
+
 	domain: MML_SET [G]
 			-- The set of left components.
 		local
@@ -101,6 +102,7 @@ feature -- Sets
 		end
 
 feature -- Measurement
+
 	count: INTEGER
 			-- Cardinality.
 		do
@@ -108,6 +110,7 @@ feature -- Measurement
 		end
 
 feature -- Comparison
+
 	is_model_equal alias "|=|" (other: MML_MODEL): BOOLEAN
 			-- Does this relation contain the same pairs as `other'?		
 		local
@@ -127,6 +130,7 @@ feature -- Comparison
 		end
 
 feature -- Modification
+
 	extended (x: G; y: H): MML_RELATION [G, H]
 			-- Current relation extended with pair (`x', `y') if absent.
 		local
@@ -281,6 +285,7 @@ feature -- Modification
 		end
 
 feature {MML_MODEL} -- Implementation
+
 	lefts: V_ARRAY [G]
 			-- Storage for the left components of pairs.
 

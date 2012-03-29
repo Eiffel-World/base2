@@ -20,6 +20,7 @@ create {V_BINARY_TREE}
 	make
 
 feature {NONE} -- Initialization
+
 	make (t: V_BINARY_TREE [G])
 			-- Create iterator over `tree'.
 		require
@@ -32,6 +33,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Initialization
+
 	copy (other: like Current)
 			-- Initialize with the same `target' and `path' as in `other'.
 		do
@@ -45,10 +47,12 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	target: V_BINARY_TREE [G]
 			-- Tree to traverse.
 
 feature -- Status report
+
 	is_root: BOOLEAN
 			-- Is cursor at root?
 		do
@@ -80,6 +84,7 @@ feature -- Status report
 		end
 
 feature -- Comparison
+
 	is_equal (other: like Current): BOOLEAN
 			-- Does `other' have the same `target' and `path'?
 		do
@@ -90,6 +95,7 @@ feature -- Comparison
 		end
 
 feature -- Cursor movement
+
 	up
 			-- Move cursor up to the parent.
 		require
@@ -132,6 +138,7 @@ feature -- Cursor movement
 		end
 
 feature -- Extension
+
 	extend_left (v: G)
 			-- Add a left child with value `v' to the current node.
 		require
@@ -157,6 +164,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	remove
 			-- Remove current node (it must have less than two child nodes). Go off.
 		require
@@ -181,10 +189,12 @@ feature -- Removal
 		end
 
 feature {V_CELL_CURSOR, V_ITERATOR} -- Implementation
+
 	active: V_BINARY_TREE_CELL [G]
 			-- Cell at current position.
 
 feature {NONE} -- Implementation
+
 	reachable: BOOLEAN
 			-- Is `active' part of the target container?
 		do
@@ -202,6 +212,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Specification
+
 	path: MML_SEQUENCE [BOOLEAN]
 			-- Path from root to current node.
 		note

@@ -4,8 +4,6 @@ note
 			and with reference or object equality as equivalence relation.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: set, equivalence, hash
 
 class
@@ -43,6 +41,7 @@ create
 	with_object_equality
 
 feature {NONE} -- Initialization
+
 	default_create
 			-- Create an empty set with reference equality as equivalence relation.
 		do

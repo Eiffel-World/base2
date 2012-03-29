@@ -1,8 +1,6 @@
 note
 	description: "Iterators to read from maps in linear order."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, key_sequence, index
 
 deferred class
@@ -15,6 +13,7 @@ inherit
 		end
 
 feature -- Access
+
 	key: K
 			-- Key at current position.
 		require
@@ -28,6 +27,7 @@ feature -- Access
 		end
 
 feature -- Cursor movement
+
 	search_key (k: K)
 			-- Move to a position where key is equivalent to `k'.
 			-- If `k' does not appear, go after.
@@ -39,6 +39,7 @@ feature -- Cursor movement
 		end
 
 feature -- Specification
+
 	key_sequence: MML_SEQUENCE [K]
 			-- Sequence of keys.
 		note

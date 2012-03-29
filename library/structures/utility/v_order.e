@@ -4,13 +4,12 @@ note
 		Void is taken to be the minimal value.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	V_ORDER [G -> COMPARABLE]
 
 feature -- Basic operations
+
 	less (x, y: G): BOOLEAN
 			-- Is `x' < `y'?.
 		do

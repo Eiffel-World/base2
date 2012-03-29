@@ -4,8 +4,6 @@ note
 		(using linear congruential pseudorandom number generator).
 	]"
 	author: "Nadia Polikarpova."
-	date: "$Date$"
-	revision: "$Revision$"
 	model: bit_sequence
 
 class
@@ -22,6 +20,7 @@ create
 	set_seed
 
 feature -- Initialization
+
 	default_create
 			-- Create a random stream using milliseconds of current time as seed.
 		do
@@ -40,6 +39,7 @@ feature -- Initialization
 		end
 
 feature -- Access
+
 	item: INTEGER
 			-- Random integer.
 		do
@@ -99,10 +99,12 @@ feature -- Access
 		end
 
 feature -- Status report
+
 	off: BOOLEAN = False
 			-- Is current position off scope?
 
 feature -- Cursor movement
+
 	forth
 			-- Move one position forward.
 		do
@@ -113,6 +115,7 @@ feature -- Cursor movement
 		end
 
 feature {NONE} -- Implementation
+
 	value: NATURAL_64
 			-- Current random bit string.
 
@@ -155,6 +158,7 @@ feature {NONE} -- Implementation
 		end
 
 feature -- Specification
+
 	bit_sequence: MML_SEQUENCE [BOOLEAN]
 		local
 			i: INTEGER

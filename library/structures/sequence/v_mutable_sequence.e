@@ -1,8 +1,6 @@
 note
 	description: "Sequences where values can be updated."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: map
 
 deferred class
@@ -15,18 +13,21 @@ inherit
 		end
 
 feature -- Access
+
 	item alias "[]" (i: INTEGER): G assign put
 			-- Value at position `i'.
 		deferred
 		end
 
 feature -- Iteration
+
 	at (i: INTEGER): V_MUTABLE_SEQUENCE_ITERATOR [G]
 			-- New iterator pointing at position `i'.
 		deferred
 		end
 
 feature -- Replacement
+
 	put (v: G; i: INTEGER)
 			-- Replace value at position `i' with `v'.
 		require
@@ -175,6 +176,7 @@ feature -- Replacement
 		end
 
 feature {NONE} -- Implementation
+
 	quick_sort (left, right: INTEGER; order: PREDICATE [ANY, TUPLE [G, G]])
 			-- Sort element in index range [`left', `right'] in `order' left to right.
 		require

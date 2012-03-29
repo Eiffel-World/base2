@@ -1,8 +1,6 @@
 note
 	description: "Iterators to read and write from/to a container in linear order."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, sequence, index
 
 deferred class
@@ -18,6 +16,7 @@ inherit
 		end
 
 feature -- Replacement
+
 	put (v: G)
 			-- Replace item at current position with `v'.
 		require

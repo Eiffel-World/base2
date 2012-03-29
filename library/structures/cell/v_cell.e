@@ -1,8 +1,6 @@
 note
 	description: "Cells containing an item."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: item
 
 class
@@ -12,10 +10,12 @@ create
 	put
 
 feature -- Access
+
 	item: G
 			-- Content of the cell.
 
 feature -- Replacement
+
 	put (v: G)
 			-- Replace `item' with `v'.
 		do

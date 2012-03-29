@@ -1,8 +1,6 @@
 note
 	description: "Streams that output textual representation of values to the console."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: separator
 
 class
@@ -19,6 +17,7 @@ create
 	make_with_separator
 
 feature {NONE} -- Initialization
+
 	default_create
 			-- Create a stream with `default_separator'.
 		do
@@ -38,6 +37,7 @@ feature {NONE} -- Initialization
 		end
 
 feature -- Access
+
 	separator: STRING
 			-- String that is output after every element.
 
@@ -45,10 +45,12 @@ feature -- Access
 			-- Default value of `separator'.			
 
 feature -- Status report
+
 	off: BOOLEAN = False
 			-- Is current position off scope?
 
 feature -- Replacement
+
 	output (v: ANY)
 			-- Put `v' into the stream and move to the next position.
 		do

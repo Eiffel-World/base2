@@ -4,8 +4,6 @@ note
 		Cells provide a low-level interface and do not ensure neither the consistency of parent and child links, nor the acyclicity property.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: item, left, right, parent
 
 class
@@ -18,6 +16,7 @@ create
 	put
 
 feature -- Access
+
 	right: V_BINARY_TREE_CELL [G]
 			-- Right child.
 
@@ -28,6 +27,7 @@ feature -- Access
 			-- Parent.
 
 feature -- Status report
+
 	is_root: BOOLEAN
 			-- Does not have parent?
 		do
@@ -53,6 +53,7 @@ feature -- Status report
 		end
 
 feature -- Replacement
+
 	connect_right_child (r: V_BINARY_TREE_CELL [G])
 			-- Set `right' to `r' and `r.parent' to `Current'.
 		do

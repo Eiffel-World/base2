@@ -1,8 +1,6 @@
 note
 	description: "Iterators to read from and update tables."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, key_sequence, index
 
 deferred class
@@ -22,12 +20,14 @@ inherit
 		end
 
 feature -- Access
+
 	target: V_TABLE [K, V]
 			-- Table to iterate over.
 		deferred
 		end
 
 feature -- Removal
+
 	remove
 			-- Remove key-value pair at current position. Move to the next position.
 		require

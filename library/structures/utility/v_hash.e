@@ -4,13 +4,12 @@ note
 		Hash code of Void is taken to be 0.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	V_HASH [G -> HASHABLE]
 
 feature -- Basic operations
+
 	hash_code (x: G): INTEGER
 			-- Hash code of `x'.
 		do

@@ -4,8 +4,6 @@ note
 		Indexing starts from 1.
 		]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: sequence
 
 deferred class
@@ -21,6 +19,7 @@ inherit
 		end
 
 feature -- Measurement
+
 	lower: INTEGER = 1
 			-- Lower bound of index interval.
 
@@ -31,12 +30,14 @@ feature -- Measurement
 		end
 
 feature -- Iteration
+
 	at (i: INTEGER): V_LIST_ITERATOR [G]
 			-- New iterator pointing at position `i'.
 		deferred
 		end
 
 feature -- Comparison
+
 	is_equal (other: like Current): BOOLEAN
 			-- Is list made of the same values in the same order as `other'?
 			-- (Use reference comparison.)
@@ -63,6 +64,7 @@ feature -- Comparison
 		end
 
 feature -- Extension
+
 	extend_front (v: G)
 			-- Insert `v' at the front.
 		deferred
@@ -134,6 +136,7 @@ feature -- Extension
 		end
 
 feature -- Removal
+
 	remove_front
 			-- Remove first element.
 		require
@@ -233,6 +236,7 @@ feature -- Removal
 		end
 
 feature -- Specification
+
 	sequence: MML_SEQUENCE [G]
 			-- Sequence of list's elements.
 		note

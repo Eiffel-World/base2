@@ -1,14 +1,13 @@
 note
 	description: "Streams that provide values one by one."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: off, item
 
 deferred class
 	V_INPUT_STREAM [G]
 
 feature -- Access
+
 	item: G
 			-- Item at current position.
 		require
@@ -17,12 +16,14 @@ feature -- Access
 		end
 
 feature -- Status report
+
 	off: BOOLEAN
 			-- Is current position off scope?
 		deferred
 		end
 
 feature -- Cursor movement
+
 	forth
 			-- Move one position forward.
 		require
@@ -67,6 +68,7 @@ feature -- Cursor movement
 		end
 
 feature -- Specification
+
 	relevant (x: ANY): BOOLEAN
 			-- Always true.
 		note

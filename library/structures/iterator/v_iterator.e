@@ -4,8 +4,6 @@ note
 		Indexing starts from 1.
 	]"
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, sequence, index
 
 deferred class
@@ -30,12 +28,14 @@ inherit
 		end
 
 feature -- Access
+
 	target: V_CONTAINER [G]
 			-- Container to iterate over.
 		deferred
 		end
 
-feature -- Measurement		
+feature -- Measurement
+
 	index: INTEGER
 			-- Current position.
 		deferred
@@ -56,6 +56,7 @@ feature -- Measurement
 		end
 
 feature -- Status report
+
 	before: BOOLEAN
 			-- Is current position before any position in `target'?
 		deferred
@@ -83,6 +84,7 @@ feature -- Status report
 		end
 
 feature -- Comparison
+
 	is_equal (other: like Current): BOOLEAN
 			-- Is `other' attached to the same container at the same position?
 			-- (Use reference comparison)
@@ -97,6 +99,7 @@ feature -- Comparison
 		end
 
 feature -- Cursor movement
+
 	start
 			-- Go to the first position.
 		deferred
@@ -266,6 +269,7 @@ feature -- Cursor movement
 		end
 
 feature -- Specification
+
 	sequence: MML_SEQUENCE [G]
 			-- Sequence of elements	in `target'.
 		note
