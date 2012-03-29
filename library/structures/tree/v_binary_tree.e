@@ -120,7 +120,7 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 			cell_exists: cell /= Void
 			not_cell_has_left: cell.left = Void
 		do
-			cell.put_left (create {V_BINARY_TREE_CELL [G]}.put (v))
+			cell.connect_left_child (create {V_BINARY_TREE_CELL [G]}.put (v))
 			count := count + 1
 		end
 
@@ -130,7 +130,7 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 			cell_exists: cell /= Void
 			not_cell_has_left: cell.right = Void
 		do
-			cell.put_right (create {V_BINARY_TREE_CELL [G]}.put (v))
+			cell.connect_right_child (create {V_BINARY_TREE_CELL [G]}.put (v))
 			count := count + 1
 		end
 
@@ -150,13 +150,13 @@ feature {V_BINARY_TREE_CURSOR} -- Implementation
 			if cell.is_root then
 				root := child
 				if child /= Void then
-					child.simple_put_parent (Void)
+					child.put_parent (Void)
 				end
 			else
 				if cell.is_left then
-					cell.parent.put_left (child)
+					cell.parent.connect_left_child (child)
 				else
-					cell.parent.put_right (child)
+					cell.parent.connect_right_child (child)
 				end
 			end
 			count := count - 1
@@ -168,8 +168,8 @@ feature {NONE} -- Implementation
 		do
 			if cell /= Void then
 				create Result.put (cell.item)
-				Result.put_left (subtree_twin (cell.left))
-				Result.put_right (subtree_twin (cell.right))
+				Result.connect_left_child (subtree_twin (cell.left))
+				Result.connect_right_child (subtree_twin (cell.right))
 			end
 		end
 

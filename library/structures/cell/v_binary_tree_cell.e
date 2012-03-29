@@ -53,31 +53,31 @@ feature -- Status report
 		end
 
 feature -- Replacement
-	put_right (r: V_BINARY_TREE_CELL [G])
+	connect_right_child (r: V_BINARY_TREE_CELL [G])
 			-- Set `right' to `r' and `r.parent' to `Current'.
 		do
 			right := r
 			if r /= Void then
-				r.simple_put_parent (Current)
+				r.put_parent (Current)
 			end
 		ensure
 			right_effect: right = r
 			r_parent_effect: r /= Void implies r.parent = Current
 		end
 
-	put_left (l: V_BINARY_TREE_CELL [G])
+	connect_left_child (l: V_BINARY_TREE_CELL [G])
 			-- Set `left' to `l' and `l.parent' to `Current'.
 		do
 			left := l
 			if l /= Void then
-				l.simple_put_parent (Current)
+				l.put_parent (Current)
 			end
 		ensure
 			left_effect: left = l
 			l_parent_effect: l /= Void implies l.parent = Current
 		end
 
-	simple_put_right (r: V_BINARY_TREE_CELL [G])
+	put_right (r: V_BINARY_TREE_CELL [G])
 			-- Set `right' to `r'.
 		do
 			right := r
@@ -85,7 +85,7 @@ feature -- Replacement
 			right_effect: right = r
 		end
 
-	simple_put_left (l: V_BINARY_TREE_CELL [G])
+	put_left (l: V_BINARY_TREE_CELL [G])
 			-- Set `left' to `l'.
 		do
 			left := l
@@ -93,7 +93,7 @@ feature -- Replacement
 			left_effect: left = l
 		end
 
-	simple_put_parent (p: V_BINARY_TREE_CELL [G])
+	put_parent (p: V_BINARY_TREE_CELL [G])
 			-- Set `parent' to `p'.
 		do
 			parent := p

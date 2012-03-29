@@ -234,13 +234,9 @@ feature -- Removal
 
 	remove_left
 			-- Remove element to the left of current position. Do not move cursor.
-		local
-			old_active: V_LINKABLE [G]
 		do
-			old_active := active
 			back
 			remove
-			active := old_active
 		end
 
 	remove_right

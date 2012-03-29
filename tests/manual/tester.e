@@ -18,21 +18,24 @@ feature {NONE} -- Initialization
 	execute
 			-- Run application.
 		do
---			print ("%NTest MML_SET%N")
---			test_mml_set
---			io.new_line
---			print ("%NTest ARRAY%N")
---			test_array
---			io.new_line
---			print ("%NTest LINKED_LIST%N")
---			test_linked_list
---			io.new_line
---			print ("%NTest ARRAYED_LIST%N")
---			test_arrayed_list
---			io.new_line
---			print ("%NTest BINARY_TREE%N")
---			test_binary_tree
---			io.new_line
+			print ("%NTest MML_SET%N")
+			test_mml_set
+			io.new_line
+			print ("%NTest ARRAY%N")
+			test_array
+			io.new_line
+			print ("%NTest LINKED_LIST%N")
+			test_linked_list
+			io.new_line
+			print ("%NTest DOUBLY_LINKED_LIST%N")
+			test_doubly_linked_list
+			io.new_line
+			print ("%NTest ARRAYED_LIST%N")
+			test_arrayed_list
+			io.new_line
+			print ("%NTest BINARY_TREE%N")
+			test_binary_tree
+			io.new_line
 			print ("%NTest SORTED_SET%N")
 			test_sorted_set
 			io.new_line
@@ -145,6 +148,7 @@ feature -- Tests
 			it.satisfy_back (agent (x: INTEGER): BOOLEAN do Result := x > 0 end)
 			a2.swap (10, 8)
 			a2.sort (agent less_equal)
+			a2.reverse
 			cout.pipe (a2.new_cursor)
 			a1.wipe_out
 			a1.include (7)
@@ -164,6 +168,8 @@ feature -- Tests
 			l1.extend_at (0, 1)
 			l1.extend_at (2, 3)
 			l1.extend_at (3, 5)
+
+			l1.reverse
 			across
 				l1 as it1
 			loop
@@ -224,6 +230,98 @@ feature -- Tests
 			it.remove
 			it.remove_left
 			it.remove_right
+			it.go_to (15)
+
+			l2.reverse
+			l2.sort (agent less_equal)
+
+			l1.new_cursor.merge (l2)
+
+			l1.remove_front
+			l1.remove_back
+			l1.remove_at (3)
+			l1.wipe_out
+		end
+
+	test_doubly_linked_list
+			-- Test V_DOUBLY_LINKED_LIST
+		local
+			l1, l2: V_DOUBLY_LINKED_LIST [INTEGER]
+			it: V_LIST_ITERATOR [INTEGER]
+			i: INTEGER
+			b: BOOLEAN
+		do
+			create l1
+			l1.extend_front (1)
+			l1.extend_back (2)
+			l1.extend_at (0, 1)
+			l1.extend_at (2, 3)
+			l1.extend_at (3, 5)
+			l1.reverse
+			across
+				l1 as it1
+			loop
+				print (it1.item)
+				print (" ")
+			end
+			io.new_line
+			from
+				it := l1.at_last
+			until
+				it.before
+			loop
+				print (it.item)
+				print (" ")
+				it.back
+			end
+			i := l1.count
+			create l2
+			i := l2.count
+			l2.copy (l1)
+			b := l1.is_equal (l2)
+			l1.append (l2.new_cursor)
+			b := l1.is_equal (l2)
+			l2.prepend (l1.at (3))
+			l1.insert_at (l2.at (3), 3)
+			l1.put (10, 10)
+			l1.remove (2)
+			l1.remove_all (1)
+			l1.remove_satisfying (agent (x: INTEGER): BOOLEAN do Result := x \\ 2 = 0 end)
+			l1.remove_all_satisfying (agent (x: INTEGER): BOOLEAN do Result := x \\ 3 = 0 end)
+
+			b := l1.is_empty
+			b := l1.has_index (5)
+			b := l1.has_index (100)
+			l1.clear (2, 2)
+			l1.fill (6, 1, l1.count)
+			i := l1.index_of (6)
+			i := l1.index_of (5)
+			i := l1.index_of_from (6, 3)
+			i := l1.index_satisfying (agent (x: INTEGER): BOOLEAN do Result := x < 0 end)
+			i := l1.index_satisfying_from (agent (x: INTEGER): BOOLEAN do Result := x > 0 end, 3)
+			b := l1.has (6)
+			b := l1.has (5)
+			i := l1.occurrences (6)
+			i := l1.occurrences (5)
+			b := l1.exists (agent (x: INTEGER): BOOLEAN do Result := x < 0 end)
+			b := l1.for_all (agent (x: INTEGER): BOOLEAN do Result := x > 0 end)
+
+			it := l2.new_cursor
+			i := it.count
+			b := it.is_first
+			b := it.is_last
+			it.output (5)
+			it.extend_left (4)
+			it.extend_right (6)
+			it.insert_left (l1.new_cursor)
+			it.insert_right (l1.at_last)
+			it.remove
+			it.remove_left
+			it.remove_right
+			it.go_to (15)
+
+			l2.reverse
+			l2.sort (agent less_equal)
 
 			l1.new_cursor.merge (l2)
 
@@ -274,6 +372,7 @@ feature -- Tests
 			l1.insert_at (l2.at (3), 3)
 			l1.put (10, 10)
 			l1.sort (agent greater_equal)
+			l1.reverse
 			l1.remove (2)
 			l1.remove_all (1)
 			l1.remove_satisfying (agent (x: INTEGER): BOOLEAN do Result := x \\ 2 = 0 end)
@@ -692,12 +791,18 @@ feature -- MML tests
 			b := s1.is_subset_of (s2)
 			b := s1.is_superset_of (s2)
 			b := s1.disjoint (s2)
-			s2 := {MML_INTERVAL} [[4, 6]]
+			s1 := {MML_INTERVAL} [[5, 7]]
+			s2 := {MML_INTERVAL} [[-10, -5]]
 			b := s1.disjoint (s2)
+			s2 := {MML_INTERVAL} [[5, 7]] |+| {MML_INTERVAL} [[4, 6]]
+			b := s2 <= s1
+			b := s2 >= s1
+			b := s1 |=| s2
 			s2 := s2.extended (1)
 			s2 := s2.extended (4)
 			s2 := s2.removed (6)
 			s2 := s2.removed (6)
+			b := s1 |=| s2
 			s3 := s1 + s2
 			s3 := s1 * s2
 			s3 := s1 - s2

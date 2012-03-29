@@ -5,7 +5,7 @@ note
 		Once a position is found, inserting or removing elements to the right of it takes constant time 
 		and doesn't require reallocation of other elements.
 		]"
-	author: ""
+	author: "Nadia Polikarpova"
 	date: "$Date$"
 	revision: "$Revision$"
 	model: sequence

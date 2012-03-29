@@ -1,7 +1,12 @@
+Note clauses: remove date and revision
+Empty line between feature clause and feature
+Introduce modify clauses
+
 Structures:
 
+- Relax precondiitons of forth/back and extend_left/right?
 - V_SET: weaker contracts for extend and remove (only require sets to be the same up to equivalence)
-- ARRAY2, doubly linked list
+- ARRAY2
 - Tree nodes should not have parent pointers? (less consistentcy problems,
 more sharing possible)
 - Do not rely on agents in standard sorted and hash structures
