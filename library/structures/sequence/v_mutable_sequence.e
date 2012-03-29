@@ -43,14 +43,11 @@ feature -- Replacement
 			has_index_one: has_index (i1)
 			has_index_two: has_index (i2)
 		local
-			it1, it2: V_IO_ITERATOR [G]
 			v: G
 		do
-			it1 := at (i1)
-			it2 := at (i2)
-			v := it1.item
-			it1.put (it2.item)
-			it2.put (v)
+			v := item (i1)
+			put (item (i2), i1)
+			put (v, i2)
 		ensure
 			map_effect: map |=| old map.updated (i1, map [i2]).updated (i2, map [i1])
 		end
@@ -144,14 +141,37 @@ feature -- Replacement
 		do
 			quick_sort (lower, upper, order)
 		ensure
+			map_domain_effect: map.domain |=| old map.domain
 			map_effect_short: map.count < 2 implies map |=| old map
 			map_effect_long: map.count >= 2 implies
 				bag |=| old bag and
-				(map.domain / map.domain.extremum (agent greater_equal)).for_all (
-					agent (i: INTEGER; o: PREDICATE [ANY, TUPLE [G, G]]): BOOLEAN
-						do
-							Result := o.item ([map [i], map [i + 1]])
-						end (?, order))
+				(map.domain / upper).for_all (agent (i: INTEGER; o: PREDICATE [ANY, TUPLE [G, G]]): BOOLEAN
+					do
+						Result := o.item ([map [i], map [i + 1]])
+					end (?, order))
+		end
+
+	reverse
+			-- Reverse the order of elements.
+		local
+			j, k: INTEGER
+		do
+			from
+				j := lower
+				k := upper
+			until
+				j >= k
+			loop
+				swap (j, k)
+				j := j + 1
+				k := k - 1
+			end
+		ensure
+			map_domain_effect: map.domain |=| old map.domain
+			map_effect: map.domain.for_all (agent (i: INTEGER; m: MML_MAP [INTEGER, G]): BOOLEAN
+				do
+					Result := map [i] = m [lower + upper - i]
+				end (?, old map))
 		end
 
 feature {NONE} -- Implementation

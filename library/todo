@@ -1,11 +1,9 @@
 Structures:
 
-- V_EQUALITY, V_ORDER - should be in MML?
-- V_SET: change contract according to Anton's suggestion
+- V_SET: weaker contracts for extend and remove (only require sets to be the same up to equivalence)
 - ARRAY2, doubly linked list
 - Tree nodes should not have parent pointers? (less consistentcy problems,
 more sharing possible)
-- List reversal
 - Do not rely on agents in standard sorted and hash structures
 - Set/table with no requirements on elements/keys
 - Finite streams: filter, mapper, folder

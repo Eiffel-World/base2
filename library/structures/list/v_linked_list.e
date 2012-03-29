@@ -22,7 +22,8 @@ inherit
 			last,
 			exists,
 			put,
-			prepend
+			prepend,
+			reverse
 		end
 
 feature {NONE} -- Initialization
@@ -93,6 +94,25 @@ feature -- Replacement
 			-- Associate `v' with index `i'.
 		do
 			cell_at (i).put (v)
+		end
+
+	reverse
+			-- Reverse the order of elements.
+		local
+			rest, next: V_LINKABLE [G]
+		do
+			from
+				last_cell := first_cell
+				rest := first_cell
+				first_cell := Void
+			until
+				rest = Void
+			loop
+				next := rest.right
+				rest.put_right (first_cell)
+				first_cell := rest
+				rest := next
+			end
 		end
 
 feature -- Extension
