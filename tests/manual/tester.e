@@ -24,6 +24,9 @@ feature {NONE} -- Initialization
 			print ("%NTest ARRAY%N")
 			test_array
 			io.new_line
+			print ("%NTest ARRAY2%N")
+			test_array2
+			io.new_line
 			print ("%NTest LINKED_LIST%N")
 			test_linked_list
 			io.new_line
@@ -135,6 +138,7 @@ feature -- Tests
 				it1.put (5)
 			end
 			io.new_line
+			it := a1.at (1000)
 			it := a1.new_cursor
 			it.search_forth (5)
 			it.search_forth (6)
@@ -152,6 +156,32 @@ feature -- Tests
 			cout.pipe (a2.new_cursor)
 			a1.wipe_out
 			a1.include (7)
+		end
+
+	test_array2
+			-- Test V_ARRAY2.
+		local
+			a1, a2: V_ARRAY2 [INTEGER]
+			n: INTEGER
+			b: BOOLEAN
+			it: V_IO_ITERATOR [INTEGER]
+		do
+			create a1.make (3, 3)
+			create a2.make_filled (4, 4, 5)
+			across
+				a2 as c
+			loop
+				c.put (6)
+			end
+			cout.pipe (a2.new_cursor)
+			a1 [2, 2] := 5
+			a2.copy (a1)
+			b := a2.has_row (1)
+			b := a2.has_column (7)
+			n := a2.row_index (7)
+			n := a2.column_index (7)
+			n := a2.flat_index (2, 1)
+			it := a1.flat_at (1000)
 		end
 
 	test_linked_list
@@ -218,6 +248,7 @@ feature -- Tests
 			b := l1.exists (agent (x: INTEGER): BOOLEAN do Result := x < 0 end)
 			b := l1.for_all (agent (x: INTEGER): BOOLEAN do Result := x > 0 end)
 
+			it := l2.at (1000)
 			it := l2.new_cursor
 			i := it.count
 			b := it.is_first
@@ -306,6 +337,7 @@ feature -- Tests
 			b := l1.exists (agent (x: INTEGER): BOOLEAN do Result := x < 0 end)
 			b := l1.for_all (agent (x: INTEGER): BOOLEAN do Result := x > 0 end)
 
+			it := l2.at (1000)
 			it := l2.new_cursor
 			i := it.count
 			b := it.is_first
@@ -395,6 +427,7 @@ feature -- Tests
 			b := l1.exists (agent (x: INTEGER): BOOLEAN do Result := x < 0 end)
 			b := l1.for_all (agent (x: INTEGER): BOOLEAN do Result := x > 0 end)
 
+			it := l2.at (1000)
 			it := l2.new_cursor
 			i := it.count
 			b := it.is_first

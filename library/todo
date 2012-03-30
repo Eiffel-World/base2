@@ -2,7 +2,6 @@ Introduce modify clauses
 
 Structures:
 
-- ARRAY2
 - Relax preconditons of forth/back and extend_left/right?
 - V_SET: weaker contracts for extend and remove (only require sets to be the same up to equivalence)
 - Tree nodes should not have parent pointers? (less consistentcy problems,
