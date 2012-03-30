@@ -17,7 +17,6 @@ inherit
 			copy,
 			is_equal,
 			put,
-			swap,
 			fill,
 			clear,
 			copy_range
@@ -148,16 +147,6 @@ feature -- Replacement
 			-- Put `v' at position `i'.
 		do
 			area.put (v, i - lower)
-		end
-
-	swap (i1, i2: INTEGER)
-			-- Swap values at positions `i1' and `i2'.
-		local
-			v: G
-		do
-			v := item (i1)
-			put (item (i2), i1)
-			put (v, i2)
 		end
 
 	fill (v: G; l, u: INTEGER)

@@ -28,13 +28,20 @@ feature {NONE} -- Initialization
 			-- Create an iterator at position `i' in `list'.
 		require
 			list_exists: list /= Void
-			i_valid: 0 <= i and i <= list.count + 1
 		do
 			target := list
-			index := i
+			if i < 1 then
+				index := 0
+			elseif i > list.count then
+				index := list.count + 1
+			else
+				index := i
+			end
 		ensure
 			target_effect: target = list
-			index_effect: index = i
+			index_effect_has: 1 <= i and i <= list.count implies index = i
+			index_effect_before: i < 1 implies index = 0
+			index_effect_after: i > list.count implies index = list.count + 1
 		end
 
 feature -- Initialization

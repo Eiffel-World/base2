@@ -77,7 +77,13 @@ feature -- Iteration
 			-- New iterator pointing at position `i'.
 		do
 			create Result.make (Current)
-			Result.go_to (i)
+			if i < 1 then
+				Result.go_before
+			elseif i > count then
+				Result.go_after
+			else
+				Result.go_to (i)
+			end
 		end
 
 feature -- Replacement

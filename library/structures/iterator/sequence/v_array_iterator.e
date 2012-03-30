@@ -30,13 +30,20 @@ feature {NONE} -- Initialization
 			-- Create an iterator at position `i' in `t'.
 		require
 			t_exists: t /= Void
-			i_valid: 0 <= i and i <= t.count + 1
 		do
 			target := t
-			index := i
+			if i < 1 then
+				index := 0
+			elseif i > t.count then
+				index := t.count + 1
+			else
+				index := i
+			end
 		ensure
 			target_effect: target = t
-			index_effect: index = i
+			index_effect_has: 1 <= i and i <= t.count implies index = i
+			index_effect_before: i < 1 implies index = 0
+			index_effect_after: i > t.count implies index = t.count + 1
 		end
 
 feature -- Initialization

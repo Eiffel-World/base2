@@ -17,7 +17,6 @@ inherit
 			item,
 			default_create,
 			put,
-			swap,
 			copy,
 			prepend
 		end
@@ -74,12 +73,6 @@ feature -- Replacement
 			-- Associate `v' with index `i'.
 		do
 			array.put (v, array_index (i))
-		end
-
-	swap (i1, i2: INTEGER)
-			-- Swap values at positions `i1' and `i2'.
-		do
-			array.swap (array_index (i1), array_index (i2))
 		end
 
 feature -- Extension
