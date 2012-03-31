@@ -38,6 +38,8 @@ feature {NONE} -- Initialization
 	make (s: V_GENERAL_SORTED_SET [G]; t: V_BINARY_TREE [G])
 			-- Create an iterator over `s'.
 			-- (Passing `t' is needed to avoid violating invariant `iterator /= Void' when calling `s.tree')
+		note
+			modify: target, index
 		require
 			s_exists: s /= Void
 			valid_tree: t = s.tree
@@ -52,14 +54,14 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
+		note
+			modify: target, index
 		do
 			target := other.target
 			Precursor {V_INORDER_ITERATOR} (other)
 		ensure then
 			target_effect: target = other.target
 			index_effect: index = other.index
-			other_target_effect: other.target = old other.target
-			other_index_effect: other.index = old other.index
 		end
 
 feature -- Access

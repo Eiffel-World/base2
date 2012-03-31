@@ -27,6 +27,8 @@ feature {NONE} -- Initialization
 
 	default_create
 			-- Create an empty list.
+		note
+			modify: sequence
 		do
 		ensure then
 			sequence_effect: sequence.is_empty
@@ -36,6 +38,8 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize by copying all the items of `other'.
+		note
+			modify: sequence
 		do
 			if other /= Current then
 				wipe_out
@@ -43,7 +47,6 @@ feature -- Initialization
 			end
 		ensure then
 			sequence_effect: sequence |=| other.sequence
-			other_sequence_effect: other.sequence |=| old other.sequence
 		end
 
 feature -- Access
@@ -90,12 +93,16 @@ feature -- Replacement
 
 	put (v: G; i: INTEGER)
 			-- Associate `v' with index `i'.
+		note
+			modify: sequence
 		do
 			cell_at (i).put (v)
 		end
 
 	reverse
 			-- Reverse the order of elements.
+		note
+			modify: sequence
 		local
 			rest, next: V_DOUBLY_LINKABLE [G]
 		do

@@ -23,6 +23,8 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Copy values and structure from `other'.
+		note
+			modify: map
 		do
 			if other /= Current then
 				root := subtree_twin (other.root)
@@ -30,7 +32,6 @@ feature -- Initialization
 			end
 		ensure then
 			map_effect: map |=| other.map
-			other_map_effect: other.map |=| old other.map
 		end
 
 feature -- Measurement
@@ -86,6 +87,8 @@ feature -- Extension
 
 	add_root (v: G)
 			-- Add a root with value `v' to an empty tree.
+		note
+			modify: map
 		require
 			is_empty: is_empty
 		do
@@ -99,6 +102,8 @@ feature -- Removal
 
 	wipe_out
 			-- Remove all elements.
+		note
+			modify: map
 		do
 			root := Void
 			count := 0

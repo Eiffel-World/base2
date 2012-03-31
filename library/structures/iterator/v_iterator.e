@@ -102,6 +102,8 @@ feature -- Cursor movement
 
 	start
 			-- Go to the first position.
+		note
+			modify: index
 		deferred
 		ensure then
 			index_effect: index = 1
@@ -109,6 +111,8 @@ feature -- Cursor movement
 
 	finish
 			-- Go to the last position.
+		note
+			modify: index
 		deferred
 		ensure
 			index_effect: index = sequence.count
@@ -116,6 +120,8 @@ feature -- Cursor movement
 
 	forth
 			-- Go one position forward.
+		note
+			modify: index
 		deferred
 		ensure then
 			index_effect: index = old index + 1
@@ -123,6 +129,8 @@ feature -- Cursor movement
 
 	back
 			-- Go one position backward.
+		note
+			modify: index
 		require
 			not_off: not off
 		deferred
@@ -132,6 +140,8 @@ feature -- Cursor movement
 
 	go_to (i: INTEGER)
 			-- Go to position `i'.
+		note
+			modify: index
 		require
 			has_index: valid_index (i)
 		local
@@ -160,6 +170,8 @@ feature -- Cursor movement
 
 	go_before
 			-- Go before any position of `target'.
+		note
+			modify: index
 		deferred
 		ensure
 			index_effect: index = 0
@@ -167,6 +179,8 @@ feature -- Cursor movement
 
 	go_after
 			-- Go after any position of `target'.
+		note
+			modify: index
 		deferred
 		ensure
 			index_effect: index = sequence.count + 1
@@ -176,6 +190,8 @@ feature -- Cursor movement
 			-- Move to the first occurrence of `v' at or after current position.
 			-- If `v' does not occur, move `after'.
 			-- (Use reference equality.)
+		note
+			modify: index
 		do
 			if before then
 				start
@@ -190,12 +206,13 @@ feature -- Cursor movement
 			index_effect_not_found: not sequence.tail (old index).has (v) implies index = target.count + 1
 			index_effect_found: sequence.tail (old index).has (v) implies
 				(sequence [index] = v and not sequence.interval (old index, index - 1).has (v))
-			sequence_effect: sequence |=| old sequence
 		end
 
 	satisfy_forth (pred: PREDICATE [ANY, TUPLE [G]])
 			-- Move to the first position at or after current where `pred' holds.
 			-- If `pred' never holds, move `after'.
+		note
+			modify: index
 		require else
 			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
@@ -217,13 +234,14 @@ feature -- Cursor movement
 			index_effect_not_found: not sequence.tail (old index).range.exists (pred) implies index = target.count + 1
 			index_effect_found: sequence.tail (old index).range.exists (pred) implies
 				(pred.item ([sequence [index]]) and not sequence.interval (old index, index - 1).range.exists (pred))
-			sequence_effect: sequence |=| old sequence
 		end
 
 	search_back (v: G)
 			-- Move to the last occurrence of `v' at or before current position.
 			-- If `v' does not occur, move `before'.
 			-- (Use reference equality.)
+		note
+			modify: index
 		do
 			if after then
 				finish
@@ -238,12 +256,13 @@ feature -- Cursor movement
 			index_effect_not_found: not sequence.front (old index).has (v) implies index = 0
 			index_effect_found: sequence.front (old index).has (v) implies
 				(sequence [index] = v and not sequence.interval (index + 1, old index).has (v))
-			sequence_effect: sequence |=| old sequence
 		end
 
 	satisfy_back (pred: PREDICATE [ANY, TUPLE [G]])
 			-- Move to the first position at or before current where `p' holds.
 			-- If `pred' never holds, move `after'.
+		note
+			modify: index
 		require
 			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
@@ -265,7 +284,6 @@ feature -- Cursor movement
 			index_effect_not_found: not sequence.front (old index).range.exists (pred) implies index = 0
 			index_effect_found: sequence.front (old index).range.exists (pred) implies
 				(pred.item ([sequence [index]]) and not sequence.interval (index + 1, old index).range.exists (pred))
-			sequence_effect: sequence |=| old sequence
 		end
 
 feature -- Specification
@@ -283,12 +301,7 @@ invariant
 	target_exists: target /= Void
 	item_definition: sequence.domain [index] implies item = sequence [index]
 	off_definition: off = not sequence.domain [index]
-	target_bag_domain_constraint: target.bag.domain |=| sequence.range
-	target_bag_constraint: target.bag.domain.for_all (agent (x: G): BOOLEAN
-		do
-			Result := target.bag [x] = sequence.occurrences (x)
-		end)
-	target_bag_count_constraint: target.bag.count = sequence.count
+	target_bag_constraint: target.bag |=| sequence.to_bag
 	before_definition: before = (index = 0)
 	after_definition: after = (index = sequence.count + 1)
 	is_first_definition: is_first = (not sequence.is_empty and index = 1)

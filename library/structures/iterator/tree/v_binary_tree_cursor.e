@@ -23,6 +23,8 @@ feature {NONE} -- Initialization
 
 	make (t: V_BINARY_TREE [G])
 			-- Create iterator over `tree'.
+		note
+			modify: target, path
 		require
 			tree_exists: t /= Void
 		do
@@ -36,14 +38,14 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize with the same `target' and `path' as in `other'.
+		note
+			modify: target, path
 		do
 			target := other.target
 			active := other.active
 		ensure then
 			target_effect: target = other.target
 			path_effect: path |=| other.path
-			other_target_effect: other.target = old other.target
-			other_path_effect: other.path |=| old other.path
 		end
 
 feature -- Access
@@ -98,6 +100,8 @@ feature -- Cursor movement
 
 	up
 			-- Move cursor up to the parent.
+		note
+			modify: path
 		require
 			not_off: not off
 		do
@@ -108,6 +112,8 @@ feature -- Cursor movement
 
 	left
 			-- Move cursor down to the left child.
+		note
+			modify: path
 		require
 			not_off: not off
 		do
@@ -119,6 +125,8 @@ feature -- Cursor movement
 
 	right
 			-- Move cursor down to the right child.
+		note
+			modify: path
 		require
 			not_off: not off
 		do
@@ -130,6 +138,8 @@ feature -- Cursor movement
 
 	go_root
 			-- Move cursor to the root.
+		note
+			modify: path
 		do
 			active := target.root
 		ensure
@@ -141,6 +151,8 @@ feature -- Extension
 
 	extend_left (v: G)
 			-- Add a left child with value `v' to the current node.
+--		note
+--			modify: target.map
 		require
 			not_off: not off
 			not_has_left: not has_left
@@ -148,11 +160,12 @@ feature -- Extension
 			target.extend_left (v, active)
 		ensure
 			target_map_effect: target.map |=| old target.map.updated (path & False, v)
-			path_effect: path |=| old path
 		end
 
 	extend_right (v: G)
 			-- Add a left child with value `v' to the current node.
+--		note
+--			modify: target.map
 		require
 			not_off: not off
 			not_has_right: not has_right
@@ -160,13 +173,14 @@ feature -- Extension
 			target.extend_right (v, active)
 		ensure
 			target_map_effect: target.map |=| old target.map.updated (path & True, v)
-			path_effect: path |=| old path
 		end
 
 feature -- Removal
 
 	remove
 			-- Remove current node (it must have less than two child nodes). Go off.
+		note
+			modify: path --, target.map
 		require
 			not_off: not off
 			not_two_children: not has_left or not has_right

@@ -56,6 +56,8 @@ feature -- Replacement
 
 	connect_right_child (r: V_BINARY_TREE_CELL [G])
 			-- Set `right' to `r' and `r.parent' to `Current'.
+		note
+			modify: right, r__parent
 		do
 			right := r
 			if r /= Void then
@@ -68,6 +70,8 @@ feature -- Replacement
 
 	connect_left_child (l: V_BINARY_TREE_CELL [G])
 			-- Set `left' to `l' and `l.parent' to `Current'.
+		note
+			modify: left, l__parent
 		do
 			left := l
 			if l /= Void then
@@ -80,6 +84,8 @@ feature -- Replacement
 
 	put_right (r: V_BINARY_TREE_CELL [G])
 			-- Set `right' to `r'.
+		note
+			modify: right
 		do
 			right := r
 		ensure
@@ -88,6 +94,8 @@ feature -- Replacement
 
 	put_left (l: V_BINARY_TREE_CELL [G])
 			-- Set `left' to `l'.
+		note
+			modify: left
 		do
 			left := l
 		ensure
@@ -96,6 +104,8 @@ feature -- Replacement
 
 	put_parent (p: V_BINARY_TREE_CELL [G])
 			-- Set `parent' to `p'.
+		note
+			modify: parent
 		do
 			parent := p
 		ensure

@@ -21,6 +21,8 @@ feature -- Replacement
 
 	put_right (cell: V_LINKABLE [G])
 			-- Replace `right' with `cell'.
+		note
+			modify: right
 		do
 			right := cell
 		ensure

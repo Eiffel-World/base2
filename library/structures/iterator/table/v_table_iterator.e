@@ -30,13 +30,14 @@ feature -- Removal
 
 	remove
 			-- Remove key-value pair at current position. Move to the next position.
+		note
+			modify: key_sequence --, target.map
 		require
 			not_off: not off
 		deferred
 		ensure
 			target_map_effect: target.map |=| old target.map.removed (key_sequence [index])
 			key_sequence_effect: key_sequence |=| old (key_sequence.front (index - 1) + key_sequence.tail (index + 1))
-			index_effect: index = old index
 		end
 
 end

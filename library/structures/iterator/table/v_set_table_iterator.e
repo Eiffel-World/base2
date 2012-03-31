@@ -20,6 +20,8 @@ feature {NONE} -- Initialization
 
 	make_at_start (t: V_SET_TABLE [K, V])
 			-- Create an iterator at start of `t'.
+		note
+			modify: target, key_sequence, index
 		do
 			target := t
 			set_iterator := target.set.new_cursor
@@ -30,6 +32,8 @@ feature {NONE} -- Initialization
 
 	make_at_key (t: V_SET_TABLE [K, V]; k: K)
 			-- Create an iterator over `t' pointing to the position with key `k'.
+		note
+			modify: target, key_sequence, index
 		do
 			target := t
 			set_iterator := target.set.at ([k, ({V}).default])
@@ -43,6 +47,8 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
+		note
+			modify: target, key_sequence, index
 		do
 			if other /= Current then
 				target := other.target
@@ -52,9 +58,6 @@ feature -- Initialization
 			target_effect: target = other.target
 			key_sequence_effect: key_sequence |=| other.key_sequence
 			index_effect: index = other.index
-			other_target_effect: other.target = old other.target
-			other_index_effect: other.index = old other.index
-			other_key_sequence_effect: other.key_sequence |=| old other.key_sequence
 		end
 
 feature -- Access
@@ -158,6 +161,8 @@ feature -- Replacement
 
 	put (v: V)
 			-- Replace item at current position with `v'.
+--		note
+--			modify: target.map
 		do
 			set_iterator.item.value := v
 		ensure then

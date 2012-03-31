@@ -13,6 +13,8 @@ feature {NONE} -- Initialization
 
 	make (v: G)
 			-- Create a stream that provides `v'.
+		note
+			modify: item
 		do
 			item := v
 		ensure

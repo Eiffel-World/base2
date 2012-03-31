@@ -25,6 +25,8 @@ feature {NONE} -- Initialization
 
 	make (o: PREDICATE [ANY, TUPLE [G, G]])
 			-- Create an empty set with elements order `o'.
+		note
+			modify: set, order
 		require
 			o_exists: o /= Void
 			--- o_is_total: o.precondition |=| True
@@ -42,6 +44,8 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Copy order relation and values values from `other'.
+		note
+			modify: set, order
 		do
 			if other /= Current then
 				order := other.order
@@ -56,8 +60,6 @@ feature -- Initialization
 		ensure then
 			set_effect: set |=| other.set
 			--- order_effect: order |=| other.order
-			other_set_effect: other.set |=| old other.set
-			--- other_order_effect: other.order |=| old other.order
 		end
 
 feature -- Measurement

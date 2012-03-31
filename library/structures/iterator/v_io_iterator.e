@@ -11,14 +11,15 @@ inherit
 
 	V_OUTPUT_STREAM [G]
 		undefine
-			is_equal,
-			relevant
+			is_equal
 		end
 
 feature -- Replacement
 
 	put (v: G)
 			-- Replace item at current position with `v'.
+		note
+			modify: sequence
 		require
 			not_off: not off
 		deferred
@@ -28,6 +29,8 @@ feature -- Replacement
 
 	output (v: G)
 			-- Replace item at current position with `v' and go to the next position.
+		note
+			modify: sequence, index
 		do
 			put (v)
 			forth

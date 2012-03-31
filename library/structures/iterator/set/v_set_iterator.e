@@ -22,6 +22,8 @@ feature -- Cursor movement
 			-- Move to an element equivalent to `v'.
 			-- If `v' does not appear, go after.
 			-- (Use `target.equivalence'.)
+		note
+			modify: index
 		deferred
 		ensure
 			index_effect_found: target.has (v) implies target.equivalent (sequence [index], v)
@@ -32,12 +34,12 @@ feature -- Removal
 
 	remove
 			-- Remove element at current position. Move to the next position.
+		note
+			modify: sequence
 		require
 			not_off: not off
 		deferred
 		ensure
-			target_set_effect: target.set |=| old (target.set / sequence [index])
 			sequence_effect: sequence |=| old (sequence.front (index - 1) + sequence.tail (index + 1))
-			index_effect: index = old index
 		end
 end

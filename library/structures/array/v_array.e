@@ -30,6 +30,8 @@ feature {NONE} -- Initialization
 
 	make (l, u: INTEGER)
 			-- Create array with indexes in [`l', `u']; set all values to default.
+		note
+			modify: map
 		require
 			valid_indexes: l <= u + 1
 		do
@@ -48,6 +50,8 @@ feature {NONE} -- Initialization
 
 	make_filled (l, u: INTEGER; v: G)
 			-- Create array with indexes in [`l', `u']; set all values to `v'.
+		note
+			modify: map
 		require
 			valid_indexes: l <= u + 1
 		do
@@ -69,6 +73,8 @@ feature -- Initialization
 	copy (other: like Current)
 			-- Initialize by copying all the items of `other'.
 			-- Reallocate memory unless count stays the same.
+		note
+			modify: map
 		do
 			if other /= Current then
 				if area /= Void and other.count = count then
@@ -81,7 +87,6 @@ feature -- Initialization
 			end
 		ensure then
 			map_effect: map |=| other.map
-			other_map_effect: other.map |=| old other.map
 		end
 
 feature -- Access
@@ -178,6 +183,8 @@ feature -- Resizing
 	resize (l, u: INTEGER)
 			-- Set index interval to [`l', `u']; keep values at old indexes; set to default at new indexes.
 			-- Reallocate memory unless count stays the same.
+		note
+			modify: map
 		require
 			valid_indexes: l <= u + 1
 		local
@@ -218,6 +225,8 @@ feature -- Resizing
 	include (i: INTEGER)
 			-- Resize in a minimal way to include index `i'; keep values at old indexes; set to default at new indexes.
 			-- Reallocate memory unless count stays the same.
+		note
+			modify: map
 		do
 			if is_empty then
 				resize (i, i)
@@ -236,6 +245,8 @@ feature -- Resizing
 	force (v: G; i: INTEGER)
 			-- Put `v' at position `i'; if position is not defined, include it.
 			-- Reallocate memory unless count stays the same.
+		note
+			modify: map
 		do
 			include (i)
 			put (v, i)

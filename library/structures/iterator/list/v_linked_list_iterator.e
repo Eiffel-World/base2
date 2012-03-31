@@ -29,6 +29,8 @@ feature {V_CONTAINER, V_ITERATOR} -- Initialization
 
 	make (list: V_LINKED_LIST [G])
 			-- Create iterator over `list'.
+		note
+			modify: target, index
 		require
 			list_exists: list /= Void
 		do
@@ -44,6 +46,8 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
+		note
+			modify: target, index
 		do
 			target := other.target
 			active := other.active
@@ -51,8 +55,6 @@ feature -- Initialization
 		ensure then
 			target_effect: target = other.target
 			index_effect: index = other.index
-			other_target_effect: other.target = old other.target
-			other_index_effect: other.index = old other.index
 		end
 
 feature -- Access

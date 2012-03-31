@@ -17,6 +17,8 @@ feature {NONE} -- Initialization
 
 	default_create
 			-- Create an empty queue.
+		note
+			modify: sequence
 		do
 			create list
 		ensure then
@@ -27,6 +29,8 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize by copying all the items of `other'.
+		note
+			modify: sequence
 		do
 			if other /= Current then
 				if list = Void then
@@ -38,7 +42,6 @@ feature -- Initialization
 			end
 		ensure then
 			sequence_effect: sequence |=| other.sequence
-			other_sequence_effect: other.sequence |=| old other.sequence
 		end
 
 feature -- Access

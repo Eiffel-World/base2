@@ -23,6 +23,8 @@ feature {NONE} -- Initialization
 
 	make (eq: PREDICATE [ANY, TUPLE [G, G]]; h: FUNCTION [ANY, TUPLE [G], INTEGER])
 			-- Create an empty set with equivalence relation `eq' and hash function `h'.
+		note
+			modify: set, equivalence, hash
 		require
 			eq_exists: eq /= Void
 			h_exists: h /= Void
@@ -46,6 +48,8 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Copy equivalence relation, hash function, capacity, optimal load and values values from `other'.
+		note
+			modify: set, equivalence, hash
 		local
 			i: INTEGER
 		do
@@ -68,9 +72,6 @@ feature -- Initialization
 			set_effect: set |=| other.set
 			--- equivalence_effect: equivalence |=| other.equivalence
 			--- hash_effect: hash |=| other.hash
-			other_set_effect: other.set |=| old other.set
-			--- other_equivalence_effect: other.equivalence |=| old other.equivalence
-			--- other_hash_effect: other.hash |=| old other.hash
 		end
 
 feature -- Measurement

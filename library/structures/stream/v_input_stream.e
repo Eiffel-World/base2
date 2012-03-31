@@ -26,18 +26,19 @@ feature -- Cursor movement
 
 	forth
 			-- Move one position forward.
+		note
+			modify: off, item
 		require
 			not_off: not off
 		deferred
-		ensure
-			item_effect: not off implies relevant (item)
-			off_effect: relevant (off)
 		end
 
 	search (v: G)
 			-- Move to the first occurrence of `v' at or after current position.
 			-- If `v' does not occur, move `after'.
 			-- (Use reference equality.)
+		note
+			modify: off, item
 		do
 			from
 			until
@@ -52,6 +53,8 @@ feature -- Cursor movement
 	satisfy (pred: PREDICATE [ANY, TUPLE [G]])
 			-- Move to the first position at or after current where `pred' holds.
 			-- If `pred' never holds, move `after'.
+		note
+			modify: off, item
 		require
 			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
@@ -67,15 +70,4 @@ feature -- Cursor movement
 			off_item_effect: off or else pred.item ([item])
 		end
 
-feature -- Specification
-
-	relevant (x: ANY): BOOLEAN
-			-- Always true.
-		note
-			status: specification
-		do
-			Result := True
-		ensure
-			definition: Result
-		end
 end

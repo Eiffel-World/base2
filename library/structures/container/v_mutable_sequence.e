@@ -30,6 +30,8 @@ feature -- Replacement
 
 	put (v: G; i: INTEGER)
 			-- Replace value at position `i' with `v'.
+		note
+			modify: map
 		require
 			has_index: has_index (i)
 		do
@@ -40,6 +42,8 @@ feature -- Replacement
 
 	swap (i1, i2: INTEGER)
 			-- Swap values at positions `i1' and `i2'.
+		note
+			modify: map
 		require
 			has_index_one: has_index (i1)
 			has_index_two: has_index (i2)
@@ -55,6 +59,8 @@ feature -- Replacement
 
 	fill (v: G; l, u: INTEGER)
 			-- Put `v' at positions [`l', `u'].
+		note
+			modify: map
 		require
 			l_not_too_small: l >= lower
 			u_not_too_large: u <= upper
@@ -81,6 +87,8 @@ feature -- Replacement
 
 	clear (l, u: INTEGER)
 			-- Put default value at positions [`l', `u'].
+		note
+			modify: map
 		require
 			l_not_too_small: l >= lower
 			u_not_too_large: u <= upper
@@ -95,6 +103,8 @@ feature -- Replacement
 
 	copy_range (other: V_SEQUENCE [G]; other_first, other_last, index: INTEGER)
 			-- Copy items of `other' within bounds [`other_first', `other_last'] to current sequence starting at index `index'.
+		note
+			modify: map
 		require
 			other_exists: other /= Void
 			other_first_not_too_small: other_first >= other.lower
@@ -129,11 +139,12 @@ feature -- Replacement
 					end (?, old other.map, index, other_first))
 			map_unchanged_effect: (map | (map.domain - {MML_INTERVAL} [[index, index + other_last - other_first]])) |=|
 				old (map | (map.domain - {MML_INTERVAL} [[index, index + other_last - other_first]]))
-			other_map_effect: other /= Current implies other.map |=| old other.map
 		end
 
 	sort (order: PREDICATE [ANY, TUPLE [G, G]])
 			-- Sort elements in `order' left to right.
+		note
+			modify: map
 		require
 			order_exists: order /= Void
 			order_has_two_args: order.open_count = 2
@@ -154,6 +165,8 @@ feature -- Replacement
 
 	reverse
 			-- Reverse the order of elements.
+		note
+			modify: map
 		local
 			j, k: INTEGER
 		do

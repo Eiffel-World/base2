@@ -16,6 +16,8 @@ feature -- Cursor movement
 
 	start
 			-- Go to the first position.
+		note
+			modify: path, after
 		do
 			if not target.is_empty then
 				from
@@ -38,6 +40,8 @@ feature -- Cursor movement
 
 	finish
 			-- Go to the last position.
+		note
+			modify: path, after
 		do
 			go_root
 			after := False
@@ -45,6 +49,8 @@ feature -- Cursor movement
 
 	forth
 			-- Go one position forward.
+		note
+			modify: path, after
 		do
 			if active.is_left and then active.parent.right /= Void then
 				up
@@ -69,6 +75,8 @@ feature -- Cursor movement
 
 	back
 			-- Go one position backward.
+		note
+			modify: path, after
 		do
 			if active.is_leaf then
 				from

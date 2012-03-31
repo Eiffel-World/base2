@@ -25,6 +25,8 @@ feature {NONE} -- Initialization
 
 	default_create
 			-- Create an empty list with default `capacity' and `growth_rate'.
+		note
+			modify: sequence
 		do
 			create array.make (0, default_capacity - 1)
 		ensure then
@@ -35,6 +37,8 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize by copying all the items of `other'.
+		note
+			modify: sequence
 		do
 			if other /= Current then
 				array := other.array.twin
@@ -43,7 +47,6 @@ feature -- Initialization
 			end
 		ensure then
 			sequence_effect: sequence |=| other.sequence
-			other_sequence_effect: other.sequence |=| old other.sequence
 		end
 
 feature -- Access
@@ -71,6 +74,8 @@ feature -- Replacement
 
 	put (v: G; i: INTEGER)
 			-- Associate `v' with index `i'.
+		note
+			modify: sequence
 		do
 			array.put (v, array_index (i))
 		end

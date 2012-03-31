@@ -17,15 +17,17 @@ feature -- Replacement
 
 	output (v: G)
 			-- Put `v' into the stream and move to the next position.
+		note
+			modify: off
 		require
 			not_off: not off
 		deferred
-		ensure
-			off_effect: relevant (off)
 		end
 
 	pipe (input: V_INPUT_STREAM [G])
 			-- Copy values from `input' until either `Current' or `input' is `off'.
+		note
+			modify: off, input__off, input__item
 		require
 			input_exists: input /= Void
 			input_not_current: input /= Current
@@ -43,6 +45,8 @@ feature -- Replacement
 
 	pipe_n (input: V_INPUT_STREAM [G]; n: INTEGER)
 			-- Copy `n' elements from `input'; stop if either `Current' or `input' is `off'.
+		note
+			modify: off, input__off, input__item
 		require
 			input_exists: input /= Void
 			input_not_current: input /= Current
@@ -59,20 +63,6 @@ feature -- Replacement
 				input.forth
 				i := i + 1
 			end
-		ensure
-			off_effect: relevant (off)
-			input_off_effect: relevant (input.off)
 		end
 
-feature -- Specification
-
-	relevant (x: ANY): BOOLEAN
-			-- Always true.
-		note
-			status: specification
-		do
-			Result := True
-		ensure
-			definition: Result
-		end
 end

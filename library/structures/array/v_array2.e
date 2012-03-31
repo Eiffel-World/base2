@@ -29,6 +29,8 @@ feature {NONE} -- Initialization
 
 	make (n, m: INTEGER)
 			-- Create array with `n' rows and `m' columns; set all values to default.
+		note
+			modify: matrix
 		require
 			valid_dimentions: (n = 0 and m = 0) or (n > 0 and m > 0)
 		do
@@ -45,6 +47,8 @@ feature {NONE} -- Initialization
 
 	make_filled (n, m: INTEGER; v: G)
 			-- Create array with `n' rows and `m' columns; set all values to `v'.
+		note
+			modify: matrix
 		require
 			valid_dimentions: (n = 0 and m = 0) or (n > 0 and m > 0)
 		do
@@ -63,6 +67,8 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize by copying all the items of `other'.
+		note
+			modify: matrix
 		do
 			if other /= Current then
 				row_count := other.row_count
@@ -185,6 +191,8 @@ feature -- Replacement
 
 	put (v: G; i, j: INTEGER)
 			-- Replace value at row `i' and column `j' with `v'.
+		note
+			modify: matrix
 		require
 			valid_row: has_row (i)
 			valid_column: has_column (j)
@@ -196,6 +204,8 @@ feature -- Replacement
 
 	flat_put (v: G; i: INTEGER)
 			-- Replace value at position `i' with `v'.
+		note
+			modify: matrix
 		do
 			array.put (v, i)
 		end

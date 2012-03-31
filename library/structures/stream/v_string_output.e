@@ -1,7 +1,7 @@
 note
 	description: "Streams that output textual representation of values to a string."
 	author: "Nadia Polikarpova"
-	model: string, separator
+	model: destination, separator
 
 class
 	V_STRING_OUTPUT
@@ -18,6 +18,8 @@ feature {NONE} -- Initialization
 	make (dest: STRING)
 			-- Create a stream that outputs into `dest'.
 			-- (Use `default_separator' as `separator').
+		note
+			modify: destination, separator
 		require
 			dest_exists: dest /= Void
 		do
@@ -30,6 +32,8 @@ feature {NONE} -- Initialization
 	make_with_separator (dest, sep: STRING)
 			-- Create a stream that outputs into `dest'
 			-- and uses `sep' as `separator'.
+		note
+			modify: destination, separator
 		require
 			dest_exists: dest /= Void
 			sep_exists: sep /= Void
@@ -64,6 +68,8 @@ feature -- Replacement
 
 	output (v: ANY)
 			-- Put `v' into the stream and move to the next position.
+		note
+			modify: destination
 		do
 			if v = Void then
 				destination.append (Void_out)

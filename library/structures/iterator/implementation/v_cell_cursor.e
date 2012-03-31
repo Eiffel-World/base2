@@ -28,6 +28,8 @@ feature -- Replacement
 
 	put (v: G)
 			-- Replace item at current position with `v'.
+		note
+			modify: item
 		require
 			not_off: not off
 		do

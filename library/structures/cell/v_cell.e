@@ -18,6 +18,8 @@ feature -- Replacement
 
 	put (v: G)
 			-- Replace `item' with `v'.
+		note
+			modify: item
 		do
 			item := v
 		ensure

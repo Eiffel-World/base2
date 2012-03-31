@@ -67,6 +67,8 @@ feature -- Extension
 
 	extend_front (v: G)
 			-- Insert `v' at the front.
+		note
+			modify: sequence
 		deferred
 		ensure
 			sequence_effect: sequence |=| old sequence.prepended (v)
@@ -74,6 +76,8 @@ feature -- Extension
 
 	extend_back (v: G)
 			-- Insert `v' at the back.
+		note
+			modify: sequence
 		deferred
 		ensure
 			sequence_effect: sequence |=| old (sequence & v)
@@ -81,6 +85,8 @@ feature -- Extension
 
 	extend_at (v: G; i: INTEGER)
 			-- Insert `v' at position `i'.
+		note
+			modify: sequence
 		require
 			valid_index: has_index (i) or i = count + 1
 		deferred
@@ -90,6 +96,8 @@ feature -- Extension
 
 	append (input: V_ITERATOR [G])
 			-- Append sequence of values produced by `input'.
+		note
+			modify: sequence, input__index
 		require
 			input_exists: input /= Void
 			different_target: input.target /= Current
@@ -105,11 +113,12 @@ feature -- Extension
 		ensure
 			sequence_effect: sequence |=| old (sequence + input.sequence.tail (input.index))
 			input_index_effect: input.index = input.sequence.count + 1
-			input_sequence_effect: input.sequence |=| old input.sequence
 		end
 
 	prepend (input: V_ITERATOR [G])
 			-- Prepend sequence of values produced by `input'.
+		note
+			modify: sequence, input__index
 		require
 			input_exists: input /= Void
 			different_target: input.target /= Current
@@ -118,11 +127,12 @@ feature -- Extension
 		ensure
 			sequence_effect: sequence |=| old (input.sequence.tail (input.index) + sequence)
 			input_index_effect: input.index = input.sequence.count + 1
-			input_sequence_effect: input.sequence |=| old input.sequence
 		end
 
 	insert_at (input: V_ITERATOR [G]; i: INTEGER)
 			-- Insert starting at position `i' sequence of values produced by `input'.
+		note
+			modify: sequence, input__index
 		require
 			valid_index: has_index (i) or i = count + 1
 			input_exists: input /= Void
@@ -132,13 +142,14 @@ feature -- Extension
 		ensure
 			sequence_effect: sequence |=| old (sequence.front (i - 1) + input.sequence.tail (input.index) + sequence.tail (i))
 			input_index_effect: input.index = input.sequence.count + 1
-			input_sequence_effect: input.sequence |=| old input.sequence
 		end
 
 feature -- Removal
 
 	remove_front
 			-- Remove first element.
+		note
+			modify: sequence
 		require
 			not_empty: not is_empty
 		deferred
@@ -148,6 +159,8 @@ feature -- Removal
 
 	remove_back
 			-- Remove last element.
+		note
+			modify: sequence
 		require
 			not_empty: not is_empty
 		deferred
@@ -157,6 +170,8 @@ feature -- Removal
 
 	remove_at (i: INTEGER)
 			-- Remove element at position `i'.
+		note
+			modify: sequence
 		require
 			has_index: has_index (i)
 		deferred
@@ -166,6 +181,8 @@ feature -- Removal
 
 	remove (v: G)
 			-- Remove the first occurrence of `v'.
+		note
+			modify: sequence
 		require
 			has: has (v)
 		local
@@ -180,6 +197,8 @@ feature -- Removal
 
 	remove_all (v: G)
 			-- Remove all occurrences of `v'.
+		note
+			modify: sequence
 		local
 			i: V_LIST_ITERATOR [G]
 		do
@@ -198,6 +217,8 @@ feature -- Removal
 
 	remove_satisfying (pred: PREDICATE [ANY, TUPLE [G]])
 			-- Remove the first element satisfying `pred'.
+		note
+			modify: sequence
 		require
 			exists: exists (pred)
 		local
@@ -212,6 +233,8 @@ feature -- Removal
 
 	remove_all_satisfying (pred: PREDICATE [ANY, TUPLE [G]])
 			-- Remove all elements satisfying `pred'.
+		note
+			modify: sequence
 		local
 			i: V_LIST_ITERATOR [G]
 		do
@@ -230,6 +253,8 @@ feature -- Removal
 
 	wipe_out
 			-- Remove all elements.
+		note
+			modify: sequence
 		deferred
 		ensure then
 			sequence_effect: sequence.is_empty

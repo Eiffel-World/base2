@@ -23,6 +23,8 @@ feature {NONE} -- Initialization
 
 	make (o: PREDICATE [ANY, TUPLE [K, K]])
 			-- Create an empty table with key order `o'.
+		note
+			modify: map, key_order
 		require
 			o_exists: o /= Void
 			--- o_is_total: o.precondition |=| True
@@ -42,6 +44,8 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize table by copying `key_order', and key-value pair from `other'.
+		note
+			modify: map, key_order
 		do
 			if other /= Current then
 				key_order := other.key_order
@@ -55,8 +59,6 @@ feature -- Initialization
 		ensure then
 			map_effect: map |=| other.map
 			--- key_order_effect: key_order |=| other.key_order
-			other_map_effect: other.map |=| old other.map
-			--- other_key_order_effect: other.key_order |=| old other.key_order
 		end
 
 feature -- Search

@@ -32,6 +32,8 @@ feature -- Cursor movement
 			-- Move to a position where key is equivalent to `k'.
 			-- If `k' does not appear, go after.
 			-- (Use `target.key_equivalence'.)
+		note
+			modify: index
 		deferred
 		ensure
 			index_effect_found: target.has_key (k) implies target.equivalent (key_sequence [index], k)

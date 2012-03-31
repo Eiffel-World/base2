@@ -16,6 +16,8 @@ feature -- Cursor movement
 
 	start
 			-- Go to the first position.
+		note
+			modify: path, after
 		do
 			if not target.is_empty then
 				from
@@ -34,6 +36,8 @@ feature -- Cursor movement
 
 	finish
 			-- Go to the last position.
+		note
+			modify: path, after
 		do
 			if not target.is_empty then
 				from
@@ -51,6 +55,8 @@ feature -- Cursor movement
 
 	forth
 			-- Go one position forward.
+		note
+			modify: path, after
 		do
 			if active.right /= Void then
 				right
@@ -76,6 +82,8 @@ feature -- Cursor movement
 
 	back
 			-- Go one position backward.
+		note
+			modify: path, after
 		do
 			if active.left /= Void then
 				left

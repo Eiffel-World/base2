@@ -160,6 +160,8 @@ feature -- Extension
 
 	extend (v: G)
 			-- Add `v' to the set.
+		note
+			modify: set
 		deferred
 		ensure
 			set_effect_not_has: not old has (v) implies set |=| (old set & v)
@@ -168,6 +170,8 @@ feature -- Extension
 
 	join (other: V_SET [G])
 			-- Add all elements from `other'.
+		note
+			modify: set
 		require
 			other_exists: other /= Void
 		do
@@ -195,6 +199,8 @@ feature -- Removal
 	remove (v: G)
 			-- Remove `v' from the set, if contained.
 			-- Otherwise do nothing.		
+		note
+			modify: set
 		do
 			iterator.search (v)
 			if not iterator.after then
@@ -207,6 +213,8 @@ feature -- Removal
 
 	meet (other: V_SET [G])
 			-- Keep only elements that are also in `other'.
+		note
+			modify: set
 		require
 			other_exists: other /= Void
 		do
@@ -233,6 +241,8 @@ feature -- Removal
 
 	subtract (other: V_SET [G])
 			-- Remove elements that are in `other'.
+		note
+			modify: set
 		require
 			other_exists: other /= Void
 		do
@@ -258,6 +268,8 @@ feature -- Removal
 
 	symmetric_subtract (other: V_SET [G])
 			-- Keep elements that are only in `Current' or only in `other'.
+		note
+			modify: set
 		require
 			other_exists: other /= Void
 		do
@@ -294,6 +306,8 @@ feature -- Removal
 
 	wipe_out
 			-- Remove all elements.
+		note
+			modify: set
 		deferred
 		ensure
 			set_effect: set.is_empty

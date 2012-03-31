@@ -26,6 +26,8 @@ feature {NONE} -- Initialization
 
 	make (list: V_ARRAYED_LIST [G]; i: INTEGER)
 			-- Create an iterator at position `i' in `list'.
+		note
+			modify: target, index
 		require
 			list_exists: list /= Void
 		do
@@ -48,14 +50,14 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
+		note
+			modify: target, index
 		do
 			target := other.target
 			index := other.index
 		ensure then
 			target_effect: target = other.target
 			index_effect: index = other.index
-			other_target_effect: other.target = old other.target
-			other_index_effect: other.index = old other.index
 		end
 
 feature -- Access

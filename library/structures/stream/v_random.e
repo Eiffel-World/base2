@@ -23,19 +23,19 @@ feature -- Initialization
 
 	default_create
 			-- Create a random stream using milliseconds of current time as seed.
+		note
+			modify: bit_sequence
 		do
 			set_seed (current_time_millis)
-		ensure then
-			bit_sequence_effect: relevant (bit_sequence)
 		end
 
 	set_seed (seed: NATURAL_64)
 			-- Create a random stream with a specified `seed'.
+		note
+			modify: bit_sequence
 		do
 			value := (seed.bit_xor (Multiplier) & (({NATURAL_64} 1 |<< Random_bit_count) - 1))
 			next_value := next (value)
-		ensure
-			bit_sequence_effect: relevant (bit_sequence)
 		end
 
 feature -- Access
@@ -107,11 +107,11 @@ feature -- Cursor movement
 
 	forth
 			-- Move one position forward.
+		note
+			modify: bit_sequence
 		do
 			value := next (next_value)
 			next_value := next (value)
-		ensure then
-			bit_sequence_effect: relevant (bit_sequence)
 		end
 
 feature {NONE} -- Implementation

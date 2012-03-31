@@ -20,6 +20,8 @@ feature {NONE} -- Initialization
 
 	default_create
 			-- Create a stream with `default_separator'.
+		note
+			modify: separator
 		do
 			make_with_separator (default_separator)
 		ensure then
@@ -28,6 +30,8 @@ feature {NONE} -- Initialization
 
 	make_with_separator (sep: STRING)
 			-- Create a stream and set `separator' to `s'.
+		note
+			modify: separator
 		require
 			sep_exists: sep /= Void
 		do

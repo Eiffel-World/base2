@@ -23,6 +23,8 @@ feature {NONE} -- Initialization
 
 	make (eq: PREDICATE [ANY, TUPLE [K, K]]; h: FUNCTION [ANY, TUPLE [K], INTEGER])
 			-- Create an empty table with key equivalence `eq' and hash function `h'.
+		note
+			modify: map, key_equivalence, key_hash
 		require
 			eq_exists: eq /= Void
 			h_exists: h /= Void
@@ -53,6 +55,8 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize table by copying `key_order', and key-value pair from `other'.
+		note
+			modify: map, key_equivalence, key_hash
 		do
 			if other /= Current then
 				key_equivalence := other.key_equivalence
@@ -68,9 +72,6 @@ feature -- Initialization
 			map_effect: map |=| other.map
 			--- key_equivalence_effect: key_equivalence |=| other.key_equivalence
 			--- key_hash_effect: key_hash |=| other.key_hash
-			other_map_effect: other.map |=| old other.map
-			--- other_key_equivalence_effect: other.key_equivalence |=| old other.key_equivalence
-			--- other_key_hash_effect: other.key_hash |=| old other.key_hash
 		end
 
 feature -- Search

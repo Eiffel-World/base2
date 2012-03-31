@@ -62,6 +62,8 @@ feature -- Replacement
 
 	put (v: V; k: K)
 			-- Associate `v' with key `k'.
+		note
+			modify: map
 		require
 			has_key: has_key (k)
 		local
@@ -77,6 +79,8 @@ feature -- Extension
 
 	extend (v: V; k: K)
 			-- Extend table with key-value pair <`k', `v'>.
+		note
+			modify: map
 		require
 			fresh_key: not has_key (k)
 		deferred
@@ -87,6 +91,8 @@ feature -- Extension
 	force (v: V; k: K)
 			-- Make sure that `k' is associated with `v'.
 			-- Add `k' if not already present.
+		note
+			modify: map
 		local
 			i: V_TABLE_ITERATOR [K, V]
 		do
@@ -105,6 +111,8 @@ feature -- Removal
 
 	remove (k: K)
 			-- Remove key `k' and its associated value.
+		note
+			modify: map
 		require
 			has_key: has_key (k)
 		deferred
@@ -114,6 +122,8 @@ feature -- Removal
 
 	wipe_out
 			-- Remove all elements.
+		note
+			modify: map
 		deferred
 		ensure
 			map_effect: map.is_empty

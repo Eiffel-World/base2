@@ -1,8 +1,6 @@
 note
 	description: "Iterators over mutable sequences that allow only traversal, search and replacement."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, index
 
 class
@@ -28,6 +26,8 @@ feature {NONE} -- Initialization
 
 	make (t: V_MUTABLE_SEQUENCE [G]; i: INTEGER)
 			-- Create an iterator at position `i' in `t'.
+		note
+			modify: target, index
 		require
 			t_exists: t /= Void
 		do
@@ -50,14 +50,14 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize with the same `target' and `index' as in `other'.
+		note
+			modify: target, index
 		do
 			target := other.target
 			index := other.index
 		ensure then
 			target_effect: target = other.target
 			index_effect: index = other.index
-			other_target_effect: other.target = old other.target
-			other_index_effect: other.index = old other.index
 		end
 
 feature -- Access

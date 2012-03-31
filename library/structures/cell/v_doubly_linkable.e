@@ -24,6 +24,8 @@ feature -- Replacement
 
 	put_right (cell: V_DOUBLY_LINKABLE [G])
 			-- Replace `right' with `cell'.
+		note
+			modify: right
 		do
 			right := cell
 		ensure
@@ -32,6 +34,8 @@ feature -- Replacement
 
 	put_left (cell: V_DOUBLY_LINKABLE [G])
 			-- Replace `left' with `cell'.
+		note
+			modify: left
 		do
 			left := cell
 		ensure
@@ -41,6 +45,8 @@ feature -- Replacement
 	connect (cell: V_DOUBLY_LINKABLE [G])
 			-- Establish two-way connection with `cell' on the right.
 			-- Do not modify `right' and `cell.left'.
+		note
+			modify: right, cell__left
 		require
 			cell_exists: cell /= Void
 		do

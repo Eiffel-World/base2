@@ -32,15 +32,19 @@ feature -- Extension
 
 	extend (v: G)
 			-- Add `v' to the dispenser.
+		note
+			modify: sequence
 		deferred
 		ensure
-			sequence_effect: bag |=| old (bag & v)
+			bag_effect: bag |=| old (bag & v)
 		end
 
 feature -- Removal
 
 	remove
 			-- Remove the accessible element.
+		note
+			modify: sequence
 		require
 			not_empty: not is_empty
 		deferred
@@ -50,6 +54,8 @@ feature -- Removal
 
 	wipe_out
 			-- Remove all elements.
+		note
+			modify: sequence
 		deferred
 		ensure
 			sequence_effect: sequence.is_empty

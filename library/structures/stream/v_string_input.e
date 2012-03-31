@@ -22,6 +22,8 @@ feature {NONE} -- Initialization
 	make (src: STRING; fs: FUNCTION [ANY, TUPLE [STRING], G])
 			-- Create a stream that reads from `src' and uses function `fs' to convert from string to `G'.
 			-- (Use function `default_is_separator' to recognize separator characters).
+		note
+			modify: source, index, from_string, is_separator
 		require
 			src_exists: src /= Void
 			fs_exists: fs /= Void
@@ -38,6 +40,8 @@ feature {NONE} -- Initialization
 	make_with_separators (src: STRING; fs: FUNCTION [ANY, TUPLE [STRING], G]; is_sep: PREDICATE [ANY, TUPLE [CHARACTER]])
 			-- Create a stream that reads from `src', uses function `fs' to convert from string to `G'
 			-- and function `is_sep' to recognize separator characters.
+		note
+			modify: source, index, from_string, is_separator
 		require
 			src_exists: src /= Void
 			fs_exists: fs /= Void
@@ -61,6 +65,8 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize with the same `source' and position as in `other'.
+		note
+			modify: source, index, from_string, is_separator
 		do
 			source := other.source.twin
 			from_string := other.from_string
@@ -126,6 +132,8 @@ feature -- Cursor movement
 
 	start
 			-- Read the first token.
+		note
+			modify: index
 		do
 			next := 1
 			skip_separators
@@ -137,11 +145,12 @@ feature -- Cursor movement
 			end
 		ensure then
 			index_effect: index = index_satisfying_from (source, agent non_separator, 1)
-			source_effect: source ~ old source.twin
 		end
 
 	forth
 			-- Read the next token.
+		note
+			modify: index
 		do
 			if source.valid_index (next) then
 				parse_value
@@ -151,7 +160,6 @@ feature -- Cursor movement
 			end
 		ensure then
 			index_effect: index = index_satisfying_from (source, agent non_separator, index_satisfying_from (source, is_separator, old index))
-			source_effect: source ~ old source.twin
 		end
 
 feature {V_STRING_INPUT} -- Implementation

@@ -26,6 +26,8 @@ feature -- Initialization
 
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
+		note
+			modify: target, path, after
 		do
 			after := other.after
 			Precursor {V_BINARY_TREE_CURSOR} (other)
@@ -33,9 +35,6 @@ feature -- Initialization
 			sequence_effect: sequence |=| other.sequence
 			path_effect: path |=| other.path
 			after_effect: after = other.after
-			other_sequence_effect: other.sequence |=| old other.sequence
-			other_path_effect: other.path |=| old other.path
-			other_after_effect: other.after = old other.after
 		end
 
 feature -- Measurement
@@ -97,6 +96,8 @@ feature -- Cursor movement
 
 	go_root
 			-- Move cursor to the root.
+		note
+			modify: path, after
 		do
 			Precursor
 			if not target.is_empty then
@@ -111,6 +112,8 @@ feature -- Cursor movement
 
 	go_before
 			-- Move cursor before any position of `target'.
+		note
+			modify: path, after
 		do
 			active := Void
 			after := False
@@ -118,6 +121,8 @@ feature -- Cursor movement
 
 	go_after
 			-- Move cursor after any position of `target'.
+		note
+			modify: path, after
 		do
 			active := Void
 			after := True

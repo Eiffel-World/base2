@@ -17,6 +17,9 @@ create
 feature {NONE} -- Initialization
 	execute
 			-- Run application.
+		local
+			constant_input: V_CONSTANT_INPUT [INTEGER]
+			string_input: V_STRING_INPUT [INTEGER]
 		do
 			print ("%NTest MML_SET%N")
 			test_mml_set
@@ -182,6 +185,9 @@ feature -- Tests
 			n := a2.column_index (7)
 			n := a2.flat_index (2, 1)
 			it := a1.flat_at (1000)
+
+			create a1.make (0, 0)
+			b := a1.has (0)
 		end
 
 	test_linked_list
