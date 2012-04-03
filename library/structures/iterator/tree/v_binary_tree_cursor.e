@@ -57,6 +57,8 @@ feature -- Status report
 			-- Is cursor at root?
 		do
 			Result := active /= Void and active = target.root
+		ensure
+			definition: Result = (path |=| {MML_SEQUENCE [BOOLEAN]} [True])
 		end
 
 	is_leaf: BOOLEAN
@@ -65,6 +67,8 @@ feature -- Status report
 			not_off: not off
 		do
 			Result := active.is_leaf
+		ensure
+			definition: Result = (not target.map.domain [path & True] and not target.map.domain [path & False])
 		end
 
 	has_left: BOOLEAN
@@ -73,6 +77,8 @@ feature -- Status report
 			not_off: not off
 		do
 			Result := active.left /= Void
+		ensure
+			definition: Result = target.map.domain [path & False]
 		end
 
 	has_right: BOOLEAN
@@ -81,6 +87,8 @@ feature -- Status report
 			no_off: not off
 		do
 			Result := active.right /= Void
+		ensure
+			definition: Result = target.map.domain [path & True]
 		end
 
 feature -- Comparison
@@ -276,11 +284,7 @@ feature -- Specification
 
 invariant
 	target_exists: target /= Void
-	item_definition: target.map.domain [path] implies item = target.map [path]
-	off_definition: off = not target.map.domain [path]
-	is_root_definition: is_root = (path |=| {MML_SEQUENCE [BOOLEAN]} [True])
-	is_leaf_definition: target.map.domain [path] implies
-		is_leaf = (not target.map.domain [path & True] and not target.map.domain [path & False])
-	has_left_definition: target.map.domain [path] implies has_left = target.map.domain [path & False]
-	has_right_definition: target.map.domain [path] implies has_right = target.map.domain [path & True]
+	box_definition_empty: not target.map.domain [path] implies box.is_empty
+	box_definition_non_empty: target.map.domain [path] implies box |=| create {MML_SET [G]}.singleton (target.map [path])
+
 end

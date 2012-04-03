@@ -20,6 +20,8 @@ feature -- Measurement
 	count: INTEGER
 			-- Number of elements.
 		deferred
+		ensure
+			definition: Result = bag.count
 		end
 
 feature -- Status report
@@ -28,6 +30,8 @@ feature -- Status report
 			-- Is container empty?
 		do
 			Result := count = 0
+		ensure
+			definition: Result = bag.is_empty
 		end
 
 feature -- Search
@@ -153,7 +157,4 @@ feature -- Specification
 			exists: Result /= Void
 		end
 
-invariant
-	count_definition: count = bag.count
-	is_empty_definition: is_empty = bag.is_empty
 end

@@ -19,6 +19,8 @@ feature -- Access
 		require
 			not_off: not off
 		deferred
+		ensure
+			definition: Result = key_sequence [index]
 		end
 
 	target: V_MAP [K, V]
@@ -54,7 +56,6 @@ feature -- Specification
 invariant
 	keys_in_target: key_sequence.range |=| target.map.domain
 	unique_keys: key_sequence.count = target.map.count
-	key_definition: key_sequence.domain [index] implies key = key_sequence [index]
 	value_sequence_domain_definition: value_sequence.count = key_sequence.count
 	value_sequence_definition: value_sequence.domain.for_all (agent (i: INTEGER): BOOLEAN
 		do

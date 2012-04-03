@@ -16,7 +16,8 @@ inherit
 
 	V_BINARY_TREE_CURSOR [G]
 		undefine
-			is_equal
+			is_equal,
+			box
 		redefine
 			copy,
 			go_root
@@ -206,4 +207,5 @@ invariant
 	sequence_definition: sequence |=| target.map.sequence_image (path_sequence)
 	index_definition_not_after: not after implies index = path_sequence.inverse.image_of (path).any_item
 	index_definition_after: after implies index = target.map.count + 1
+
 end

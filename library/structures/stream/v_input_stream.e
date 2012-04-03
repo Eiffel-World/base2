@@ -1,7 +1,7 @@
 note
 	description: "Streams that provide values one by one."
 	author: "Nadia Polikarpova"
-	model: off, item
+	model: box
 
 deferred class
 	V_INPUT_STREAM [G]
@@ -13,6 +13,8 @@ feature -- Access
 		require
 			not_off: not off
 		deferred
+		ensure
+			definition: Result = box.any_item
 		end
 
 feature -- Status report
@@ -20,6 +22,8 @@ feature -- Status report
 	off: BOOLEAN
 			-- Is current position off scope?
 		deferred
+		ensure
+			definition: Result = box.is_empty
 		end
 
 feature -- Cursor movement
@@ -27,7 +31,7 @@ feature -- Cursor movement
 	forth
 			-- Move one position forward.
 		note
-			modify: off, item
+			modify: box
 		require
 			not_off: not off
 		deferred
@@ -38,7 +42,7 @@ feature -- Cursor movement
 			-- If `v' does not occur, move `after'.
 			-- (Use reference equality.)
 		note
-			modify: off, item
+			modify: box
 		do
 			from
 			until
@@ -47,14 +51,14 @@ feature -- Cursor movement
 				forth
 			end
 		ensure
-			off_item_effect: off or else item = v
+			box_effect: box.is_empty or else box.any_item = v
 		end
 
 	satisfy (pred: PREDICATE [ANY, TUPLE [G]])
 			-- Move to the first position at or after current where `pred' holds.
 			-- If `pred' never holds, move `after'.
 		note
-			modify: off, item
+			modify: box
 		require
 			pred_exists: pred /= Void
 			pred_has_one_arg: pred.open_count = 1
@@ -67,7 +71,24 @@ feature -- Cursor movement
 				forth
 			end
 		ensure
-			off_item_effect: off or else pred.item ([item])
+			box_effect: box.is_empty or else pred.item ([box.any_item])
 		end
+
+feature -- Specification
+
+	box: MML_SET [G]
+			-- Current element in the stream.
+		note
+			status: specification
+		do
+			if off then
+				create Result
+			else
+				create Result.singleton (item)
+			end
+		end
+
+invariant
+	box_count_constraint: box.count <= 1
 
 end

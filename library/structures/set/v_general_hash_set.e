@@ -262,4 +262,5 @@ invariant
 	iterator_exists: iterator /= Void
 	all_buckets_exist: buckets.for_all (agent (x: V_LINKED_LIST [G]): BOOLEAN do Result := x /= Void end)
 	--- hash_non_negative: forall x: G :: hash (x) >= 0
+	count_definition: count = set.count
 end

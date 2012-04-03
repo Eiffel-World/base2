@@ -361,4 +361,5 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 invariant
 	first_cell_exists_in_nonempty: is_empty = (first_cell = Void)
 	last_cell_exists_in_nonempty: is_empty = (last_cell = Void)
+	count_definition: count = sequence.count
 end

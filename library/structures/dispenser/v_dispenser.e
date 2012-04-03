@@ -16,6 +16,8 @@ feature -- Access
 		require
 			not_empty: not is_empty
 		deferred
+		ensure
+			definition: Result = sequence.first
 		end
 
 feature -- Iteration
@@ -74,7 +76,6 @@ feature -- Specification
 		end
 
 invariant
-	item_definition: not sequence.is_empty implies item = sequence.first
 	bag_domain_definition: bag.domain |=| sequence.range
 	bag_definition: bag.domain.for_all (agent (x: G): BOOLEAN
 		do

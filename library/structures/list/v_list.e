@@ -278,4 +278,5 @@ invariant
 		do
 			Result := map [i] = sequence [i]
 		end)
+
 end

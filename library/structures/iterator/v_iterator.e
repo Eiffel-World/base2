@@ -45,6 +45,8 @@ feature -- Measurement
 			-- Number of elements left to iterate.
 		do
 			Result := target.count - index + 1
+		ensure
+			definition: Result = target.count - index + 1
 		end
 
 	valid_index (i: INTEGER): BOOLEAN
@@ -60,11 +62,15 @@ feature -- Status report
 	before: BOOLEAN
 			-- Is current position before any position in `target'?
 		deferred
+		ensure
+			definition: Result = (index = 0)
 		end
 
 	after: BOOLEAN
 			-- Is current position after any position in `target'?
 		deferred
+		ensure
+			definition: Result = (index = sequence.count + 1)
 		end
 
 	off: BOOLEAN
@@ -76,11 +82,15 @@ feature -- Status report
 	is_first: BOOLEAN
 			-- Is cursor at the first position?
 		deferred
+		ensure
+			definition: Result = (not sequence.is_empty and index = 1)
 		end
 
 	is_last: BOOLEAN
 			-- Is cursor at the last position?
 		deferred
+		ensure
+			definition: Result = (not sequence.is_empty and index = sequence.count)
 		end
 
 feature -- Comparison
@@ -299,12 +309,8 @@ feature -- Specification
 
 invariant
 	target_exists: target /= Void
-	item_definition: sequence.domain [index] implies item = sequence [index]
-	off_definition: off = not sequence.domain [index]
 	target_bag_constraint: target.bag |=| sequence.to_bag
-	before_definition: before = (index = 0)
-	after_definition: after = (index = sequence.count + 1)
-	is_first_definition: is_first = (not sequence.is_empty and index = 1)
-	is_last_definition: is_last = (not sequence.is_empty and index = sequence.count)
 	index_constraint: 0 <= index and index <= sequence.count + 1
+	box_definition_empty: not sequence.domain [index] implies box.is_empty
+	box_definition_non_empty: sequence.domain [index] implies box |=| create {MML_SET [G]}.singleton (sequence [index])
 end

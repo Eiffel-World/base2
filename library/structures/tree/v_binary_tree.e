@@ -64,6 +64,9 @@ feature -- Iteration
 		do
 			create Result.make (Current)
 			Result.start
+		ensure
+			target_definition: Result.target = Current
+			index_definition: Result.index = 1
 		end
 
 	postorder: V_POSTORDER_ITERATOR [G]
@@ -71,6 +74,9 @@ feature -- Iteration
 		do
 			create Result.make (Current)
 			Result.start
+		ensure
+			target_definition: Result.target = Current
+			index_definition: Result.index = 1
 		end
 
 feature -- Comparison
@@ -238,4 +244,5 @@ invariant
 		do
 			Result := bag [x] = map.inverse.image_of (x).count
 		end)
+	count_definition: count = map.count
 end

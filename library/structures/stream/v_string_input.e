@@ -228,8 +228,9 @@ feature -- Specification
 		end
 
 invariant
-	item_definition: not off implies
-		(item ~ from_string.item ([source.substring (index, index_satisfying_from (source, is_separator, index) - 1)]))
-	off_definition: off = not source.valid_index (index)
+	box_definition_empty: not source.valid_index (index) implies box.is_empty
+	box_constraint_non_empty: source.valid_index (index) implies box.count = 1 and
+		box.any_item ~ from_string.item ([source.substring (index, index_satisfying_from (source, is_separator, index) - 1)])
 	--- is_separator_is_total: is_separator.precondition |=| True
+	item_definition: not box.is_empty implies item = box.any_item
 end

@@ -17,7 +17,8 @@ inherit
 
 	V_CELL_CURSOR [G]
 		undefine
-			is_equal
+			is_equal,
+			box
 		redefine
 			active,
 			copy
@@ -227,6 +228,8 @@ feature -- Extension
 
 	merge (other: V_DOUBLY_LINKED_LIST [G])
 			-- Merge `other' into `target' after current position. Do not copy elements. Empty `other'.
+		note
+			modify: other__sequence --, target.sequence
 		require
 			other_exists: other /= Void
 			other_not_target: other /= target
@@ -239,7 +242,6 @@ feature -- Extension
 			end
 		ensure
 			sequence_effect: sequence |=| old (sequence.front (index) + other.sequence + sequence.tail (index + 1))
-			index_effect: index = old index
 			other_sequence_effect: other.sequence.is_empty
 		end
 
@@ -333,4 +335,8 @@ feature -- Specification
 				c := c.right
 			end
 		end
+
+invariant
+	after_definition: after = (index = sequence.count + 1)
+
 end

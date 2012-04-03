@@ -27,7 +27,7 @@ feature -- Replacement
 	pipe (input: V_INPUT_STREAM [G])
 			-- Copy values from `input' until either `Current' or `input' is `off'.
 		note
-			modify: off, input__off, input__item
+			modify: off, input__box
 		require
 			input_exists: input /= Void
 			input_not_current: input /= Current
@@ -40,13 +40,13 @@ feature -- Replacement
 				input.forth
 			end
 		ensure
-			off_effect: off or input.off
+			off_effect: off or input.box.is_empty
 		end
 
 	pipe_n (input: V_INPUT_STREAM [G]; n: INTEGER)
 			-- Copy `n' elements from `input'; stop if either `Current' or `input' is `off'.
 		note
-			modify: off, input__off, input__item
+			modify: off, input__box
 		require
 			input_exists: input /= Void
 			input_not_current: input /= Current

@@ -160,6 +160,7 @@ feature {NONE} -- Implementation
 feature -- Specification
 
 	bit_sequence: MML_SEQUENCE [BOOLEAN]
+			-- Bit sequence from which current random values are derived.
 		local
 			i: INTEGER
 		do
@@ -183,7 +184,8 @@ feature -- Specification
 		end
 
 invariant
-	--- item_definition: item = function (bit_sequence)
+	box_constraint: box.count = 1
+	--- box_item_definition: box.any_item = function (bit_sequence)
 	--- long_item_definition: long_item = function (bit_sequence)
 	--- real_item_definition: real_item = function (bit_sequence)
 	--- double_item_definition: double_item = function (bit_sequence)

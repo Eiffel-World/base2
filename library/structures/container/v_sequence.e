@@ -44,6 +44,8 @@ feature -- Access
 			not_empty: not is_empty
 		do
 			Result := item (lower)
+		ensure
+			definition: Result = map [lower]
 		end
 
 	last: G
@@ -52,6 +54,8 @@ feature -- Access
 			not_empty: not is_empty
 		do
 			Result := item (upper)
+		ensure
+			definition: Result = map [upper]
 		end
 
 feature -- Measurement
@@ -61,6 +65,9 @@ feature -- Measurement
 		note
 			status: specification
 		deferred
+		ensure
+			definition_nonempty: not map.is_empty implies Result = map.domain.extremum (agent less_equal)
+			definition_empty: map.is_empty implies Result = 1
 		end
 
 	upper: INTEGER
@@ -68,6 +75,9 @@ feature -- Measurement
 		note
 			status: specification
 		deferred
+		ensure
+			definition_nonempty: not map.is_empty implies Result = map.domain.extremum (agent greater_equal)
+			definition_empty: map.is_empty implies Result = 0
 		end
 
 	count: INTEGER
@@ -247,12 +257,6 @@ feature -- Specification
 ---		end		
 
 invariant
-	lower_definition_nonempty: not map.is_empty implies lower = map.domain.extremum (agent less_equal)
-	lower_definition_empty: map.is_empty implies lower = 1
-	upper_definition_nonempty: not map.is_empty implies upper = map.domain.extremum (agent greater_equal)
-	upper_definition_empty: map.is_empty implies upper = 0
-	first_definition: not map.is_empty implies first = map [lower]
-	last_definition: not map.is_empty implies last = map [upper]
 	indexes_in_interval: map.domain |=| {MML_INTERVAL} [[lower, upper]]
 	--- key_equivalence_definition: key_equivalence |=| agent reference_equal
 end

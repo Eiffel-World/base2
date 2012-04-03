@@ -275,4 +275,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Implementation
 
 invariant
 	area_exists: area /= Void
+	lower_definition_empty: map.is_empty implies lower = 1
+	upper_definition_empty: map.is_empty implies upper = 0
+
 end

@@ -273,4 +273,5 @@ invariant
 	array_non_empty: capacity > 0
 	array_starts_from_zero: array.lower = 0
 	first_index_in_bounds: 0 <= first_index and first_index < capacity
+	count_definition: count = sequence.count
 end

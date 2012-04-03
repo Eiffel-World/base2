@@ -21,9 +21,9 @@ feature {NONE} -- Initialization
 			constant_input: V_CONSTANT_INPUT [INTEGER]
 			string_input: V_STRING_INPUT [INTEGER]
 		do
-			print ("%NTest MML_SET%N")
-			test_mml_set
-			io.new_line
+--			print ("%NTest MML_SET%N")
+--			test_mml_set
+--			io.new_line
 			print ("%NTest ARRAY%N")
 			test_array
 			io.new_line
@@ -194,7 +194,7 @@ feature -- Tests
 			-- Test V_LINKED_LIST
 		local
 			l1, l2: V_LINKED_LIST [INTEGER]
-			it: V_LIST_ITERATOR [INTEGER]
+			it: V_LINKED_LIST_ITERATOR [INTEGER]
 			i: INTEGER
 			b: BOOLEAN
 		do
@@ -272,7 +272,8 @@ feature -- Tests
 			l2.reverse
 			l2.sort (agent less_equal)
 
-			l1.new_cursor.merge (l2)
+			it := l1.at (3)
+			it.merge (l2)
 
 			l1.remove_front
 			l1.remove_back
@@ -284,7 +285,7 @@ feature -- Tests
 			-- Test V_DOUBLY_LINKED_LIST
 		local
 			l1, l2: V_DOUBLY_LINKED_LIST [INTEGER]
-			it: V_LIST_ITERATOR [INTEGER]
+			it: V_DOUBLY_LINKED_LIST_ITERATOR [INTEGER]
 			i: INTEGER
 			b: BOOLEAN
 		do
@@ -361,7 +362,8 @@ feature -- Tests
 			l2.reverse
 			l2.sort (agent less_equal)
 
-			l1.new_cursor.merge (l2)
+			it := l1.at (3)
+			it.merge (l2)
 
 			l1.remove_front
 			l1.remove_back

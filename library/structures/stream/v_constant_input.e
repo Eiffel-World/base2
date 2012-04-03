@@ -39,4 +39,8 @@ feature -- Cursor movement
 			modify: nothing__
 		do
 		end
+
+invariant
+	box_definition: box |=| create {MML_SET [G]}.singleton (item)
+
 end

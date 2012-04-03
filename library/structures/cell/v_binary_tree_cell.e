@@ -32,24 +32,32 @@ feature -- Status report
 			-- Does not have parent?
 		do
 			Result := (parent = Void)
+		ensure
+			definition: Result = (parent = Void)
 		end
 
 	is_leaf: BOOLEAN
 			-- Does not have children?
 		do
 			Result := (left = Void and right = Void)
+		ensure
+			definition: Result = (left = Void and right = Void)
 		end
 
 	is_left: BOOLEAN
 			-- Is the left child of its parent?
 		do
 			Result := (not is_root and then parent.left = Current)
+		ensure
+			definition: Result = (parent /= Void and then parent.left = Current)
 		end
 
 	is_right: BOOLEAN
 			-- Is the right child of its parent?
 		do
 			Result := (not is_root and then parent.right = Current)
+		ensure
+			definition: Result = (parent /= Void and then parent.right = Current)
 		end
 
 feature -- Replacement
@@ -112,9 +120,4 @@ feature -- Replacement
 			parent_effect: parent = p
 		end
 
-invariant
-	is_root_definition: is_root = (parent = Void)
-	is_leaf_definition: is_leaf = (left = Void and right = Void)
-	is_left_definition: is_left = (parent /= Void and then parent.left = Current)
-	is_right_definition: is_right = (parent /= Void and then parent.right = Current)
 end
