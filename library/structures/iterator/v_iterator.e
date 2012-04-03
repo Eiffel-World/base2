@@ -41,8 +41,8 @@ feature -- Measurement
 		deferred
 		end
 
-	count: INTEGER
-			-- Number of elements left to iterate.
+	count_left: INTEGER
+			-- Number of elements left to iterate over.
 		do
 			Result := target.count - index + 1
 		ensure

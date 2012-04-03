@@ -95,7 +95,7 @@ feature -- Extension
 		local
 			old_other_count: INTEGER
 		do
-			old_other_count := other.count
+			old_other_count := other.count_left
 			target.insert_at (other, index)
 			index := index + old_other_count
 		end
@@ -105,7 +105,7 @@ feature -- Extension
 		local
 			old_other_count: INTEGER
 		do
-			old_other_count := other.count
+			old_other_count := other.count_left
 			target.insert_at (other, index + 1)
 			index := index + old_other_count
 		end

@@ -133,7 +133,7 @@ feature -- Extension
 			if i = count + 1 then
 				append (input)
 			else
-				ic := input.count
+				ic := input.count_left
 				reserve (count + ic)
 				circular_copy (i, i + ic, count - i + 1)
 				count := count + ic
