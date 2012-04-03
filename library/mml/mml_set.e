@@ -1,8 +1,6 @@
 note
 	description: "Finite sets."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 
 class
 	MML_SET [G]

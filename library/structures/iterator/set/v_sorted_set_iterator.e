@@ -109,6 +109,8 @@ feature -- Removal
 
 	remove
 			-- Remove element at current position. Move cursor to the next position.
+		note
+			modify: nothing__ -- target.sequence
 		local
 			found: V_BINARY_TREE_CELL [G]
 		do

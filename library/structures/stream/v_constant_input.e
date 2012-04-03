@@ -35,8 +35,8 @@ feature -- Cursor movement
 
 	forth
 			-- Move one position forward.
+		note
+			modify: nothing__
 		do
-		ensure then
-			item_effect: item = old item
 		end
 end

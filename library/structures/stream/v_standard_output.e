@@ -57,6 +57,8 @@ feature -- Replacement
 
 	output (v: ANY)
 			-- Put `v' into the stream and move to the next position.
+		note
+			modify: nothing__
 		do
 			print (v)
 			print (separator)

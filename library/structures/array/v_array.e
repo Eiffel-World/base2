@@ -260,8 +260,12 @@ feature -- Resizing
 
 	wipe_out
 			-- Remove all elements.
+		note
+			modify: map
 		do
 			resize (1, 0)
+		ensure
+			map_effect: map.is_empty
 		end
 
 feature {V_CONTAINER, V_ITERATOR} -- Implementation

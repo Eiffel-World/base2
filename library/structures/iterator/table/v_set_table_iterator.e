@@ -161,8 +161,8 @@ feature -- Replacement
 
 	put (v: V)
 			-- Replace item at current position with `v'.
---		note
---			modify: target.map
+		note
+			modify: nothing__-- target.map
 		do
 			set_iterator.item.value := v
 		ensure then

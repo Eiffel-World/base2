@@ -1,8 +1,6 @@
 note
 	description: "Cursors to traverse binary trees."
 	author: "Nadia Polikarpova"
-	date: "$Date$"
-	revision: "$Revision$"
 	model: target, path
 
 class
