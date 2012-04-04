@@ -256,7 +256,7 @@ feature -- Tests
 
 			it := l2.at (1000)
 			it := l2.new_cursor
-			i := it.count
+			i := it.count_left
 			b := it.is_first
 			b := it.is_last
 			it.output (5)
@@ -346,7 +346,7 @@ feature -- Tests
 
 			it := l2.at (1000)
 			it := l2.new_cursor
-			i := it.count
+			i := it.count_left
 			b := it.is_first
 			b := it.is_last
 			it.output (5)
@@ -437,7 +437,7 @@ feature -- Tests
 
 			it := l2.at (1000)
 			it := l2.new_cursor
-			i := it.count
+			i := it.count_left
 			b := it.is_first
 			b := it.is_last
 			it.output (5)

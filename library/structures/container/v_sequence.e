@@ -62,8 +62,6 @@ feature -- Measurement
 
 	lower: INTEGER
 			-- Lower bound of index interval.
-		note
-			status: specification
 		deferred
 		ensure
 			definition_nonempty: not map.is_empty implies Result = map.domain.extremum (agent less_equal)
@@ -72,8 +70,6 @@ feature -- Measurement
 
 	upper: INTEGER
 			-- Upper bound of index interval.
-		note
-			status: specification
 		deferred
 		ensure
 			definition_nonempty: not map.is_empty implies Result = map.domain.extremum (agent greater_equal)
@@ -189,8 +185,6 @@ feature -- Search
 
 	key_equivalence: PREDICATE [ANY, TUPLE [INTEGER, INTEGER]]
 			-- Index equivalence relation: identity.
-		note
-			status: specification
 		once
 			Result := agent reference_equal
 		end

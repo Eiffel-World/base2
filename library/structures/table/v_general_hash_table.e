@@ -82,16 +82,6 @@ feature -- Search
 	key_hash: FUNCTION [ANY, TUPLE [K], INTEGER]
 			-- Hash function on keys.
 
---	hash_code (k: K): INTEGER
---			-- Hash code of `k' according to `key_hash'.
---		note
---			status: specification
---		do
---			Result := key_hash.item ([k])
---		ensure
---			definition: Result = key_hash.item ([k])
---		end
-
 feature {V_CONTAINER, V_ITERATOR} -- Implementation
 
 	set: V_GENERAL_HASH_SET [TUPLE [key: K; value: V]]

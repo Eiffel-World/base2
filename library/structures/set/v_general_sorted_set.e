@@ -90,8 +90,6 @@ feature -- Search
 
 	less_equal (x, y: G): BOOLEAN
 			-- Is `x' <= `y' according to `order'?
-		note
-			status: specification
 		do
 			Result := order.item ([x, y])
 		ensure

@@ -24,8 +24,6 @@ feature -- Search
 	has (v: G): BOOLEAN
 			-- Is `v' contained?
 			-- (Uses `equivalence'.)
-		note
-			status: specification
 		deferred
 		ensure
 			definition: Result = set.exists (agent equivalent (v, ?))
@@ -33,8 +31,6 @@ feature -- Search
 
 	item (v: G): G
 			-- Element of `set' equivalent to `v' according to `relation'.
-		note
-			status: specification
 		require
 			has: has (v)
 		deferred
@@ -49,8 +45,6 @@ feature -- Search
 
 	equivalent (x, y: G): BOOLEAN
 			-- Are `x' and `y' equivalent according to `equivalence'?
-		note
-			status: specification
 		do
 			Result := equivalence.item ([x, y])
 		ensure

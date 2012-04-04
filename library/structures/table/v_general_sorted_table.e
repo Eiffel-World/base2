@@ -68,8 +68,6 @@ feature -- Search
 
 	less_equal (k1, k2: K): BOOLEAN
 			-- Is `k1 <= k2' according to `key_order'?
-		note
-			status: specification
 		do
 			Result := key_order.item ([k1, k2])
 		ensure

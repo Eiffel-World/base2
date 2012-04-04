@@ -36,8 +36,6 @@ feature -- Search
 
 	has_key (k: K): BOOLEAN
 			-- Does `map' contain a key equivalent to `k' according to `key_equivalence'?
-		note
-			status: specification
 		deferred
 		ensure
 			definition: Result = map.domain.exists (agent equivalent (k, ?))
