@@ -129,6 +129,17 @@ feature -- Cursor movement
 			after := True
 		end
 
+feature {V_ITERATOR} -- Cursor movement
+
+	go_to_cell (c: V_BINARY_TREE_CELL [G])
+			-- Set cursor to cell `c'.
+		require
+			c_exists: c /= Void
+		do
+			active := c
+			after := False
+		end
+
 feature {NONE} -- Implementation
 
 	active_index: INTEGER

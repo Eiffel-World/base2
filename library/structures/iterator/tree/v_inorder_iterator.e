@@ -9,7 +9,7 @@ class
 inherit
 	V_BINARY_TREE_ITERATOR [G]
 
-create {V_CONTAINER}
+create {V_CONTAINER, V_ITERATOR}
 	make
 
 feature -- Cursor movement
