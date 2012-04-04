@@ -331,6 +331,27 @@ feature -- Modification
 			definition: Result |=| ((Current + other) - (Current * other))
 		end
 
+	mapped (f: FUNCTION [ANY, TUPLE [G], G]): MML_SET [G]
+			-- Set of elements of `Current' with `f' applied to each of them.
+		require
+			f_exists: f /= Void
+			f_has_one_arg: f.open_count = 1
+		local
+			a: V_ARRAY [G]
+			i: INTEGER
+		do
+			create a.make (1, count)
+			from
+				i := 1
+			until
+				i > count
+			loop
+				a [i] := f.item ([array [i]])
+				i := i + 1
+			end
+			create Result.make_from_array (a)
+		end
+
 feature {MML_MODEL} -- Implementation
 
 	array: V_ARRAY [G]
