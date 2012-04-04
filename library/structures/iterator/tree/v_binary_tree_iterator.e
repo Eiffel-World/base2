@@ -1,7 +1,7 @@
 note
 	description: "Iterators to traverse binary trees in some linear order."
 	author: "Nadia Polikarpova"
-	model: target, path, after
+	model: target, map, path, after
 
 deferred class
 	V_BINARY_TREE_ITERATOR [G]
@@ -28,7 +28,7 @@ feature -- Initialization
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
 		note
-			modify: target, path, after
+			modify: target, map, path, after
 		do
 			after := other.after
 			Precursor {V_BINARY_TREE_CURSOR} (other)

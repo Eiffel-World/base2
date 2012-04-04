@@ -1,7 +1,7 @@
 note
 	description: "Iterators over mutable sequences that allow only traversal, search and replacement."
 	author: "Nadia Polikarpova"
-	model: target, index
+	model: target, sequence, index
 
 class
 	V_ARRAY_ITERATOR [G]
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	make (t: V_MUTABLE_SEQUENCE [G]; i: INTEGER)
 			-- Create an iterator at position `i' in `t'.
 		note
-			modify: target, index
+			modify: target, sequence, index
 		require
 			t_exists: t /= Void
 		do
@@ -51,7 +51,7 @@ feature -- Initialization
 	copy (other: like Current)
 			-- Initialize with the same `target' and `index' as in `other'.
 		note
-			modify: target, index
+			modify: target, sequence, index
 		do
 			target := other.target
 			index := other.index
@@ -69,8 +69,6 @@ feature -- Replacement
 
 	put (v: G)
 			-- Replace item at current position with `v'.
-		note
-			modify: nothing__
 		do
 			target.put (v, target.lower + index - 1)
 		end

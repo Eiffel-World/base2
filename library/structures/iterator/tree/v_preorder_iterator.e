@@ -1,7 +1,7 @@
 note
 	description: "Iterators to traverse binary trees in order root - left subtree - right subtree."
 	author: "Nadia Polikarpova"
-	model: target, path, after
+	model: target, map, path, after
 
 class
 	V_PREORDER_ITERATOR [G]

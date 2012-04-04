@@ -1,7 +1,7 @@
 note
 	description: "Iterators over tables implemented as set of key-value pairs."
 	author: "Nadia Polikarpova"
-	model: target, key_sequence, index
+	model: target, map, key_sequence, index
 
 class
 	V_SET_TABLE_ITERATOR [K, V]
@@ -21,7 +21,7 @@ feature {NONE} -- Initialization
 	make_at_start (t: V_SET_TABLE [K, V])
 			-- Create an iterator at start of `t'.
 		note
-			modify: target, key_sequence, index
+			modify: target, map, key_sequence, index
 		do
 			target := t
 			set_iterator := target.set.new_cursor
@@ -33,7 +33,7 @@ feature {NONE} -- Initialization
 	make_at_key (t: V_SET_TABLE [K, V]; k: K)
 			-- Create an iterator over `t' pointing to the position with key `k'.
 		note
-			modify: target, key_sequence, index
+			modify: target, map, key_sequence, index
 		do
 			target := t
 			set_iterator := target.set.at ([k, ({V}).default])
@@ -48,7 +48,7 @@ feature -- Initialization
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
 		note
-			modify: target, key_sequence, index
+			modify: target, map, key_sequence, index
 		do
 			if other /= Current then
 				target := other.target
@@ -162,11 +162,11 @@ feature -- Replacement
 	put (v: V)
 			-- Replace item at current position with `v'.
 		note
-			modify: nothing__-- target.map
+			modify: map
 		do
 			set_iterator.item.value := v
 		ensure then
-			target_map_effect: target.map |=| old target.map.updated (key_sequence [index], v)
+			map_effect: map |=| old map.updated (key_sequence [index], v)
 		end
 
 feature -- Removal

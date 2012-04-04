@@ -66,6 +66,8 @@ feature -- Specification
 			else
 				create Result.singleton (item)
 			end
+		ensure
+			exists: Result /= Void
 		end
 
 invariant

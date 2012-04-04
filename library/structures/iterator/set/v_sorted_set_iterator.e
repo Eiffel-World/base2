@@ -1,7 +1,7 @@
 note
 	description: "Iterators over sorted sets."
 	author: "Nadia Polikarpova"
-	model: target, index
+	model: target, sequence, index
 
 class
 	V_SORTED_SET_ITERATOR [G]
@@ -39,7 +39,7 @@ feature {NONE} -- Initialization
 			-- Create an iterator over `s'.
 			-- (Passing `t' is needed to avoid violating invariant `iterator /= Void' when calling `s.tree')
 		note
-			modify: target, index
+			modify: target, sequence, index
 		require
 			s_exists: s /= Void
 			valid_tree: t = s.tree
@@ -55,7 +55,7 @@ feature -- Initialization
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
 		note
-			modify: target, index
+			modify: target, sequence, index
 		do
 			target := other.target
 			Precursor {V_INORDER_ITERATOR} (other)
@@ -109,8 +109,6 @@ feature -- Removal
 
 	remove
 			-- Remove element at current position. Move cursor to the next position.
-		note
-			modify: nothing__ -- target.sequence
 		local
 			found: V_BINARY_TREE_CELL [G]
 		do

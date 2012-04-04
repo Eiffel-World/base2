@@ -40,6 +40,6 @@ feature -- Removal
 			not_off: not off
 		deferred
 		ensure
-			sequence_effect: sequence |=| old (sequence.front (index - 1) + sequence.tail (index + 1))
+			sequence_effect: sequence |=| old sequence.removed_at (index)
 		end
 end

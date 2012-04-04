@@ -1,7 +1,7 @@
 note
 	description: "Iterators over arrayed lists."
 	author: "Nadia Polikarpova"
-	model: target, index
+	model: target, sequence, index
 
 class
 	V_ARRAYED_LIST_ITERATOR [G]
@@ -27,7 +27,7 @@ feature {NONE} -- Initialization
 	make (list: V_ARRAYED_LIST [G]; i: INTEGER)
 			-- Create an iterator at position `i' in `list'.
 		note
-			modify: target, index
+			modify: target, sequence, index
 		require
 			list_exists: list /= Void
 		do
@@ -51,7 +51,7 @@ feature -- Initialization
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
 		note
-			modify: target, index
+			modify: target, sequence, index
 		do
 			target := other.target
 			index := other.index

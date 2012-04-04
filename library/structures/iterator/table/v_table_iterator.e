@@ -1,7 +1,7 @@
 note
 	description: "Iterators to read from and update tables."
 	author: "Nadia Polikarpova"
-	model: target, key_sequence, index
+	model: target, map, key_sequence, index
 
 deferred class
 	V_TABLE_ITERATOR [K, V]
@@ -31,13 +31,26 @@ feature -- Removal
 	remove
 			-- Remove key-value pair at current position. Move to the next position.
 		note
-			modify: key_sequence --, target.map
+			modify: map, key_sequence
 		require
 			not_off: not off
 		deferred
 		ensure
-			target_map_effect: target.map |=| old target.map.removed (key_sequence [index])
-			key_sequence_effect: key_sequence |=| old (key_sequence.front (index - 1) + key_sequence.tail (index + 1))
+			map_effect: map |=| old map.removed (key_sequence [index])
+			key_sequence_effect: key_sequence |=| old key_sequence.removed_at (index)
 		end
+
+feature -- Specification
+
+	map: MML_MAP [K, V]
+			-- Map of keys to values in `target'.
+		note
+			status: specification
+		do
+			Result := target.map
+		end
+
+invariant
+	map_dependant: map |=| target.map
 
 end

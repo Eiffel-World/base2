@@ -229,20 +229,29 @@ feature -- Specification
 		note
 			status: specification
 		do
-			if is_empty then
+			Result := map_from (root, {MML_SEQUENCE [BOOLEAN]} [True])
+		ensure
+			exists: Result /= Void
+		end
+
+feature {NONE} -- Specification
+
+	map_from (cell: V_BINARY_TREE_CELL [G]; path: MML_SEQUENCE [BOOLEAN]): MML_MAP [MML_SEQUENCE [BOOLEAN], G]
+			-- Map from paths to elements in a subtree starting from `cell' and `path' leading from `root' to `cell'.
+		note
+			status: specification
+		do
+			if cell = Void then
 				create Result
 			else
-				Result := at_root.map
+				create Result.singleton (path, cell.item)
+				Result := Result + map_from (cell.left, path & False) + map_from (cell.right, path & true)
 			end
 		ensure
 			exists: Result /= Void
 		end
 
 invariant
-	bag_domain_definition: bag.domain |=| map.range
-	bag_definition: bag.domain.for_all (agent (x: G): BOOLEAN
-		do
-			Result := bag [x] = map.inverse.image_of (x).count
-		end)
+	bag_definition: bag |=| map.to_bag
 	count_definition: count = map.count
 end

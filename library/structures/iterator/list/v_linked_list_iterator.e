@@ -211,7 +211,7 @@ feature -- Extension
 	merge (other: V_LINKED_LIST [G])
 			-- Merge `other' into `target' after current position. Do not copy elements. Empty `other'.
 		note
-			modify: other__sequence --, target.sequence
+			modify: sequence, other__sequence
 		require
 			other_exists: other /= Void
 			other_not_target: other /= target

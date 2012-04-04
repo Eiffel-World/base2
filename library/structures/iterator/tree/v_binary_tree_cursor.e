@@ -1,7 +1,7 @@
 note
 	description: "Cursors to traverse binary trees."
 	author: "Nadia Polikarpova"
-	model: target, path
+	model: target, map, path
 
 class
 	V_BINARY_TREE_CURSOR [G]
@@ -22,7 +22,7 @@ feature {NONE} -- Initialization
 	make (t: V_BINARY_TREE [G])
 			-- Create iterator over `tree'.
 		note
-			modify: target, path
+			modify: target, map, path
 		require
 			tree_exists: t /= Void
 		do
@@ -37,7 +37,7 @@ feature -- Initialization
 	copy (other: like Current)
 			-- Initialize with the same `target' and `path' as in `other'.
 		note
-			modify: target, path
+			modify: target, map, path
 		do
 			target := other.target
 			active := other.active
@@ -68,7 +68,7 @@ feature -- Status report
 		do
 			Result := active.is_leaf
 		ensure
-			definition: Result = (not target.map.domain [path & True] and not target.map.domain [path & False])
+			definition: Result = (not map.domain [path & True] and not map.domain [path & False])
 		end
 
 	has_left: BOOLEAN
@@ -78,7 +78,7 @@ feature -- Status report
 		do
 			Result := active.left /= Void
 		ensure
-			definition: Result = target.map.domain [path & False]
+			definition: Result = map.domain [path & False]
 		end
 
 	has_right: BOOLEAN
@@ -88,7 +88,7 @@ feature -- Status report
 		do
 			Result := active.right /= Void
 		ensure
-			definition: Result = target.map.domain [path & True]
+			definition: Result = map.domain [path & True]
 		end
 
 feature -- Comparison
@@ -149,36 +149,36 @@ feature -- Cursor movement
 		do
 			active := target.root
 		ensure
-			path_effect_non_empty: not target.map.is_empty implies path |=| {MML_SEQUENCE [BOOLEAN]} [True]
-			path_effect_empty: target.map.is_empty implies path.is_empty
+			path_effect_non_empty: not map.is_empty implies path |=| {MML_SEQUENCE [BOOLEAN]} [True]
+			path_effect_empty: map.is_empty implies path.is_empty
 		end
 
 feature -- Extension
 
 	extend_left (v: G)
 			-- Add a left child with value `v' to the current node.
---		note
---			modify: target.map
+		note
+			modify: map
 		require
 			not_off: not off
 			not_has_left: not has_left
 		do
 			target.extend_left (v, active)
 		ensure
-			target_map_effect: target.map |=| old target.map.updated (path & False, v)
+			map_effect: map |=| old map.updated (path & False, v)
 		end
 
 	extend_right (v: G)
 			-- Add a left child with value `v' to the current node.
---		note
---			modify: target.map
+		note
+			modify: map
 		require
 			not_off: not off
 			not_has_right: not has_right
 		do
 			target.extend_right (v, active)
 		ensure
-			target_map_effect: target.map |=| old target.map.updated (path & True, v)
+			map_effect: map |=| old map.updated (path & True, v)
 		end
 
 feature -- Removal
@@ -186,7 +186,7 @@ feature -- Removal
 	remove
 			-- Remove current node (it must have less than two child nodes). Go off.
 		note
-			modify: path --, target.map
+			modify: map, path
 		require
 			not_off: not off
 			not_two_children: not has_left or not has_right
@@ -194,17 +194,15 @@ feature -- Removal
 			target.remove (active)
 			active := Void
 		ensure
-			target_map_domain_effect: (old target.map.domain).for_all (agent (x, p: MML_SEQUENCE [BOOLEAN]): BOOLEAN
+			map_domain_effect: map.domain |=| old (
+				(map.domain - map.domain | agent path.is_prefix_of) +
+				(map.domain | agent path.is_prefix_of).removed (path).mapped (agent {like path}.removed_at (path.count + 1)))
+			map_effect_unchanged: map.restricted (old (map.domain - map.domain | agent path.is_prefix_of)) |=|
+				old map.restricted (map.domain - map.domain | agent path.is_prefix_of)
+			map_effect_changed: (old (map.domain | agent path.is_prefix_of).removed (path)).for_all (agent (x, p: like path; m: like map): BOOLEAN
 				do
-					Result := (not (p <= x) implies target.map.domain [x]) and
-						((p <= x and x |/=| p) implies target.map.domain [x.removed_at (p.count + 1)])
-				end (?, old path))
-			target_map_domain_constraint: target.map.count = old target.map.count - 1
-			target_map_effect: (old target.map.domain).for_all (agent (x, p: MML_SEQUENCE [BOOLEAN]; m: MML_MAP [MML_SEQUENCE [BOOLEAN], G]): BOOLEAN
-				do
-					Result := (not (p <= x) implies target.map [x] = m [x]) and
-					((p <= x and x |/=| p) implies target.map [x.removed_at (p.count + 1)] = m [x])
-				end (?, old path, old target.map))
+					Result := map [x.removed_at (p.count + 1)] = m [x]
+				end (?, old path, old map))
 			path_effect: path.is_empty
 		end
 
@@ -263,27 +261,15 @@ feature -- Specification
 			-- Map of paths to values in the subtree starting from current node.
 		note
 			status: specification
-		require
-			not_off: not off
 		do
-			create Result.singleton (path, item)
-			if has_left then
-				left
-				Result := Result + map
-				up
-			end
-			if has_right then
-				right
-				Result := Result + map
-				up
-			end
+			Result := target.map
 		ensure
 			exists: Result /= Void
-			-- ToDo: add definition			
 		end
 
 invariant
 	target_exists: target /= Void
+	map_dependant: map |=| target.map
 	box_definition_empty: not target.map.domain [path] implies box.is_empty
 	box_definition_non_empty: target.map.domain [path] implies box |=| create {MML_SET [G]}.singleton (target.map [path])
 

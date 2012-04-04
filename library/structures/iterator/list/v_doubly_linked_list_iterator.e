@@ -1,7 +1,7 @@
 note
 	description: "Iterators over doubly-linked lists."
 	author: "Nadia Polikarpova"
-	model: target, index
+	model: target, sequence, index
 
 class
 	V_DOUBLY_LINKED_LIST_ITERATOR [G]
@@ -32,7 +32,7 @@ feature {V_CONTAINER, V_ITERATOR} -- Initialization
 	make (list: V_DOUBLY_LINKED_LIST [G])
 			-- Create iterator over `list'.
 		note
-			modify: target, index
+			modify: target, sequence, index
 		require
 			list_exists: list /= Void
 		do
@@ -49,7 +49,7 @@ feature -- Initialization
 	copy (other: like Current)
 			-- Initialize with the same `target' and position as in `other'.
 		note
-			modify: target, index
+			modify: target, sequence, index
 		do
 			target := other.target
 			active := other.active
@@ -229,7 +229,7 @@ feature -- Extension
 	merge (other: V_DOUBLY_LINKED_LIST [G])
 			-- Merge `other' into `target' after current position. Do not copy elements. Empty `other'.
 		note
-			modify: other__sequence --, target.sequence
+			modify: sequence, other__sequence
 		require
 			other_exists: other /= Void
 			other_not_target: other /= target
