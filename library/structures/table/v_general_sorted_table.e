@@ -23,8 +23,6 @@ feature {NONE} -- Initialization
 
 	make (o: PREDICATE [ANY, TUPLE [K, K]])
 			-- Create an empty table with key order `o'.
-		note
-			modify: map, key_order
 		require
 			o_exists: o /= Void
 			--- o_is_total: o.precondition |=| True

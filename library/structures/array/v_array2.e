@@ -29,10 +29,8 @@ feature {NONE} -- Initialization
 
 	make (n, m: INTEGER)
 			-- Create array with `n' rows and `m' columns; set all values to default.
-		note
-			modify: matrix
 		require
-			valid_dimentions: (n = 0 and m = 0) or (n > 0 and m > 0)
+			valid_dimensions: (n = 0 and m = 0) or (n > 0 and m > 0)
 		do
 			row_count := n
 			column_count := m
@@ -47,10 +45,8 @@ feature {NONE} -- Initialization
 
 	make_filled (n, m: INTEGER; v: G)
 			-- Create array with `n' rows and `m' columns; set all values to `v'.
-		note
-			modify: matrix
 		require
-			valid_dimentions: (n = 0 and m = 0) or (n > 0 and m > 0)
+			valid_dimensions: (n = 0 and m = 0) or (n > 0 and m > 0)
 		do
 			row_count := n
 			column_count := m

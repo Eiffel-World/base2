@@ -32,8 +32,6 @@ feature {NONE} -- Initialization
 
 	default_create
 			-- Create an empty set with reference equality as equivalence relation.
-		note
-			modify: set, order
 		do
 			make (agent comparable_less_equal)
 		end

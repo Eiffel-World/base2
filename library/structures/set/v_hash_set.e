@@ -44,16 +44,12 @@ feature {NONE} -- Initialization
 
 	default_create
 			-- Create an empty set with reference equality as equivalence relation.
-		note
-			modify: set, equivalence, hash
 		do
 			make (agent reference_equal, agent hash_code)
 		end
 
 	with_object_equality
 			-- Create an empty set with object equality as equivalence relation.
-		note
-			modify: set, equivalence, hash
 		do
 			make (agent object_equal, agent hash_code)
 		end

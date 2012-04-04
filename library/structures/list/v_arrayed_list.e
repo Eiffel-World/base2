@@ -25,8 +25,6 @@ feature {NONE} -- Initialization
 
 	default_create
 			-- Create an empty list with default `capacity' and `growth_rate'.
-		note
-			modify: sequence
 		do
 			create array.make (0, default_capacity - 1)
 		ensure then

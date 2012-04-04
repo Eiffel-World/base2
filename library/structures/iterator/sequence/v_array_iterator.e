@@ -26,8 +26,6 @@ feature {NONE} -- Initialization
 
 	make (t: V_MUTABLE_SEQUENCE [G]; i: INTEGER)
 			-- Create an iterator at position `i' in `t'.
-		note
-			modify: target, sequence, index
 		require
 			t_exists: t /= Void
 		do

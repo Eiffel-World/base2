@@ -19,8 +19,6 @@ feature {NONE} -- Initialization
 
 	make (s: V_GENERAL_HASH_SET [G])
 			-- Create an iterator over `s'.
-		note
-			modify: target, sequence, index
 		require
 			s_exists: s /= Void
 		do

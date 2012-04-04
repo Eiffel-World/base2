@@ -16,9 +16,6 @@ inherit
 			out
 		end
 
-create
-	default_create
-
 feature -- Initialization
 
 	copy (other: like Current)

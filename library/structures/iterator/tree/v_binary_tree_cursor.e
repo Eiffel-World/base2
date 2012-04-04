@@ -21,8 +21,6 @@ feature {NONE} -- Initialization
 
 	make (t: V_BINARY_TREE [G])
 			-- Create iterator over `tree'.
-		note
-			modify: target, map, path
 		require
 			tree_exists: t /= Void
 		do

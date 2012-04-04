@@ -44,8 +44,6 @@ feature {NONE} -- Initialization
 
 	default_create
 			-- Create an empty table with reference equality as equivalence relation on keys.
-		note
-			modify: map, key_equivalence, key_hash
 		do
 			key_equivalence := agent reference_equal
 			key_hash := agent hash_code
@@ -56,8 +54,6 @@ feature {NONE} -- Initialization
 
 	with_object_equality
 			-- Create an empty table with object equality as equivalence relation on keys.
-		note
-			modify: map, key_equivalence, key_hash
 		do
 			key_equivalence := agent object_equal
 			key_hash := agent hash_code

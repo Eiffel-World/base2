@@ -23,8 +23,6 @@ feature {NONE} -- Initialization
 
 	make (eq: PREDICATE [ANY, TUPLE [K, K]]; h: FUNCTION [ANY, TUPLE [K], INTEGER])
 			-- Create an empty table with key equivalence `eq' and hash function `h'.
-		note
-			modify: map, key_equivalence, key_hash
 		require
 			eq_exists: eq /= Void
 			h_exists: h /= Void

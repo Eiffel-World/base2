@@ -20,8 +20,6 @@ feature {NONE} -- Initialization
 
 	make_at_start (t: V_SET_TABLE [K, V])
 			-- Create an iterator at start of `t'.
-		note
-			modify: target, map, key_sequence, index
 		do
 			target := t
 			set_iterator := target.set.new_cursor
@@ -32,8 +30,6 @@ feature {NONE} -- Initialization
 
 	make_at_key (t: V_SET_TABLE [K, V]; k: K)
 			-- Create an iterator over `t' pointing to the position with key `k'.
-		note
-			modify: target, map, key_sequence, index
 		do
 			target := t
 			set_iterator := target.set.at ([k, ({V}).default])

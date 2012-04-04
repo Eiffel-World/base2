@@ -24,8 +24,6 @@ feature {NONE} -- Initialization
 	make (s: V_GENERAL_SORTED_SET [G]; t: V_BINARY_TREE [G])
 			-- Create an iterator over `s'.
 			-- (Passing `t' is needed to avoid violating invariant `iterator /= Void' when calling `s.tree')
-		note
-			modify: target, sequence, index
 		require
 			s_exists: s /= Void
 			valid_tree: t = s.tree

@@ -28,8 +28,6 @@ feature {NONE} -- Initialization
 
 	default_create
 			-- Create an empty list.
-		note
-			modify: sequence
 		do
 		ensure then
 			sequence_effect: sequence.is_empty

@@ -23,8 +23,6 @@ feature {NONE} -- Initialization
 
 	make (eq: PREDICATE [ANY, TUPLE [G, G]]; h: FUNCTION [ANY, TUPLE [G], INTEGER])
 			-- Create an empty set with equivalence relation `eq' and hash function `h'.
-		note
-			modify: set, equivalence, hash
 		require
 			eq_exists: eq /= Void
 			h_exists: h /= Void

@@ -17,8 +17,6 @@ feature {NONE} -- Initialization
 
 	default_create
 			-- Create an empty queue.
-		note
-			modify: sequence
 		do
 			create list
 		ensure then

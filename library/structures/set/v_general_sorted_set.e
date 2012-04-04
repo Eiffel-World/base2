@@ -25,8 +25,6 @@ feature {NONE} -- Initialization
 
 	make (o: PREDICATE [ANY, TUPLE [G, G]])
 			-- Create an empty set with elements order `o'.
-		note
-			modify: set, order
 		require
 			o_exists: o /= Void
 			--- o_is_total: o.precondition |=| True

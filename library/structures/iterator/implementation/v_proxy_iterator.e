@@ -19,8 +19,6 @@ feature {NONE} -- Initialization
 
 	make (t: V_CONTAINER [G]; it: V_ITERATOR [G])
 			-- Create a proxy for `it' with target `t'.
-		note
-			modify: target, sequence, index
 		require
 			t_exists: t /= Void
 			it_exists: it /= Void

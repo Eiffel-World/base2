@@ -30,8 +30,6 @@ feature {V_CONTAINER, V_ITERATOR} -- Initialization
 
 	make (list: V_LINKED_LIST [G])
 			-- Create iterator over `list'.
-		note
-			modify: target, index
 		require
 			list_exists: list /= Void
 		do

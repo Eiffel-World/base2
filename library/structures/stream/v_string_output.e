@@ -18,8 +18,6 @@ feature {NONE} -- Initialization
 	make (dest: STRING)
 			-- Create a stream that outputs into `dest'.
 			-- (Use `default_separator' as `separator').
-		note
-			modify: destination, separator
 		require
 			dest_exists: dest /= Void
 		do
@@ -32,8 +30,6 @@ feature {NONE} -- Initialization
 	make_with_separator (dest, sep: STRING)
 			-- Create a stream that outputs into `dest'
 			-- and uses `sep' as `separator'.
-		note
-			modify: destination, separator
 		require
 			dest_exists: dest /= Void
 			sep_exists: sep /= Void

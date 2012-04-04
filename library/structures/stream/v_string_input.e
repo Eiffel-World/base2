@@ -22,8 +22,6 @@ feature {NONE} -- Initialization
 	make (src: STRING; fs: FUNCTION [ANY, TUPLE [STRING], G])
 			-- Create a stream that reads from `src' and uses function `fs' to convert from string to `G'.
 			-- (Use function `default_is_separator' to recognize separator characters).
-		note
-			modify: source, index, from_string, is_separator
 		require
 			src_exists: src /= Void
 			fs_exists: fs /= Void
@@ -40,8 +38,6 @@ feature {NONE} -- Initialization
 	make_with_separators (src: STRING; fs: FUNCTION [ANY, TUPLE [STRING], G]; is_sep: PREDICATE [ANY, TUPLE [CHARACTER]])
 			-- Create a stream that reads from `src', uses function `fs' to convert from string to `G'
 			-- and function `is_sep' to recognize separator characters.
-		note
-			modify: source, index, from_string, is_separator
 		require
 			src_exists: src /= Void
 			fs_exists: fs /= Void

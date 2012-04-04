@@ -30,8 +30,6 @@ feature {NONE} -- Initialization
 
 	make (l, u: INTEGER)
 			-- Create array with indexes in [`l', `u']; set all values to default.
-		note
-			modify: map
 		require
 			valid_indexes: l <= u + 1
 		do
@@ -50,8 +48,6 @@ feature {NONE} -- Initialization
 
 	make_filled (l, u: INTEGER; v: G)
 			-- Create array with indexes in [`l', `u']; set all values to `v'.
-		note
-			modify: map
 		require
 			valid_indexes: l <= u + 1
 		do
