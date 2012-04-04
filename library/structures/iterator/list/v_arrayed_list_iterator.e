@@ -69,8 +69,6 @@ feature -- Replacement
 
 	put (v: G)
 			-- Replace item at current position with `v'.
-		note
-			modify: nothing__
 		do
 			target.put (v, target.lower + index - 1)
 		end
