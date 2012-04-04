@@ -245,7 +245,7 @@ feature {NONE} -- Specification
 				create Result
 			else
 				create Result.singleton (path, cell.item)
-				Result := Result + map_from (cell.left, path & False) + map_from (cell.right, path & true)
+				Result := Result + map_from (cell.left, path & False) + map_from (cell.right, path & True)
 			end
 		ensure
 			exists: Result /= Void

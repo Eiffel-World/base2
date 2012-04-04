@@ -1,7 +1,7 @@
 note
 	description: "Iterators over linked lists."
 	author: "Nadia Polikarpova"
-	model: target, index
+	model: target, sequence, index
 
 class
 	V_LINKED_LIST_ITERATOR [G]
