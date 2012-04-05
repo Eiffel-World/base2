@@ -1,8 +1,3 @@
-note
-	description : "new_tester application root class"
-	date        : "$Date: 2008-12-29 15:41:59 -0800 (Mon, 29 Dec 2008) $"
-	revision    : "$Revision: 76432 $"
-
 class
 	TESTER
 

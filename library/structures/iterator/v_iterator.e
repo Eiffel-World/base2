@@ -299,7 +299,7 @@ feature -- Cursor movement
 feature -- Specification
 
 	sequence: MML_SEQUENCE [G]
-			-- Sequence of elements	in `target'.
+			-- Sequence of elements in `target'.
 		note
 			status: specification
 		deferred
